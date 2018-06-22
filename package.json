@@ -9,7 +9,7 @@
     "server-dev": "nodemon server/index.js"
   },
   "author": "Matt Lee, Raphael Croce, Trevor Sasaki",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
