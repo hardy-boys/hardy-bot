@@ -6,7 +6,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Typography variant='display4' gutterBottom> Hello World!</Typography> 
+        <Typography variant='display3' gutterBottom> Hello World!</Typography> 
       </div>
     );
   }
