@@ -1,4 +1,5 @@
 node_modules
+react-client/dist/assets
 react-client/dist/bundle.js
 react-client/src/config.js
 .env

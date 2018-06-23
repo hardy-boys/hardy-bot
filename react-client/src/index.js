@@ -1,17 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Typography from '@material-ui/core/Typography';
+import { createBrowserHistory } from 'history';
+import { Router, Route, Switch } from 'react-router-dom';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Typography variant='display3' gutterBottom> Hello World!</Typography> 
-      </div>
-    );
-  }
-}
+import 'assets/css/material-dashboard-react.css';
 
-export default App;
+import indexRoutes from 'routes/index.jsx';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+const hist = createBrowserHistory();
+
+ReactDOM.render(
+  <Router history={hist}>
+    <Switch>
+      {indexRoutes.map((prop, key) => {
+        return <Route path={prop.path} component={prop.component} key={key} />;
+      })}
+    </Switch>
+  </Router>,
+  document.getElementById('app'),
+);
