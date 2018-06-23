@@ -1,28 +1,28 @@
-import React from "react";
-import classNames from "classnames";
-import { Manager, Target, Popper } from "react-popper";
+import React from 'react';
+import classNames from 'classnames';
+import { Manager, Target, Popper } from 'react-popper';
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
-import Grow from "@material-ui/core/Grow";
-import Paper from "@material-ui/core/Paper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Hidden from "@material-ui/core/Hidden";
+import withStyles from '@material-ui/core/styles/withStyles';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Hidden from '@material-ui/core/Hidden';
 // @material-ui/icons
-import Person from "@material-ui/icons/Person";
-import Notifications from "@material-ui/icons/Notifications";
-import Dashboard from "@material-ui/icons/Dashboard";
-import Search from "@material-ui/icons/Search";
+import Person from '@material-ui/icons/Person';
+import Notifications from '@material-ui/icons/Notifications';
+import Dashboard from '@material-ui/icons/Dashboard';
+import Search from '@material-ui/icons/Search';
 // core components
-import CustomInput from "components/CustomInput/CustomInput.jsx";
-import Button from "components/CustomButtons/Button.jsx";
+import CustomInput from 'components/CustomInput/CustomInput';
+import Button from 'components/CustomButtons/Button';
 
-import headerLinksStyle from "assets/jss/material-dashboard-react/components/headerLinksStyle";
+import headerLinksStyle from 'assets/jss/material-dashboard-react/components/headerLinksStyle';
 
 class HeaderLinks extends React.Component {
   state = {
-    open: false
+    open: false,
   };
   handleClick = () => {
     this.setState({ open: !this.state.open });
@@ -39,13 +39,13 @@ class HeaderLinks extends React.Component {
         <div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{
-            className: classes.margin + " " + classes.search
+            className: `${classes.margin  } ${  classes.search}`,
           }}
           inputProps={{
-            placeholder: "Search",
+            placeholder: 'Search',
             inputProps: {
-              "aria-label": "Search"
-            }
+              'aria-label': 'Search',
+            },
           }}
         />
         <Button color="white" aria-label="edit" justIcon round>
@@ -53,7 +53,7 @@ class HeaderLinks extends React.Component {
         </Button>
       </div>
         <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
+          color={window.innerWidth > 959 ? 'transparent' : 'white'}
           justIcon={window.innerWidth > 959}
           simple={!(window.innerWidth > 959)}
           aria-label="Dashboard"
@@ -67,11 +67,11 @@ class HeaderLinks extends React.Component {
         <Manager className={classes.manager}>
           <Target>
             <Button
-              color={window.innerWidth > 959 ? "transparent" : "white"}
+              color={window.innerWidth > 959 ? 'transparent' : 'white'}
               justIcon={window.innerWidth > 959}
               simple={!(window.innerWidth > 959)}
               aria-label="Notifications"
-              aria-owns={open ? "menu-list" : null}
+              aria-owns={open ? 'menu-list' : null}
               aria-haspopup="true"
               onClick={this.handleClick}
               className={classes.buttonLink}
@@ -89,16 +89,16 @@ class HeaderLinks extends React.Component {
             placement="bottom-start"
             eventsEnabled={open}
             className={
-              classNames({ [classes.popperClose]: !open }) +
-              " " +
-              classes.pooperResponsive
+              `${classNames({ [classes.popperClose]: !open }) 
+              } ${ 
+              classes.pooperResponsive}`
             }
           >
             <ClickAwayListener onClickAway={this.handleClose}>
               <Grow
                 in={open}
                 id="menu-list"
-                style={{ transformOrigin: "0 0 0" }}
+                style={{ transformOrigin: '0 0 0' }}
               >
                 <Paper className={classes.dropdown}>
                   <MenuList role="menu">
@@ -139,7 +139,7 @@ class HeaderLinks extends React.Component {
           </Popper>
         </Manager>
         <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
+          color={window.innerWidth > 959 ? 'transparent' : 'white'}
           justIcon={window.innerWidth > 959}
           simple={!(window.innerWidth > 959)}
           aria-label="Person"

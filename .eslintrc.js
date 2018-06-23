@@ -14,5 +14,8 @@ module.exports = {
     "class-methods-use-this": 0,
     "no-underscore-dangle": 0,
     "no-else-return": 0,
+    "arrow-body-style": 0,
+    "import/no-unresolved": 0,
+    "import/extensions": 0,
   }
 };
