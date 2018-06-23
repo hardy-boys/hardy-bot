@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const db = require('../database/models/index');
+
 //
 // ─── MODULE IMPORTS ─────────────────────────────────────────────────────
 //
@@ -30,6 +32,9 @@ app.use(morgan('dev'));
 // ─── SERVER START ───────────────────────────────────────────────────────────────
 //
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('listening on port 3000!');
+db.models.sequelize.sync().then(() => {
+  app.listen(process.env.PORT || 3000, () => {
+    console.log('listening on port 3000!');
+  });
 });
+

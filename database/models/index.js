@@ -5,15 +5,15 @@ const Sequelize = require('sequelize');
 const { Op } = Sequelize;
 
 //setup connection to server
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+const sequelize = new Sequelize('thesis', 'hardyboys', null, {
+  host: 'localhost',
+  port: '5432',
   dialect: 'postgres',
   operatorsAliases: false,
   logging: false,
-  dialectOptions: {
-    ssl: true,
-  },
+//   dialectOptions: {
+//     ssl: true,
+//   },
 });
 
 //testing connection
@@ -28,12 +28,9 @@ sequelize.authenticate()
 //model object created to import all DB tables
 const models = {
     User: sequelize.import('./user'),
-    User_Devices: sequelize.import('./userDevices'),
-    Devices: sequelize.import('./devices'),
-    Profiles: sequelize.import('./profiles'),
-    Profile_Devices: sequelize.import('./profileDevices'),
-    Widget_Profiles: sequelize.import('./widgetProfiles'),
-    Widgets: sequelize.import('./widgets'),
+    Device: sequelize.import('./devices'),
+    Profile: sequelize.import('./profiles'),
+    Widget: sequelize.import('./widgets'),
 }
 
 //create relationships between all tables with associations 
@@ -48,4 +45,4 @@ models.Sequelize = Sequelize;
 
 module.exports.models = models;
 module.exports.Op = Op;
-module.exports.sequelize = sequelize;
+// module.exports.sequelize = sequelize;
