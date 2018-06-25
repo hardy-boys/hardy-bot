@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Typography from '@material-ui/core/Typography';
+import { Provider } from 'react-redux';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Typography variant='display4' gutterBottom> Hello World!</Typography> 
-      </div>
-    );
-  }
-}
+import store from './store/index';
+import App from './components/app';
 
-export default App;
-
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app'),
+);
