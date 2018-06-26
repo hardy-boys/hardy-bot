@@ -1,5 +1,5 @@
 const express = require('express');
-const dbHelpers = require('../database/controllers/dbHelpers');
+const dbHelpers = require('../../database/controllers/dbHelpers');
 
 const router = express.Router();
 
