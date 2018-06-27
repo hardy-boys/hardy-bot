@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -43,6 +45,7 @@ const styles = {
 };
 
 function Widgets(props) {
+  console.log('WIDGET PROPS', props);
   const { classes } = props;
   return (
     <Grid container>
@@ -109,4 +112,12 @@ function Widgets(props) {
   );
 }
 
-export default withStyles(styles)(Widgets);
+const mapStateToProps = (state) => {
+  return { weather: state.weather };
+};
+
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+)(Widgets);
+
