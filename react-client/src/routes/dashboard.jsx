@@ -14,7 +14,7 @@ import DeviceProfiles from 'views/DeviceProfiles/DeviceProfiles.jsx';
 // import Typography from "views/Typography/Typography.jsx";
 // import Icons from "views/Icons/Icons.jsx";
 import Maps from 'views/Maps/Maps.jsx';
-import NotificationsPage from 'views/Notifications/Notifications.jsx';
+import WidgetsPage from 'views/Widgets/Widgets.jsx';
 // import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.jsx";
 
 const dashboardRoutes = [
@@ -30,14 +30,14 @@ const dashboardRoutes = [
     sidebarName: 'Device Profiles',
     navbarName: 'Device Profiles',
     icon: ContentPaste,
-    component: DeviceProfiles, // Need to change this too
+    component: DeviceProfiles,
   },
   {
     path: '/widgets',
     sidebarName: 'Widgets',
     navbarName: 'Widgets',
     icon: Notifications, // Need to change this
-    component: NotificationsPage, // Need to change this
+    component: WidgetsPage,
   },
   {
     path: '/map',
