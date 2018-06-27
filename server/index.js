@@ -14,6 +14,8 @@ const morgan = require('morgan');
 // ─── ROUTE IMPORTS ─────────────────────────────────────────────────────
 //
 const profile = require('./routes/profile');
+const weather = require('./routes/weather');
+const news = require('./routes/news');
 //
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────
 //
@@ -27,6 +29,8 @@ app.use(morgan('dev'));
 //
 // ─── ROUTE MIDDLEWARE ─────────────────────────────────────────────────────
 //
+app.use(weather);
+app.use(news);
 
 app.use(profile);
 
