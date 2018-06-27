@@ -59,7 +59,7 @@ class App extends React.Component {
         <Sidebar
           routes={dashboardRoutes}
           logoText={"Hardy Bot"}
-          logo={logo}
+          //logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
