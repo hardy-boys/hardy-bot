@@ -11,9 +11,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Menu from '@material-ui/icons/Menu';
 // core components
 import HeaderLinks from './HeaderLinks';
-import Button from 'components/CustomButtons/Button';
-
-import headerStyle from 'assets/jss/material-dashboard-react/components/headerStyle.jsx';
+import Button from '../../components/CustomButtons/Button';
+import headerStyle from '../../assets/jss/material-dashboard-react/components/headerStyle.jsx';
 
 function Header({ ...props }) {
   function makeBrand() {
@@ -28,7 +27,7 @@ function Header({ ...props }) {
   }
   const { classes, color } = props;
   const appBarClasses = classNames({
-    [' ' + classes[color]]: color,
+    [` ${classes[color]}`]: color,
   });
   return (
     <AppBar className={classes.appBar + appBarClasses}>

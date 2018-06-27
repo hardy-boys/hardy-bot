@@ -39,7 +39,7 @@ class HeaderLinks extends React.Component {
         <div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{
-            className: `${classes.margin  } ${  classes.search}`,
+            className: `${classes.margin} ${classes.search}`,
           }}
           inputProps={{
             placeholder: 'Search',
@@ -89,8 +89,8 @@ class HeaderLinks extends React.Component {
             placement="bottom-start"
             eventsEnabled={open}
             className={
-              `${classNames({ [classes.popperClose]: !open }) 
-              } ${ 
+              `${classNames({ [classes.popperClose]: !open })
+              } ${
               classes.pooperResponsive}`
             }
           >

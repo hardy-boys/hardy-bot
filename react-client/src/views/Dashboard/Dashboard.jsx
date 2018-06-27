@@ -1,55 +1,55 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 // react plugin for creating charts
-import ChartistGraph from "react-chartist";
+import ChartistGraph from 'react-chartist';
 // @material-ui/core
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
+import withStyles from '@material-ui/core/styles/withStyles';
+import Grid from '@material-ui/core/Grid';
 // @material-ui/icons
-import ContentCopy from "@material-ui/icons/ContentCopy";
-import Store from "@material-ui/icons/Store";
-import InfoOutline from "@material-ui/icons/InfoOutline";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+import ContentCopy from '@material-ui/icons/ContentCopy';
+import Store from '@material-ui/icons/Store';
+import InfoOutline from '@material-ui/icons/InfoOutline';
+import Warning from '@material-ui/icons/Warning';
+import DateRange from '@material-ui/icons/DateRange';
+import LocalOffer from '@material-ui/icons/LocalOffer';
+// import Update from "@material-ui/icons/Update";
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import AccessTime from '@material-ui/icons/AccessTime';
+// import Accessibility from "@material-ui/icons/Accessibility";
+// import BugReport from "@material-ui/icons/BugReport";
+// import Code from "@material-ui/icons/Code";
+// import Cloud from "@material-ui/icons/Cloud";
 // core components
-import GridItem from "components/Grid/GridItem.jsx";
-import Table from "components/Table/Table.jsx";
-import Tasks from "components/Tasks/Tasks.jsx";
-import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
-import Danger from "components/Typography/Danger.jsx";
-import Card from "components/Card/Card.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
-import CardIcon from "components/Card/CardIcon.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardFooter from "components/Card/CardFooter.jsx";
+import GridItem from 'components/Grid/GridItem.jsx';
+// import Table from "components/Table/Table.jsx";
+// import Tasks from "components/Tasks/Tasks.jsx";
+// import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
+import Danger from 'components/Typography/Danger.jsx';
+import Card from 'components/Card/Card.jsx';
+import CardHeader from 'components/Card/CardHeader.jsx';
+import CardIcon from 'components/Card/CardIcon.jsx';
+import CardBody from 'components/Card/CardBody.jsx';
+import CardFooter from 'components/Card/CardFooter.jsx';
 
-import { bugs, website, server } from "variables/general";
+// import { bugs, website, server } from "variables/general";
 
 import {
   dailySalesChart,
   emailsSubscriptionChart,
-  completedTasksChart
-} from "variables/charts";
+  // completedTasksChart
+} from 'variables/charts';
 
-import dashboardStyle from "assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardStyle.jsx';
 
 class Dashboard extends React.Component {
   state = {
-    value: 0
+    value: 0,
   };
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
-  handleChangeIndex = index => {
+  handleChangeIndex = (index) => {
     this.setState({ value: index });
   };
   render() {
@@ -57,13 +57,44 @@ class Dashboard extends React.Component {
     return (
       <div>
         <Grid container>
-          <GridItem xs={12} sm={6} md={3}>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="info">
+              {/* Get device info from db */}
+                <h4 className={classes.cardTitleWhite}>Savvy Fox</h4>
+                <p className={classes.cardCategoryWhite}>LCD Display</p>
+              </CardHeader>
+            </Card>
+          </GridItem>
+        </Grid>
+        <Grid container>
+          <GridItem xs={4} sm={4} md={4}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <Store />
+                </CardIcon>
+                <p className={classes.cardCategory}>Current Status</p>
+                {/* This is data we need to get from the device */}
+                <h3 className={classes.cardTitle}>Offline</h3>
+              </CardHeader>
+              <CardFooter stats>
+                <div className={classes.stats}>
+                  <DateRange />
+                  {/* This is data we need to get from the device */}
+                  Last 24 Hours
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={4} sm={4} md={4}>
             <Card>
               <CardHeader color="warning" stats icon>
                 <CardIcon color="warning">
                   <ContentCopy />
                 </CardIcon>
                 <p className={classes.cardCategory}>Used Space</p>
+                {/* This is data we need to get from the device */}
                 <h3 className={classes.cardTitle}>
                   49/50 <small>GB</small>
                 </h3>
@@ -73,6 +104,7 @@ class Dashboard extends React.Component {
                   <Danger>
                     <Warning />
                   </Danger>
+                  {/* Dynamically render based on avaialable space */}
                   <a href="#pablo" onClick={e => e.preventDefault()}>
                     Get more space
                   </a>
@@ -80,41 +112,26 @@ class Dashboard extends React.Component {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="success" stats icon>
-                <CardIcon color="success">
-                  <Store />
-                </CardIcon>
-                <p className={classes.cardCategory}>Revenue</p>
-                <h3 className={classes.cardTitle}>$34,245</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <DateRange />
-                  Last 24 Hours
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
+          <GridItem xs={4} sm={4} md={4}>
             <Card>
               <CardHeader color="danger" stats icon>
                 <CardIcon color="danger">
                   <InfoOutline />
                 </CardIcon>
-                <p className={classes.cardCategory}>Fixed Issues</p>
-                <h3 className={classes.cardTitle}>75</h3>
+                <p className={classes.cardCategory}>Current Profile</p>
+                {/* Render device profile from database */}
+                <h3 className={classes.cardTitle}>Weather</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
+                {/* Make this into a button that will redirect them to the profiles page */}
                   <LocalOffer />
-                  Tracked from Github
+                  Change Profile
                 </div>
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
+          {/* <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="info" stats icon>
                 <CardIcon color="info">
@@ -130,10 +147,10 @@ class Dashboard extends React.Component {
                 </div>
               </CardFooter>
             </Card>
-          </GridItem>
+          </GridItem> */}
         </Grid>
         <Grid container>
-          <GridItem xs={12} sm={12} md={4}>
+          <GridItem xs={12} sm={12} md={6}>
             <Card chart>
               <CardHeader color="success">
                 <ChartistGraph
@@ -145,22 +162,24 @@ class Dashboard extends React.Component {
                 />
               </CardHeader>
               <CardBody>
-                <h4 className={classes.cardTitle}>Daily Sales</h4>
+                <h4 className={classes.cardTitle}>Network Activity</h4>
                 <p className={classes.cardCategory}>
                   <span className={classes.successText}>
+                  {/* Get this data from device */}
                     <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                  </span>{" "}
-                  increase in today sales.
+                  </span>{' '}
+                  increase in activity
                 </p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
+                {/* Get this data from device */}
                   <AccessTime /> updated 4 minutes ago
                 </div>
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
+          <GridItem xs={12} sm={12} md={6}>
             <Card chart>
               <CardHeader color="warning">
                 <ChartistGraph
@@ -173,19 +192,19 @@ class Dashboard extends React.Component {
                 />
               </CardHeader>
               <CardBody>
-                <h4 className={classes.cardTitle}>Email Subscriptions</h4>
+                <h4 className={classes.cardTitle}>Uptime</h4>
                 <p className={classes.cardCategory}>
-                  Last Campaign Performance
+                  Longest Uptime
                 </p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
-                  <AccessTime /> campaign sent 2 days ago
+                  <AccessTime /> 48 hours
                 </div>
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
+          {/* <GridItem xs={12} sm={12} md={4}>
             <Card chart>
               <CardHeader color="danger">
                 <ChartistGraph
@@ -208,9 +227,9 @@ class Dashboard extends React.Component {
                 </div>
               </CardFooter>
             </Card>
-          </GridItem>
+          </GridItem> */}
         </Grid>
-        <Grid container>
+        {/* <Grid container>
           <GridItem xs={12} sm={12} md={6}>
             <CustomTabs
               title="Tasks:"
@@ -251,8 +270,8 @@ class Dashboard extends React.Component {
                 }
               ]}
             />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
+          </GridItem> */}
+          {/* <GridItem xs={12} sm={12} md={6}>
             <Card>
               <CardHeader color="warning">
                 <h4 className={classes.cardTitleWhite}>Employees Stats</h4>
@@ -273,15 +292,15 @@ class Dashboard extends React.Component {
                 />
               </CardBody>
             </Card>
-          </GridItem>
-        </Grid>
+          </GridItem> */}
+        {/* </Grid> */}
       </div>
     );
   }
 }
 
 Dashboard.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(dashboardStyle)(Dashboard);
