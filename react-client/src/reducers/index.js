@@ -1,23 +1,10 @@
-let defaultState = {
-  examplePropOne: 'example',
-  examplePropTwo: 'test',
-};
+import { combineReducers } from 'redux';
 
-const reducers = (state = defaultState, action) => {
-  switch (action.type) {
-    case 'EXAMPLE':
-      return {
-        ...state,
-        examplePropOne: 'newPropOne',
-      };
-    case 'EXAMPLE-TWO':
-      return {
-        ...state,
-        examplePropTwo: action.payload,
-      };
-    default: return state;
-  }
-};
+import WeatherReducer from './weather';
 
-export default reducers;
+const rootReducer = combineReducers({
+  weather: WeatherReducer,
+});
+
+export default rootReducer;
 
