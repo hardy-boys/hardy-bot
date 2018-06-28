@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +13,8 @@ import CardBody from 'components/Card/CardBody.jsx';
 // import Button from 'components/CustomButtons/Button.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
+
+import { fetchWeather } from '../../actions/weather';
 
 const styles = {
   cardCategoryWhite: {
@@ -44,73 +46,93 @@ const styles = {
   },
 };
 
-function Widgets(props) {
-  console.log('WIDGET PROPS', props);
-  const { classes } = props;
-  return (
-    <Grid container>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Widgets</h4>
-          </CardHeader>
-          <CardBody>
-            <Grid container>
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="rose" icon>
-                    <CardIcon color="rose">
-                      <Language />
-                    </CardIcon>
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={classes.cardTitle}>Weather</h4>
-                  </CardBody>
-                </Card>
-              </GridItem>
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="rose" icon>
-                    <CardIcon color="rose">
-                      <Language />
-                    </CardIcon>
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={classes.cardTitle}>News</h4>
-                  </CardBody>
-                </Card>
-              </GridItem>
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="rose" icon>
-                    <CardIcon color="rose">
-                      <Language />
-                    </CardIcon>
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={classes.cardTitle}>Traffic</h4>
-                  </CardBody>
-                </Card>
-              </GridItem>
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="rose" icon>
-                    <CardIcon color="rose">
-                      <Language />
-                    </CardIcon>
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={classes.cardTitle}>Sports</h4>
-                  </CardBody>
-                </Card>
-              </GridItem>
-            </Grid>
-          </CardBody>
-        </Card>
-      </GridItem>
-    </Grid>
-  );
+class Widgets extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      zipcode: 78702,
+    };
+  }
+
+  componentWillMount() {
+    this.props.fetchWeather(this.state.zipcode);
+  }
+
+  render() {
+    const { classes, weather } = this.props;
+    const city = weather.weatherData.city.name;
+    const forecast = weather.weatherData.list[0].weather[0].description;
+    console.log(city, forecast);
+    return (
+      <Grid container>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Widgets</h4>
+            </CardHeader>
+            <CardBody>
+              <Grid container>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="rose" icon>
+                      <CardIcon color="rose">
+                        <Language />
+                      </CardIcon>
+                    </CardHeader>
+                    <CardBody>
+                      <h4 className={classes.cardTitle}>Weather</h4>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="rose" icon>
+                      <CardIcon color="rose">
+                        <Language />
+                      </CardIcon>
+                    </CardHeader>
+                    <CardBody>
+                      <h4 className={classes.cardTitle}>News</h4>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="rose" icon>
+                      <CardIcon color="rose">
+                        <Language />
+                      </CardIcon>
+                    </CardHeader>
+                    <CardBody>
+                      <h4 className={classes.cardTitle}>Traffic</h4>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="rose" icon>
+                      <CardIcon color="rose">
+                        <Language />
+                      </CardIcon>
+                    </CardHeader>
+                    <CardBody>
+                      <h4 className={classes.cardTitle}>Sports</h4>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              </Grid>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </Grid>
+    );
+  }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchWeather }, dispatch);
+};
 
 const mapStateToProps = (state) => {
   return { weather: state.weather };
@@ -119,5 +141,6 @@ const mapStateToProps = (state) => {
 export default compose(
   withStyles(styles),
   connect(mapStateToProps),
+  connect(null, mapDispatchToProps),
 )(Widgets);
 
