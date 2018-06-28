@@ -16,6 +16,7 @@ const morgan = require('morgan');
 const profile = require('./routes/profile');
 const weather = require('./routes/weather');
 const news = require('./routes/news');
+const stocks = require('./routes/stocks');
 //
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────
 //
@@ -31,7 +32,7 @@ app.use(morgan('dev'));
 //
 app.use(weather);
 app.use(news);
-
+app.use(stocks);
 app.use(profile);
 
 //

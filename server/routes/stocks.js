@@ -11,13 +11,13 @@ const jsonPatch = require('fast-json-patch');
 
 // targetUrl is the JSON API you wish to stream
 // you can use this example API which simulates updating stocks prices from a financial market
-const targetUrl = 'https://api.openweathermap.org/data/2.5/weather?appid=8396af2ae78c659b32c7950d88eb78a9&zip=78701&units=imperial';
+const targetUrl = 'http://stockmarket.streamdata.io/prices';
 
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
 const appToken = process.env.STREAMDATA;
 
-router.get('/api/weather', (req, res) => {
+router.get('/api/stocks', (req, res) => {
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result;
 
@@ -54,7 +54,7 @@ router.get('/api/weather', (req, res) => {
 
   eventSource.open();
 
-  res.status(200).end('weather endpoint reached');
+  res.status(200).end('stocks endpoint reached');
 });
 
 module.exports = router;
