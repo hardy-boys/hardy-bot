@@ -43,8 +43,10 @@
     "env-cmd": "^8.0.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "fast-json-patch": "^2.0.6",
     "history": "^4.7.2",
     "morgan": "^1.9.0",
+    "node-print": "0.0.4",
     "perfect-scrollbar": "^1.4.0",
     "pg": "^7.4.3",
     "prop-types": "^15.6.2",
@@ -59,6 +61,8 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "sequelize": "^4.38.0"
+    "sequelize": "^4.38.0",
+    "streamdataio-js-sdk": "^2.0.2",
+    "streamdataio-js-sdk-auth": "^2.0.0"
   }
 }
