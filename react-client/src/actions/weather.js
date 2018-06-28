@@ -9,7 +9,7 @@ const FETCH_WEATHER_ERROR = 'FETCH_WEATHER_ERROR';
 const fetchWeather = (zip) => {
   return (dispatch) => {
     dispatch({ type: FETCH_WEATHER });
-    axios.get(`http://api.openweathermap.org/data/2.5/forecast?appid=${config.OPEN_WEATHER_MAP_API_KEY}&zip=${zip}`)
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?appid=${config.OPEN_WEATHER_MAP_API_KEY}&zip=${zip}&units=imperial`)
       .then((weather) => {
         dispatch({ type: RECEIVE_WEATHER, payload: weather.data });
       })
