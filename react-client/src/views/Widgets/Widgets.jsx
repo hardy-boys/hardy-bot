@@ -55,15 +55,33 @@ class Widgets extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchWeather(this.state.zipcode);
   }
 
   render() {
-    const { classes, weather } = this.props;
-    const city = weather.weatherData.city.name;
-    const forecast = weather.weatherData.list[0].weather[0].description;
-    console.log(city, forecast);
+    const { classes } = this.props;
+    let weatherView;
+    if (this.props.weather.fetched) {
+      const city = this.props.weather.weatherData.name;
+      const { temp } = this.props.weather.weatherData.main;
+      const { humidity } = this.props.weather.weatherData.main;
+
+      weatherView = (
+        <div>
+          <p> City: {city} </p>
+          <p> Current Temp: {temp} </p>
+          <p> Humidity: {humidity} %</p>
+        </div>
+      );
+    } else {
+      weatherView = (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
     return (
       <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -82,6 +100,7 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <h4 className={classes.cardTitle}>Weather</h4>
+                      { weatherView }
                     </CardBody>
                   </Card>
                 </GridItem>
