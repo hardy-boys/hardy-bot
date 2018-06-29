@@ -1,8 +1,10 @@
 require('dotenv').config();
-const axios = require('axios');
 const express = require('express');
+const Particle = require('particle-api-js');
 
 const router = express.Router();
+
+let particle = new Particle();
 
 // add EventSource dependency
 const streamdataio = require('streamdataio-js-sdk/dist/bundles/streamdataio-node');
@@ -16,6 +18,16 @@ const targetUrl = 'http://stockmarket.streamdata.io/prices';
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
 const appToken = process.env.STREAMDATA;
+
+let pushToDevice = (updates, token) => {
+  particle.publishEvent({ name: 'test', data: JSON.stringify(updates), auth: token })
+    .then((res) => {
+      if (res.body.ok) { console.log('Event published succesfully'); }
+    })
+    .catch((err) => {
+      console.log(`Failed to publish event: ${err}`);
+    });
+};
 
 router.get('/api/stocks', (req, res) => {
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
@@ -33,6 +45,10 @@ router.get('/api/stocks', (req, res) => {
       // memorize the fresh data set
       result = data;
       console.log(result);
+      let devData = data.map((el) => {
+        return { title: el.title, price: el.price };
+      });
+      pushToDevice(devData, req.session.particleToken);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -43,6 +59,10 @@ router.get('/api/stocks', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
+      let devData = patch.map((el) => {
+        return { title: el.path, price: el.value };
+      });
+      pushToDevice(devData, req.session.particleToken);
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
