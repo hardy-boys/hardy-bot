@@ -1,3 +1,5 @@
+/* Data provided for free by IEX (https://iextrading.com/developer) .View IEX’s Terms of Use(https://iextrading.com/api-exhibit-a/) */
+
 require('dotenv').config();
 const express = require('express');
 const Particle = require('particle-api-js');
@@ -11,27 +13,32 @@ const streamdataio = require('streamdataio-js-sdk/dist/bundles/streamdataio-node
 // add json patch dependency
 const jsonPatch = require('fast-json-patch');
 
-// targetUrl is the JSON API you wish to stream
-// you can use this example API which simulates updating stocks prices from a financial market
-const targetUrl = 'http://stockmarket.streamdata.io/prices';
-
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
-const appToken = process.env.STREAMDATA;
+const appToken = process.env.STREAMDATA_STOCKS;
 
-let pushToDevice = (updates, token) => {
-  particle.publishEvent({ name: 'test', data: JSON.stringify(updates), auth: token })
+let pushToDevice = (payload, token) => {
+  let payloadJSON = JSON.stringify(payload);
+  particle.publishEvent({ name: 'test', data: payloadJSON, auth: token })
     .then((res) => {
-      if (res.body.ok) { console.log('Event published succesfully'); }
+      if (res.body.ok) { console.log(`Event published succesfully with payload: ${payloadJSON}`); }
     })
     .catch((err) => {
       console.log(`Failed to publish event: ${err}`);
     });
 };
 
+let mapData = (sym, res) => {
+  return { Symbol: sym.toUpperCase(), Price: res[0] };
+};
+
 router.get('/api/stocks', (req, res) => {
+  // hardcoded stock symbol for testing
+  let symbol = 'aapl';
+  let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/price`;
+
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
-  let result;
+  let result = [];
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -43,12 +50,9 @@ router.get('/api/stocks', (req, res) => {
     .onData((data) => {
       console.log('data received');
       // memorize the fresh data set
-      result = data;
+      result.push(data);
       console.log(result);
-      let devData = data.map((el) => {
-        return { title: el.title, price: el.price };
-      });
-      pushToDevice(devData, req.session.particleToken);
+      pushToDevice(mapData(symbol, result), req.session.particleToken);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -59,10 +63,8 @@ router.get('/api/stocks', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
-      let devData = patch.map((el) => {
-        return { title: el.path, price: el.value };
-      });
-      pushToDevice(devData, req.session.particleToken);
+      console.log(result);
+      pushToDevice(mapData(symbol, result), req.session.particleToken);
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
@@ -74,7 +76,7 @@ router.get('/api/stocks', (req, res) => {
 
   eventSource.open();
 
-  res.status(200).end('stocks endpoint reached');
+  res.status(200).end('Stock polling started');
 });
 
 module.exports = router;
