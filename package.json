@@ -47,6 +47,7 @@
     "history": "^4.7.2",
     "morgan": "^1.9.0",
     "node-print": "0.0.4",
+    "particle-api-js": "^7.2.0",
     "perfect-scrollbar": "^1.4.0",
     "pg": "^7.4.3",
     "prop-types": "^15.6.2",
