@@ -17,7 +17,7 @@ const appToken = process.env.STREAMDATA_WEATHER;
 
 let pushToDevice = (payload, token) => {
   let payloadJSON = JSON.stringify(payload);
-  particle.publishEvent({ name: 'weather', data: payloadJSON, auth: token })
+  particle.publishEvent({ name: 'openWeather', data: payloadJSON, auth: token })
     .then((res) => {
       if (res.body.ok) { console.log(`Event published succesfully with payload: ${payloadJSON}`); }
     })
