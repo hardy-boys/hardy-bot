@@ -14,6 +14,9 @@ import CardBody from 'components/Card/CardBody.jsx';
 // import Button from 'components/CustomButtons/Button.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
+import DirectionsCar from '@material-ui/icons/DirectionsCar';
+import WbSunny from '@material-ui/icons/WbSunny';
+import GolfCourse from '@material-ui/icons/GolfCourse';
 
 import { fetchWeather } from '../../actions/weather';
 
@@ -102,7 +105,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
-                        <Language />
+                        <WbSunny />
                       </CardIcon>
                     </CardHeader>
                     <CardBody>
@@ -127,7 +130,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
-                        <Language />
+                        <DirectionsCar />
                       </CardIcon>
                     </CardHeader>
                     <CardBody>
@@ -139,7 +142,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
-                        <Language />
+                        <GolfCourse />
                       </CardIcon>
                     </CardHeader>
                     <CardBody>
