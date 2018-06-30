@@ -15,6 +15,7 @@ const session = require('express-session');
 //
 // ─── ROUTE IMPORTS ─────────────────────────────────────────────────────
 //
+const views = require('./routes/views');
 const profile = require('./routes/profile');
 const weather = require('./routes/weather');
 const news = require('./routes/news');
@@ -40,9 +41,7 @@ app.use(session({
 // ─── ROUTE MIDDLEWARE ─────────────────────────────────────────────────────
 //
 
-app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, '../react-client/dist', 'index.html'))
-});
+app.use(views);
 app.use(weather);
 app.use(news);
 app.use(stocks);
