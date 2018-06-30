@@ -61,8 +61,11 @@
     "react-swipeable-views": "^0.12.14",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
+    "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.3.0",
     "sequelize": "^4.38.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
     "streamdataio-js-sdk": "^2.0.2",
     "streamdataio-js-sdk-auth": "^2.0.0"
   }

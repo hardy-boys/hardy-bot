@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
+import io from 'socket.io-client';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -56,11 +57,17 @@ class Widgets extends React.Component {
     this.state = {
       zipcode: 78702,
     };
+
+    // Client-side socket events
+    this.socket = io.connect(process.env.PORT || 'http://localhost:3000');
+    // this.socket.on('action', (result) => {
+    //   console.log('MESSAGE', result);
+    // });
   }
 
-  componentDidMount() {
-    this.props.fetchWeather(this.state.zipcode);
-  }
+  // componentDidMount() {
+  //   this.props.fetchWeather(this.state.zipcode);
+  // }
 
   render() {
     const { classes } = this.props;
@@ -115,7 +122,7 @@ class Widgets extends React.Component {
                       </CardIcon>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>News</h4>
+                      <h4 className={classes.cardTitle}>Stocks</h4>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -152,9 +159,9 @@ class Widgets extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchWeather }, dispatch);
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return bindActionCreators({ fetchWeather }, dispatch);
+// };
 
 const mapStateToProps = (state) => {
   return { weather: state.weather };
@@ -163,6 +170,6 @@ const mapStateToProps = (state) => {
 export default compose(
   withStyles(styles),
   connect(mapStateToProps),
-  connect(null, mapDispatchToProps),
+  // connect(null, mapDispatchToProps),
 )(Widgets);
 
