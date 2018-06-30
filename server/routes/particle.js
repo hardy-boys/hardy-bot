@@ -8,20 +8,25 @@ const router = express.Router();
 let particle = new Particle();
 
 router.get('/particle/login', (req, res) => {
-  particle.login({ username: process.env.PARTICLE_EMAIL, password: process.env.PARTICLE_PASS })
-    .then((data) => {
-      req.session.particleToken = data.body.access_token;
-      console.log('Successfully logged into Particle cloud', req.session.particleToken);
-      return particle.listDevices({ auth: req.session.particleToken });
-    })
-    .then((devices) => {
-      console.log('Devices: ', devices);
-      res.status(200).end('Login successful');
-    })
-    .catch((err) => {
-      console.log('Could not log in.', err);
-      res.status(401).end(err);
-    });
+  if (req.session.particleToken) {
+    console.log('Already logged into Particle');
+    res.status(200).end('Already logged into Particle');
+  } else {
+    particle.login({ username: process.env.PARTICLE_EMAIL, password: process.env.PARTICLE_PASS })
+      .then((data) => {
+        req.session.particleToken = data.body.access_token;
+        console.log('Successfully logged into Particle cloud', req.session.particleToken);
+        return particle.listDevices({ auth: req.session.particleToken });
+      })
+      .then((devices) => {
+        console.log('Devices: ', devices);
+        res.status(200).end('Login successful');
+      })
+      .catch((err) => {
+        console.log('Could not log in.', err);
+        res.status(401).end(err);
+      });
+  }
 });
 
 router.get('/particle/flash/:widget', (req, res) => {

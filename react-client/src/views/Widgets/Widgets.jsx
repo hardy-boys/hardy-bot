@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import io from 'socket.io-client';
+import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +12,7 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
-// import Button from 'components/CustomButtons/Button.jsx';
+import Button from 'components/CustomButtons/Button.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
@@ -63,11 +64,43 @@ class Widgets extends React.Component {
     // this.socket.on('action', (result) => {
     //   console.log('MESSAGE', result);
     // });
+
+    // Quick button click handlers for demonstration
+    this.handlePolling = this.handlePolling.bind(this);
+    this.handleDeploy = this.handleDeploy.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.props.fetchWeather(this.state.zipcode);
-  // }
+  componentDidMount() {
+    axios.get('/particle/login')
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handlePolling(e, widgetName) {
+    console.log('Polling clicked: ', widgetName);
+    axios.get(`/api/${widgetName}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleDeploy(e, widgetName) {
+    console.log('Deploy clicked: ', widgetName);
+    axios.get(`/particle/flash/${widgetName}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   render() {
     const { classes } = this.props;
@@ -111,6 +144,8 @@ class Widgets extends React.Component {
                     <CardBody>
                       <h4 className={classes.cardTitle}>Weather</h4>
                       { weatherView }
+                      <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -123,6 +158,9 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <h4 className={classes.cardTitle}>Stocks</h4>
+                      <p>Loading...</p>
+                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
                     </CardBody>
                   </Card>
                 </GridItem>
