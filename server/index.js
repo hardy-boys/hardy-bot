@@ -6,6 +6,7 @@ const db = require('../database/models/index');
 // ─── MODULE IMPORTS ─────────────────────────────────────────────────────
 //
 const express = require('express');
+const socket = require('socket.io');
 const bodyParser = require('body-parser');
 const path = require('path');
 const morgan = require('morgan');
@@ -38,6 +39,7 @@ app.use(session({
 //
 // ─── ROUTE MIDDLEWARE ─────────────────────────────────────────────────────
 //
+
 app.use(weather);
 app.use(news);
 app.use(stocks);
@@ -49,8 +51,14 @@ app.use(particle);
 //
 
 db.models.sequelize.sync().then(() => {
-  app.listen(process.env.PORT || 3000, () => {
+  const server = app.listen(process.env.PORT || 3000, () => {
     console.log('listening on port 3000!');
+  });
+  const io = socket(server);
+  app.set('socketio', io);
+
+  io.on('connection', (newSocket) => {
+    console.log('made socket connection', newSocket.id);
   });
 });
 

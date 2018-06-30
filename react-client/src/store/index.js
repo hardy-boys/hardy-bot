@@ -2,10 +2,16 @@ import React from 'react';
 import { applyMiddleware, createStore, compose } from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
+import createSocketIoMiddleware from 'redux-socket.io';
+import io from 'socket.io-client';
 
 import reducers from '../reducers';
 
-const middleware = applyMiddleware(logger, thunk);
+const socket = io.connect('http://localhost:3000');
+
+const socketIoMiddleware = createSocketIoMiddleware(socket, (type, action) => action.io);
+
+const middleware = applyMiddleware(logger, thunk, socketIoMiddleware);
 
 const store = createStore(
   reducers,
