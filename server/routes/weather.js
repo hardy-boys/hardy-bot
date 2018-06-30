@@ -1,3 +1,5 @@
+const actions = require('../../react-client/src/actions/types');
+
 require('dotenv').config();
 const express = require('express');
 
@@ -19,6 +21,8 @@ const appToken = process.env.STREAMDATA;
 router.get('/api/weather', (req, res) => {
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result;
+  const io = req.app.get('socketio');
+  io.emit('action', { type: actions.WEATHER_REQUEST_RECEIVED });
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -31,6 +35,7 @@ router.get('/api/weather', (req, res) => {
       console.log('data received');
       // memorize the fresh data set
       result = data;
+      io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
       console.log(result);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -41,6 +46,8 @@ router.get('/api/weather', (req, res) => {
       console.log('patch: ', patch);
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
+      console.log('RESULT', result);
+      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       // do whatever you wish with the update data
     })
 
@@ -49,6 +56,7 @@ router.get('/api/weather', (req, res) => {
     .onError((error) => {
       console.log('ERROR!', error);
       eventSource.close();
+      io.emit('action', { type: actions.WEATHER_REQUEST_ERROR, data: error });
     });
 
   eventSource.open();
