@@ -1,3 +1,5 @@
+const actions = require('../../react-client/src/actions/types');
+
 require('dotenv').config();
 const express = require('express');
 
@@ -10,15 +12,19 @@ const jsonPatch = require('fast-json-patch');
 
 // targetUrl is the JSON API you wish to stream
 // you can use this example API which simulates updating stocks prices from a financial market
-const targetUrl = 'https://api.openweathermap.org/data/2.5/weather?appid=8396af2ae78c659b32c7950d88eb78a9&zip=78701&units=imperial';
 
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
 const appToken = process.env.STREAMDATA;
 
 router.get('/api/weather', (req, res) => {
+  let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
+  let zip = '78701';
+  let targetUrl = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&zip=${zip}&units=imperial`;
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result;
+  const io = req.app.get('socketio');
+  io.emit('action', { type: actions.WEATHER_REQUEST_RECEIVED });
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -31,6 +37,7 @@ router.get('/api/weather', (req, res) => {
       console.log('data received');
       // memorize the fresh data set
       result = data;
+      io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
       console.log(result);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -41,6 +48,8 @@ router.get('/api/weather', (req, res) => {
       console.log('patch: ', patch);
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
+      console.log('RESULT', result);
+      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       // do whatever you wish with the update data
     })
 
@@ -49,6 +58,7 @@ router.get('/api/weather', (req, res) => {
     .onError((error) => {
       console.log('ERROR!', error);
       eventSource.close();
+      io.emit('action', { type: actions.WEATHER_REQUEST_ERROR, data: error });
     });
 
   eventSource.open();
