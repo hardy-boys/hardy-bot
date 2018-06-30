@@ -38,6 +38,10 @@ app.use(session({
 //
 // ─── ROUTE MIDDLEWARE ─────────────────────────────────────────────────────
 //
+
+app.get('*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, '../react-client/dist', 'index.html'))
+});
 app.use(weather);
 app.use(news);
 app.use(stocks);

@@ -10,7 +10,7 @@ const jsonPatch = require('fast-json-patch');
 
 // targetUrl is the JSON API you wish to stream
 // you can use this example API which simulates updating stocks prices from a financial market
-const targetUrl = 'https://api.openweathermap.org/data/2.5/weather?appid=8396af2ae78c659b32c7950d88eb78a9&zip=78701&units=imperial';
+const targetUrl = 'https://api2.climacell.co/v2/nowcast?appid=AWDPv3ZolVJyeAcyCXbE6RzyyUCu9QNc';
 
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
