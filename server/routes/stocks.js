@@ -1,4 +1,5 @@
 /* Data provided for free by IEX (https://iextrading.com/developer) .View IEX’s Terms of Use(https://iextrading.com/api-exhibit-a/) */
+const actions = require('../../react-client/src/actions/types');
 
 require('dotenv').config();
 const express = require('express');
@@ -39,6 +40,8 @@ router.get('/api/stocks', (req, res) => {
 
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result = [];
+  const io = req.app.get('socketio');
+  io.emit('action', { type: actions.STOCK_REQUEST_RECEIVED });
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -53,6 +56,7 @@ router.get('/api/stocks', (req, res) => {
       result.push(data);
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
+      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -65,6 +69,7 @@ router.get('/api/stocks', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
+      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: result });
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
@@ -72,6 +77,7 @@ router.get('/api/stocks', (req, res) => {
     .onError((error) => {
       console.log('ERROR!', error);
       eventSource.close();
+      io.emit('action', { type: actions.STOCK_REQUEST_ERROR, data: error });
     });
 
   eventSource.open();
