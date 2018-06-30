@@ -20,7 +20,7 @@ const appToken = process.env.STREAMDATA_STOCKS;
 
 let pushToDevice = (payload, token) => {
   let payloadJSON = JSON.stringify(payload);
-  particle.publishEvent({ name: 'test', data: payloadJSON, auth: token })
+  particle.publishEvent({ name: 'stocks', data: payloadJSON, auth: token })
     .then((res) => {
       if (res.body.ok) { console.log(`Event published succesfully with payload: ${payloadJSON}`); }
     })
@@ -29,8 +29,8 @@ let pushToDevice = (payload, token) => {
     });
 };
 
-let mapData = (sym, res) => {
-  return { Symbol: sym.toUpperCase(), Price: res[0] };
+let mapData = (sym, input) => {
+  return { Symbol: sym.toUpperCase(), Price: input[0] };
 };
 
 router.get('/api/stocks', (req, res) => {

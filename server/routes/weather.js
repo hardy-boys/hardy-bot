@@ -2,20 +2,42 @@ const actions = require('../../react-client/src/actions/types');
 
 require('dotenv').config();
 const express = require('express');
+const Particle = require('particle-api-js');
 
 const router = express.Router();
+
+let particle = new Particle();
 
 // add EventSource dependency
 const streamdataio = require('streamdataio-js-sdk/dist/bundles/streamdataio-node');
 // add json patch dependency
 const jsonPatch = require('fast-json-patch');
 
-// targetUrl is the JSON API you wish to stream
-// you can use this example API which simulates updating stocks prices from a financial market
-
 // appToken is the way Streamdata.io authenticates you as a valid user.
 // you MUST provide a valid token for your request to go through.
-const appToken = process.env.STREAMDATA;
+const appToken = process.env.STREAMDATA_WEATHER;
+
+let pushToDevice = (payload, token) => {
+  let payloadJSON = JSON.stringify(payload);
+  particle.publishEvent({ name: 'openWeather', data: payloadJSON, auth: token })
+    .then((res) => {
+      if (res.body.ok) { console.log(`Event published succesfully with payload: ${payloadJSON}`); }
+    })
+    .catch((err) => {
+      console.log(`Failed to publish event: ${err}`);
+    });
+};
+
+let mapData = (input) => {
+  return {
+    main: input.weather[0].main,
+    temp: input.main.temp,
+    humidity: input.main.humidity,
+    wind: input.wind.speed,
+
+  };
+};
+
 
 router.get('/api/weather', (req, res) => {
   let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
@@ -39,6 +61,7 @@ router.get('/api/weather', (req, res) => {
       result = data;
       io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
       console.log(result);
+      pushToDevice(mapData(result), req.session.particleToken);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -51,6 +74,8 @@ router.get('/api/weather', (req, res) => {
       console.log('RESULT', result);
       io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       // do whatever you wish with the update data
+      console.log(result);
+      pushToDevice(mapData(result), req.session.particleToken);
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
@@ -63,7 +88,7 @@ router.get('/api/weather', (req, res) => {
 
   eventSource.open();
 
-  res.status(200).end('weather endpoint reached');
+  res.status(200).end('Weather polling started');
 });
 
 module.exports = router;
