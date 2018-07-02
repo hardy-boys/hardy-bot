@@ -35,6 +35,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   particleToken: '',
+  cookie: {
+    secure: false,
+  },
 }));
 
 //
@@ -54,7 +57,7 @@ app.use(particle);
 
 db.models.sequelize.sync().then(() => {
   const server = app.listen(process.env.PORT || 3000, () => {
-    console.log('listening on port 3000!');
+    console.log(`listening on port ${(process.env.PORT || 3000)}!`);
   });
   const io = socket(server);
   app.set('socketio', io);

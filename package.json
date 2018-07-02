@@ -6,7 +6,12 @@
   "scripts": {
     "react-dev": "NODE_ENV=development webpack --mode development --watch",
     "react-prod": "webpack --mode production",
-    "server-dev": "nodemon server/index.js"
+    "server-dev": "nodemon server/index.js",
+    "heroku-postbuild": "webpack --config ./webpack.config.js --progress",
+    "start": "node server/index.js"
+  },
+  "engines": {
+    "node": "10.1.0"
   },
   "author": "Matt Lee, Raphael Croce, Trevor Sasaki",
   "license": "MIT",

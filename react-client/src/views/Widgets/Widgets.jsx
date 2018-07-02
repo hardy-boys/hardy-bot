@@ -58,13 +58,7 @@ class Widgets extends React.Component {
     this.state = {
       zipcode: 78702,
     };
-
-    // Client-side socket events
-    this.socket = io.connect(process.env.PORT || 'http://localhost:3000');
-    // this.socket.on('action', (result) => {
-    //   console.log('MESSAGE', result);
-    // });
-
+    
     // Quick button click handlers for demonstration
     this.handlePolling = this.handlePolling.bind(this);
     this.handleDeploy = this.handleDeploy.bind(this);
