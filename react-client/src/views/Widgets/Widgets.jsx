@@ -58,7 +58,7 @@ class Widgets extends React.Component {
     this.state = {
       zipcode: 78702,
     };
-    
+
     // Quick button click handlers for demonstration
     this.handlePolling = this.handlePolling.bind(this);
     this.handleDeploy = this.handleDeploy.bind(this);
@@ -119,6 +119,24 @@ class Widgets extends React.Component {
       );
     }
 
+    let stockView;
+    if (this.props.stocks.fetched) {
+      const { symbol, data } = this.props.stocks.stockData;
+
+      stockView = (
+        <div>
+          <p> Stock: {symbol} </p>
+          <p> Current Price: {data} </p>
+        </div>
+      );
+    } else {
+      stockView = (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
     return (
       <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -152,7 +170,7 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <h4 className={classes.cardTitle}>Stocks</h4>
-                      <p>Loading...</p>
+                      { stockView }
                       <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
                       <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
                     </CardBody>
@@ -196,7 +214,10 @@ class Widgets extends React.Component {
 // };
 
 const mapStateToProps = (state) => {
-  return { weather: state.weather };
+  return {
+    weather: state.weather,
+    stocks: state.stocks,
+  };
 };
 
 export default compose(
