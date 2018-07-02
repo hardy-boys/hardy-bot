@@ -56,7 +56,7 @@ router.get('/api/stocks', (req, res) => {
       result.push(data);
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data });
+      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { symbol, data } });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -69,15 +69,15 @@ router.get('/api/stocks', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: mapData(symbol, result) });
+      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { symbol, result } });
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      eventSource.close();
       io.emit('action', { type: actions.STOCK_REQUEST_ERROR, data: error });
+      eventSource.close();
     });
 
   eventSource.open();

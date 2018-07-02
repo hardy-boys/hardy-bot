@@ -3,15 +3,14 @@ import { STOCK_REQUEST_RECEIVED, STOCK_REQUEST_ERROR, STOCK_DATA_RECEIVED, STOCK
 const initialState = {
   fetching: false,
   fetched: false,
-  stockData: [],
+  stockData: {},
   error: null,
-  payload: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case STOCK_REQUEST_RECEIVED:
-      return { ...state, fetching: true, payload: action.data };
+      return { ...state, fetching: true };
     case STOCK_REQUEST_ERROR:
       return { ...state, fetching: false, error: action.data };
     case STOCK_DATA_RECEIVED:
@@ -19,12 +18,12 @@ export default (state = initialState, action) => {
         ...state,
         fetched: true,
         fetching: false,
-        weatherData: action.data,
+        stockData: action.data,
       };
     case STOCK_DATA_UPDATE:
       return {
         ...state,
-        weatherData: action.data,
+        stockData: action.data,
       };
     default:
       return state;
