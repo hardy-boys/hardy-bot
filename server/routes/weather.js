@@ -72,9 +72,9 @@ router.get('/api/weather', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       console.log('RESULT', result);
-      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       // do whatever you wish with the update data
       console.log(result);
+      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       pushToDevice(mapData(result), req.session.particleToken);
     })
 
