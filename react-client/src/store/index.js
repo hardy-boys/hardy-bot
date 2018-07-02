@@ -7,7 +7,7 @@ import io from 'socket.io-client';
 
 import reducers from '../reducers';
 
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect();
 
 const socketIoMiddleware = createSocketIoMiddleware(socket, (type, action) => action.io);
 
