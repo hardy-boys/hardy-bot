@@ -31,7 +31,7 @@ let pushToDevice = (payload, token) => {
 let mapData = (input) => {
   return {
     main: input.weather[0].main,
-    temp: input.main.temp,
+    temp: Math.round(input.main.temp),
     humidity: input.main.humidity,
     wind: input.wind.speed,
 
