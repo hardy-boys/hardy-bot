@@ -69,7 +69,8 @@ router.get('/api/stocks', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { result } });
+      const data = result[0];
+      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
