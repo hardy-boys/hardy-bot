@@ -12,7 +12,6 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
-import Button from 'components/CustomButtons/Button.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
@@ -121,14 +120,14 @@ class Widgets extends React.Component {
   stopStocksPolling() {
     axios.get('/api/stocks/close')
       .then((res) => {
-        console.log('RESPONSE', res);
+        console.log(res.data);
       });
   }
 
   stopWeatherPolling() {
     axios.get('/api/weather/close')
       .then((res) => {
-        console.log('RESPONSE', res);
+        console.log(res.data);
       });
   }
 
@@ -164,8 +163,6 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <WeatherWidget />
-                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -179,8 +176,6 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <StocksWidget />
-                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -193,8 +188,6 @@ class Widgets extends React.Component {
                       <h4 className={classes.cardTitleBlack}>Traffic</h4>
                     </CardHeader>
                     <CardBody>
-                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -207,8 +200,6 @@ class Widgets extends React.Component {
                       <h4 className={classes.cardTitleBlack}>Sports</h4>
                     </CardHeader>
                     <CardBody>
-                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -232,9 +223,5 @@ class Widgets extends React.Component {
 //   };
 // };
 
-export default compose(
-  withStyles(styles),
-  // connect(mapStateToProps),
-  // connect(null, mapDispatchToProps),
-)(Widgets);
+export default withStyles(styles)(Widgets);
 
