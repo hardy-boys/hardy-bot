@@ -36,7 +36,7 @@ let mapData = (sym, input) => {
 router.get('/api/stocks', (req, res) => {
   // hardcoded stock symbol for testing
   let symbol = 'aapl';
-  let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/price`;
+  let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
 
   let eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result = [];
@@ -56,7 +56,7 @@ router.get('/api/stocks', (req, res) => {
       result.push(data);
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { symbol, data } });
+      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -69,7 +69,7 @@ router.get('/api/stocks', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       pushToDevice(mapData(symbol, result), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { symbol, result } });
+      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { result } });
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
