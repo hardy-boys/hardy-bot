@@ -21,6 +21,7 @@ const weather = require('./routes/weather');
 const news = require('./routes/news');
 const stocks = require('./routes/stocks');
 const particle = require('./routes/particle');
+const users = require('./routes/users');
 
 //
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ app.use(news);
 app.use(stocks);
 app.use(profile);
 app.use(particle);
+app.use(users);
 
 //
 // ─── SERVER START ───────────────────────────────────────────────────────────────
