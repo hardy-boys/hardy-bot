@@ -55,7 +55,6 @@ const styles = {
     minHeight: 'auto',
     fontWeight: '300',
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    // marginBottom: '3px',
     textDecoration: 'none',
     '& small': {
       color: '#777',
@@ -75,23 +74,32 @@ class Widgets extends React.Component {
     };
 
     // Quick button click handlers for demonstration
-    this.handlePolling = this.handlePolling.bind(this);
-    this.handleDeploy = this.handleDeploy.bind(this);
+    this.startStocksPolling = this.startStocksPolling.bind(this);
+    this.stopStocksPolling = this.stopStocksPolling.bind(this);
+    this.startWeatherPolling = this.startWeatherPolling.bind(this);
+    this.stopWeatherPolling = this.stopWeatherPolling.bind(this);
+    // this.handleDeploy = this.handleDeploy.bind(this);
   }
 
   componentDidMount() {
     axios.get('/particle/login')
       .then((res) => {
         console.log(res.data);
+        this.startWeatherPolling();
+        this.startStocksPolling();
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  handlePolling(e, widgetName) {
-    console.log('Polling clicked: ', widgetName);
-    axios.get(`/api/${widgetName}`)
+  componentWillUnmount() {
+    this.stopStocksPolling();
+    this.stopWeatherPolling();
+  }
+
+  startStocksPolling() {
+    axios.get('/api/stocks')
       .then((res) => {
         console.log(res.data);
       })
@@ -100,9 +108,8 @@ class Widgets extends React.Component {
       });
   }
 
-  handleDeploy(e, widgetName) {
-    console.log('Deploy clicked: ', widgetName);
-    axios.get(`/particle/flash/${widgetName}`)
+  startWeatherPolling() {
+    axios.get('/api/weather')
       .then((res) => {
         console.log(res.data);
       })
@@ -110,6 +117,31 @@ class Widgets extends React.Component {
         console.log(err);
       });
   }
+
+  stopStocksPolling() {
+    axios.get('/api/stocks/close')
+      .then((res) => {
+        console.log('RESPONSE', res);
+      });
+  }
+
+  stopWeatherPolling() {
+    axios.get('/api/weather/close')
+      .then((res) => {
+        console.log('RESPONSE', res);
+      });
+  }
+
+  // handleDeploy(e, widgetName) {
+  //   console.log('Deploy clicked: ', widgetName);
+  //   axios.get(`/particle/flash/${widgetName}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   render() {
     const { classes } = this.props;
@@ -132,8 +164,8 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <WeatherWidget />
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button>
+                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -147,8 +179,8 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <StocksWidget />
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
+                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -161,8 +193,8 @@ class Widgets extends React.Component {
                       <h4 className={classes.cardTitleBlack}>Traffic</h4>
                     </CardHeader>
                     <CardBody>
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
+                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -175,8 +207,8 @@ class Widgets extends React.Component {
                       <h4 className={classes.cardTitleBlack}>Sports</h4>
                     </CardHeader>
                     <CardBody>
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
+                      {/* <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button> */}
                     </CardBody>
                   </Card>
                 </GridItem>
