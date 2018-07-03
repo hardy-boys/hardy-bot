@@ -33,12 +33,14 @@ let mapData = (sym, input) => {
   return { Symbol: sym.toUpperCase(), Price: input[0] };
 };
 
+let eventSource;
+
 router.get('/api/stocks', (req, res) => {
   // hardcoded stock symbol for testing
   let symbol = 'aapl';
   let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
 
-  let eventSource = streamdataio.createEventSource(targetUrl, appToken);
+  eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result = [];
   const io = req.app.get('socketio');
   io.emit('action', { type: actions.STOCK_REQUEST_RECEIVED });
@@ -84,6 +86,11 @@ router.get('/api/stocks', (req, res) => {
   eventSource.open();
 
   res.status(200).end('Stock polling started');
+});
+
+router.get('/api/stocks/close', (req, res) => {
+  eventSource.close();
+  res.status(200).end('Stock polling stopped');
 });
 
 module.exports = router;

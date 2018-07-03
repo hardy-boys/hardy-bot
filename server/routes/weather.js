@@ -38,12 +38,16 @@ let mapData = (input) => {
   };
 };
 
+let eventSource;
+
 
 router.get('/api/weather', (req, res) => {
   let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
   let zip = '78701';
   let targetUrl = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&zip=${zip}&units=imperial`;
-  let eventSource = streamdataio.createEventSource(targetUrl, appToken);
+
+  eventSource = streamdataio.createEventSource(targetUrl, appToken);
+
   let result;
   const io = req.app.get('socketio');
   io.emit('action', { type: actions.WEATHER_REQUEST_RECEIVED });
@@ -89,6 +93,11 @@ router.get('/api/weather', (req, res) => {
   eventSource.open();
 
   res.status(200).end('Weather polling started');
+});
+
+router.get('/api/weather/close', (req, res) => {
+  eventSource.close();
+  res.status(200).end('Weather polling stopped');
 });
 
 module.exports = router;
