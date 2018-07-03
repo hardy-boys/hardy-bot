@@ -1,5 +1,8 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 // react plugin for creating charts
 import ChartistGraph from 'react-chartist';
 // @material-ui/core
@@ -42,16 +45,35 @@ import {
 import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardStyle.jsx';
 
 class Dashboard extends React.Component {
-  state = {
-    value: 0,
-  };
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+  // constructor(props) {
+  //   super(props);
 
-  handleChangeIndex = (index) => {
-    this.setState({ value: index });
-  };
+  //   this.state = {
+  //     userId: 2,
+  //   };
+  // }
+
+  // componentDidMount() {
+  //   // this.getUserDevices(this.state.userId);
+  //   axios.get('/particle/login')
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
+
+  // getUserDevices(userId) {
+  //   axios.get(`/users/${userId}`)
+  //     .then((devices) => {
+  //       console.log('DEVICES', devices);
+  //     })
+  //     .catch((err) => {
+  //       console.log('ERROR', err);
+  //     });
+  // }
+
   render() {
     const { classes } = this.props;
     return (
@@ -193,8 +215,15 @@ class Dashboard extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return { userDevices: state.userDevices };
+};
+
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(dashboardStyle)(Dashboard);
+export default compose(
+  withStyles(dashboardStyle),
+  connect(mapStateToProps),
+)(Dashboard);
