@@ -18,9 +18,8 @@ import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
-
-import { fetchWeather } from '../../actions/weather';
 import WeatherWidget from './WeatherWidget.jsx';
+import StocksWidget from './StocksWidget.jsx';
 
 const styles = {
   cardCategoryWhite: {
@@ -42,6 +41,21 @@ const styles = {
     fontWeight: '300',
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: '3px',
+    textDecoration: 'none',
+    '& small': {
+      color: '#777',
+      fontSize: '65%',
+      fontWeight: '400',
+      lineHeight: '1',
+    },
+  },
+  cardTitleBlack: {
+    color: '#000',
+    marginTop: '13px',
+    minHeight: 'auto',
+    fontWeight: '300',
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    // marginBottom: '3px',
     textDecoration: 'none',
     '& small': {
       color: '#777',
@@ -99,25 +113,6 @@ class Widgets extends React.Component {
 
   render() {
     const { classes } = this.props;
-
-    let stockView;
-    if (this.props.stocks.fetched) {
-      const { symbol, data } = this.props.stocks.stockData;
-
-      stockView = (
-        <div>
-          <p> Stock: {symbol} </p>
-          <p> Current Price: {data} </p>
-        </div>
-      );
-    } else {
-      stockView = (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
       <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -133,12 +128,12 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <WbSunny />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Weather</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Weather</h4>
+                      <WeatherWidget />
                       <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
                       <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button>
-                      <WeatherWidget />
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -148,10 +143,10 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <Language />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Stocks</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Stocks</h4>
-                      { stockView }
+                      <StocksWidget />
                       <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
                       <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
                     </CardBody>
@@ -163,9 +158,11 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <DirectionsCar />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Traffic</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Traffic</h4>
+                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -175,9 +172,11 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <GolfCourse />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Sports</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Sports</h4>
+                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
+                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -194,16 +193,16 @@ class Widgets extends React.Component {
 //   return bindActionCreators({ fetchWeather }, dispatch);
 // };
 
-const mapStateToProps = (state) => {
-  return {
-    weather: state.weather,
-    stocks: state.stocks,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     weather: state.weather,
+//     stocks: state.stocks,
+//   };
+// };
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps),
+  // connect(mapStateToProps),
   // connect(null, mapDispatchToProps),
 )(Widgets);
 
