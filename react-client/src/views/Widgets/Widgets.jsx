@@ -20,6 +20,7 @@ import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
 
 import { fetchWeather } from '../../actions/weather';
+import WeatherWidget from './WeatherWidget.jsx';
 
 const styles = {
   cardCategoryWhite: {
@@ -98,26 +99,6 @@ class Widgets extends React.Component {
 
   render() {
     const { classes } = this.props;
-    let weatherView;
-    if (this.props.weather.fetched) {
-      const city = this.props.weather.weatherData.name;
-      const { temp } = this.props.weather.weatherData.main;
-      const { humidity } = this.props.weather.weatherData.main;
-
-      weatherView = (
-        <div>
-          <p> City: {city} </p>
-          <p> Current Temp: {temp} </p>
-          <p> Humidity: {humidity} %</p>
-        </div>
-      );
-    } else {
-      weatherView = (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
 
     let stockView;
     if (this.props.stocks.fetched) {
@@ -155,9 +136,9 @@ class Widgets extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <h4 className={classes.cardTitle}>Weather</h4>
-                      { weatherView }
                       <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
                       <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button>
+                      <WeatherWidget />
                     </CardBody>
                   </Card>
                 </GridItem>
