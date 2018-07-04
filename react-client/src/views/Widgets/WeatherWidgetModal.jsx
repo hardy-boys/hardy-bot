@@ -67,7 +67,7 @@ class WeatherWidgetModal extends React.Component {
               onChange={this.onInputChange.bind(this)}
               value={this.state.zip}
               ></input>
-              <Button onClick={this.onSubmit.bind(this)} onClose={this.props.close} type="submit">Submit</Button>
+              <Button onClick={() => { this.onSubmit(); this.props.close(); }} type="submit">Submit</Button>
             </Typography>
           </div>
         </Modal>
