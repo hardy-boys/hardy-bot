@@ -12,15 +12,13 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
-import Button from 'components/CustomButtons/Button.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
-
-import { fetchWeather } from '../../actions/weather';
 import WeatherWidget from './WeatherWidget.jsx';
+import StocksWidget from './StocksWidget.jsx';
 
 const styles = {
   cardCategoryWhite: {
@@ -50,6 +48,20 @@ const styles = {
       lineHeight: '1',
     },
   },
+  cardTitleBlack: {
+    color: '#000',
+    marginTop: '13px',
+    minHeight: 'auto',
+    fontWeight: '300',
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    textDecoration: 'none',
+    '& small': {
+      color: '#777',
+      fontSize: '65%',
+      fontWeight: '400',
+      lineHeight: '1',
+    },
+  },
 };
 
 class Widgets extends React.Component {
@@ -61,23 +73,32 @@ class Widgets extends React.Component {
     };
 
     // Quick button click handlers for demonstration
-    this.handlePolling = this.handlePolling.bind(this);
-    this.handleDeploy = this.handleDeploy.bind(this);
+    this.startStocksPolling = this.startStocksPolling.bind(this);
+    this.stopStocksPolling = this.stopStocksPolling.bind(this);
+    this.startWeatherPolling = this.startWeatherPolling.bind(this);
+    this.stopWeatherPolling = this.stopWeatherPolling.bind(this);
+    // this.handleDeploy = this.handleDeploy.bind(this);
   }
 
   componentDidMount() {
     axios.get('/particle/login')
       .then((res) => {
         console.log(res.data);
+        this.startWeatherPolling();
+        this.startStocksPolling();
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  handlePolling(e, widgetName) {
-    console.log('Polling clicked: ', widgetName);
-    axios.get(`/api/${widgetName}`)
+  componentWillUnmount() {
+    this.stopStocksPolling();
+    this.stopWeatherPolling();
+  }
+
+  startStocksPolling() {
+    axios.get('/api/stocks')
       .then((res) => {
         console.log(res.data);
       })
@@ -86,9 +107,8 @@ class Widgets extends React.Component {
       });
   }
 
-  handleDeploy(e, widgetName) {
-    console.log('Deploy clicked: ', widgetName);
-    axios.get(`/particle/flash/${widgetName}`)
+  startWeatherPolling() {
+    axios.get('/api/weather')
       .then((res) => {
         console.log(res.data);
       })
@@ -96,28 +116,34 @@ class Widgets extends React.Component {
         console.log(err);
       });
   }
+
+  stopStocksPolling() {
+    axios.get('/api/stocks/close')
+      .then((res) => {
+        console.log(res.data);
+      });
+  }
+
+  stopWeatherPolling() {
+    axios.get('/api/weather/close')
+      .then((res) => {
+        console.log(res.data);
+      });
+  }
+
+  // handleDeploy(e, widgetName) {
+  //   console.log('Deploy clicked: ', widgetName);
+  //   axios.get(`/particle/flash/${widgetName}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   render() {
     const { classes } = this.props;
-
-    let stockView;
-    if (this.props.stocks.fetched) {
-      const { symbol, data } = this.props.stocks.stockData;
-
-      stockView = (
-        <div>
-          <p> Stock: {symbol} </p>
-          <p> Current Price: {data} </p>
-        </div>
-      );
-    } else {
-      stockView = (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
       <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -133,11 +159,9 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <WbSunny />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Weather</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Weather</h4>
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'weather')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'weather')}>Deploy to Device</Button>
                       <WeatherWidget />
                     </CardBody>
                   </Card>
@@ -148,12 +172,10 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <Language />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Stocks</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Stocks</h4>
-                      { stockView }
-                      <Button color="primary" onClick={e => this.handlePolling(e, 'stocks')}>Start Polling</Button>
-                      <Button color="primary" onClick={e => this.handleDeploy(e, 'stocks')}>Deploy to Device</Button>
+                      <StocksWidget />
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -163,9 +185,9 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <DirectionsCar />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Traffic</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Traffic</h4>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -175,9 +197,9 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <GolfCourse />
                       </CardIcon>
+                      <h4 className={classes.cardTitleBlack}>Sports</h4>
                     </CardHeader>
                     <CardBody>
-                      <h4 className={classes.cardTitle}>Sports</h4>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -194,16 +216,12 @@ class Widgets extends React.Component {
 //   return bindActionCreators({ fetchWeather }, dispatch);
 // };
 
-const mapStateToProps = (state) => {
-  return {
-    weather: state.weather,
-    stocks: state.stocks,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     weather: state.weather,
+//     stocks: state.stocks,
+//   };
+// };
 
-export default compose(
-  withStyles(styles),
-  connect(mapStateToProps),
-  // connect(null, mapDispatchToProps),
-)(Widgets);
+export default withStyles(styles)(Widgets);
 

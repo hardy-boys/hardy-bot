@@ -23,6 +23,19 @@ const saveProfile = (profileName, widgetNames) => {
     });
 };
 
+const getUserDevices = (userId) => {
+  return db.models.User.findOne({
+    where: {
+      id: userId,
+    },
+  })
+    .then((user) => {
+      // console.log('USER RETRIEVED', user);
+      return user;
+    });
+};
+
 module.exports = {
   saveProfile,
+  getUserDevices,
 };
