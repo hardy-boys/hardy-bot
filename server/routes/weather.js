@@ -101,6 +101,7 @@ router.get('/api/weather/close', (req, res) => {
 });
 
 router.post('/api/weather', (req, res) => {
+  eventSource.close();
   console.log('REQ', req.body);
   let { zip } = req.body;
 
