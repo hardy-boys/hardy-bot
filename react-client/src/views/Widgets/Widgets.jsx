@@ -68,16 +68,11 @@ class Widgets extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      zipcode: 78702,
-    };
-
     // Quick button click handlers for demonstration
     this.startStocksPolling = this.startStocksPolling.bind(this);
     this.stopStocksPolling = this.stopStocksPolling.bind(this);
     this.startWeatherPolling = this.startWeatherPolling.bind(this);
     this.stopWeatherPolling = this.stopWeatherPolling.bind(this);
-    // this.handleDeploy = this.handleDeploy.bind(this);
   }
 
   componentDidMount() {
@@ -130,17 +125,6 @@ class Widgets extends React.Component {
         console.log(res.data);
       });
   }
-
-  // handleDeploy(e, widgetName) {
-  //   console.log('Deploy clicked: ', widgetName);
-  //   axios.get(`/particle/flash/${widgetName}`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
 
   render() {
     const { classes } = this.props;
@@ -216,12 +200,12 @@ class Widgets extends React.Component {
 //   return bindActionCreators({ fetchWeather }, dispatch);
 // };
 
-// const mapStateToProps = (state) => {
-//   return {
-//     weather: state.weather,
-//     stocks: state.stocks,
-//   };
-// };
+// Need access to user info in order to get zipcode for initial weather load
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
 
 export default withStyles(styles)(Widgets);
 
