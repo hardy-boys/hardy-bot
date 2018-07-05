@@ -58,5 +58,24 @@ router.get('/particle/flash/:widget', (req, res) => {
     });
 });
 
+router.get('/particle/view/:widgetID', (req, res) => {
+  let { widgetID } = req.params;
+  console.log(widgetID);
+  particle.callFunction({
+    deviceId: 'savvy-fox',
+    name: 'changeView',
+    argument: widgetID,
+    auth: req.session.particleToken,
+  })
+    .then((data) => {
+      console.log('Function called succesfully, returned ', data);
+      res.status(200).end('Function called succesfully, returned ', data);
+    })
+    .catch((err) => {
+      console.log('An error occurred calling widget change view: ', err);
+      res.status(500).end('An error occurred calling widget change view: ', err);
+    });
+});
+
 
 module.exports = router;

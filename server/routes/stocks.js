@@ -41,7 +41,7 @@ router.get('/api/stocks', (req, res) => {
   let targetUrl = 'https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb,googl,amzn&types=quote';
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
-  let result = [];
+  let result;
   const io = req.app.get('socketio');
   io.emit('action', { type: actions.STOCK_REQUEST_RECEIVED });
 
@@ -55,9 +55,9 @@ router.get('/api/stocks', (req, res) => {
     .onData((data) => {
       console.log('data received');
       // memorize the fresh data set
-      result.push(data);
+      result = data;
       console.log(result);
-      pushToDevice(mapData(symbol, result), req.session.particleToken);
+      // pushToDevice(mapData(symbol, result), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -70,8 +70,8 @@ router.get('/api/stocks', (req, res) => {
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
       console.log(result);
-      pushToDevice(mapData(symbol, result), req.session.particleToken);
-      const data = result[0];
+      // pushToDevice(mapData(symbol, result), req.session.particleToken);
+      const data = result;
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
 
