@@ -93,7 +93,8 @@ class Widgets extends React.Component {
   }
 
   startStocksPolling() {
-    axios.get('/api/stocks')
+    let { stockSymbols } = this.props.stocks;
+    axios.post('/api/stocks', { symbols: stockSymbols })
       .then((res) => {
         console.log(res.data);
       })
@@ -203,9 +204,12 @@ class Widgets extends React.Component {
 // Need access to user info in order to get zipcode for initial weather load
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    stocks: state.stocks,
   };
 };
 
-export default withStyles(styles)(Widgets);
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+)(Widgets);
 
