@@ -38,7 +38,7 @@ let eventSource;
 router.get('/api/stocks', (req, res) => {
   // hardcoded stock symbol for testing
   let symbol = 'aapl';
-  let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
+  let targetUrl = 'https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb,googl,amzn&types=quote';
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result = [];
