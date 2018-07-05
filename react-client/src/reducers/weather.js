@@ -39,7 +39,6 @@ export default (state = initialState, action) => {
         ...state,
         fetched: false,
         fetching: true,
-        zipcode: action.data,
       };
     default:
       return state;

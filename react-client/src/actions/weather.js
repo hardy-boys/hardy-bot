@@ -1,12 +1,3 @@
-// const fetchWeather = (zipcode) => {
-//   return {
-//     type: 'BOOK_SELECTED',
-//     payload: zipcode,
-//   };
-// };
-
-// module.exports.selectBook = fetchWeather;
-
 import axios from 'axios';
 
 import { WEATHER_ZIPCODE_CHANGED, WEATHER_DATA_RECEIVED, WEATHER_REQUEST_ERROR } from './types';
