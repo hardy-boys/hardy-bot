@@ -35,15 +35,15 @@ let mapData = (sym, input) => {
 
 let eventSource;
 
-router.get('/api/stocks', (req, res) => {
+router.post('/api/stocks', (req, res) => {
   // hardcoded stock symbol for testing
-  let symbol = 'aapl';
-  let targetUrl = 'https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb,googl,amzn&types=quote';
+  let stockSymbols = req.body.symbols.join(',');
+  let targetUrl = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${stockSymbols}&types=quote`;
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result;
   const io = req.app.get('socketio');
-  io.emit('action', { type: actions.STOCK_REQUEST_RECEIVED });
+  // io.emit('action', { type: actions.STOCK_REQUEST_RECEIVED });
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -59,6 +59,7 @@ router.get('/api/stocks', (req, res) => {
       console.log(result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
+      // res.send(data);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -69,7 +70,7 @@ router.get('/api/stocks', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
-      console.log(result);
+      console.log('RESULT', result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       const data = result;
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
@@ -93,59 +94,60 @@ router.get('/api/stocks/close', (req, res) => {
   res.status(200).end('Stock polling stopped');
 });
 
-router.post('/api/stocks', (req, res) => {
-  eventSource.close();
-  let { symbol } = req.body;
+// router.post('/api/stocks', (req, res) => {
+//   eventSource.close();
+//   let { symbol } = req.body;
 
-  let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/batch?types=quote`;
+//   let targetUrl = `https://api.iextrading.com/1.0/stock/${symbol}/batch?types=quote`;
 
-  eventSource = streamdataio.createEventSource(targetUrl, appToken);
+//   eventSource = streamdataio.createEventSource(targetUrl, appToken);
 
-  let result;
-  const io = req.app.get('socketio');
+//   let result;
+//   const io = req.app.get('socketio');
 
-  eventSource
-    // the standard 'open' callback will be called when connection is established with the server
-    .onOpen(() => {
-      console.log('connected!');
-    })
-    // the streamdata.io specific 'data' event will be called when a fresh Json data set
-    // is pushed by Streamdata.io coming from the API
-    .onData((data) => {
-      console.log('data received');
-      // memorize the fresh data set
-      result = data;
-      // io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
-      console.log(result);
-      // pushToDevice(mapData(result), req.session.particleToken);
-      res.send(result);
-    })
-    // the streamdata.io specific 'patch' event will be called when a fresh Json patch
-    // is pushed by streamdata.io from the API. This patch has to be applied to the
-    // latest data set provided.
-    .onPatch((patch) => {
-      // display the patch
-      console.log('patch: ', patch);
-      // apply the patch to data using json patch API
-      jsonPatch.applyPatch(result, patch);
-      console.log('RESULT', result);
-      // do whatever you wish with the update data
-      // console.log(result);
-      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: result });
-      // pushToDevice(mapData(result), req.session.particleToken);
-    })
+//   eventSource
+//     // the standard 'open' callback will be called when connection is established with the server
+//     .onOpen(() => {
+//       console.log('connected!');
+//     })
+//     // the streamdata.io specific 'data' event will be called when a fresh Json data set
+//     // is pushed by Streamdata.io coming from the API
+//     .onData((data) => {
+//       console.log('data received');
+//       // memorize the fresh data set
+//       result = data;
+//       // io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
+//       console.log(result);
+//       // pushToDevice(mapData(result), req.session.particleToken);
+//       res.send(result);
+//     })
+//     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
+//     // is pushed by streamdata.io from the API. This patch has to be applied to the
+//     // latest data set provided.
+//     .onPatch((patch) => {
+//       // display the patch
+//       console.log('patch: ', patch);
+//       // apply the patch to data using json patch API
+//       jsonPatch.applyPatch(result, patch);
+//       console.log('RESULT', result);
+//       // do whatever you wish with the update data
+//       // console.log(result);
+//       const data = result;
+//       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
+//       // pushToDevice(mapData(result), req.session.particleToken);
+//     })
 
-    // the standard 'error' callback will be called when an error occur with the evenSource
-    // for example with an invalid token provided
-    .onError((error) => {
-      console.log('ERROR!', error);
-      eventSource.close();
-      io.emit('action', { type: actions.STOCK_REQUEST_ERROR, data: error });
-    });
+//     // the standard 'error' callback will be called when an error occur with the evenSource
+//     // for example with an invalid token provided
+//     .onError((error) => {
+//       console.log('ERROR!', error);
+//       eventSource.close();
+//       io.emit('action', { type: actions.STOCK_REQUEST_ERROR, data: error });
+//     });
 
-  eventSource.open();
+//   eventSource.open();
 
-  // res.status(200).end('Weather polling started');
-});
+//   // res.status(200).end('Weather polling started');
+// });
 
 module.exports = router;
