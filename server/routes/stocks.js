@@ -29,8 +29,13 @@ let pushToDevice = (payload, token) => {
     });
 };
 
-let mapData = (sym, input) => {
-  return { Symbol: sym.toUpperCase(), Price: input[0] };
+let mapData = (symbols) => {
+  return Object.keys(symbols).map((symbol) => {
+    return {
+      Symbol: symbol,
+      Price: String(symbols[symbol].quote.latestPrice),
+    };
+  });
 };
 
 let eventSource;
@@ -57,7 +62,7 @@ router.post('/api/stocks', (req, res) => {
       // memorize the fresh data set
       result = data;
       console.log(result);
-      // pushToDevice(mapData(symbol, result), req.session.particleToken);
+      pushToDevice(mapData(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
       // res.send(data);
     })
@@ -73,6 +78,7 @@ router.post('/api/stocks', (req, res) => {
       console.log('RESULT', result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       const data = result;
+      pushToDevice(mapData(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
 
