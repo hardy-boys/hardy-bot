@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-import fetchStocks from '../../actions/stocks';
+import { fetchStocks, addNewStock } from '../../actions/stocks';
 
 
 function getModalStyle() {
@@ -43,7 +44,16 @@ class StocksWidgetModal extends React.Component {
   }
 
   onSubmit() {
-    this.props.fetchStocks(this.state.symbol);
+    this.props.addNewStock(this.state.symbol);
+    this.stopStocksPolling();
+    this.props.fetchStocks([...this.props.stocks.stockSymbols, this.state.symbol]);
+  }
+
+  stopStocksPolling() {
+    axios.get('/api/stocks/close')
+      .then((res) => {
+        console.log(res.data);
+      });
   }
 
   render() {
@@ -79,11 +89,15 @@ StocksWidgetModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = (state) => {
+  return { stocks: state.stocks };
+};
+
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchStocks }, dispatch);
+  return bindActionCreators({ fetchStocks, addNewStock }, dispatch);
 };
 
 export default compose(
   withStyles(styles),
-  connect(null, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(StocksWidgetModal);
