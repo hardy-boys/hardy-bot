@@ -1,11 +1,17 @@
-import { WEATHER_REQUEST_RECEIVED, WEATHER_REQUEST_ERROR, WEATHER_DATA_RECEIVED, WEATHER_DATA_UPDATE } from '../actions/types';
+import {
+  WEATHER_REQUEST_RECEIVED,
+  WEATHER_REQUEST_ERROR,
+  WEATHER_DATA_RECEIVED,
+  WEATHER_DATA_UPDATE,
+  WEATHER_ZIPCODE_CHANGED,
+} from '../actions/types';
 
 const initialState = {
   fetching: false,
   fetched: false,
+  error: null,
   zipcode: null,
   weatherData: {},
-  error: null,
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +33,13 @@ export default (state = initialState, action) => {
         fetched: true,
         fetching: false,
         weatherData: action.data,
+      };
+    case WEATHER_ZIPCODE_CHANGED:
+      return {
+        ...state,
+        fetched: false,
+        fetching: true,
+        zipcode: action.data,
       };
     default:
       return state;

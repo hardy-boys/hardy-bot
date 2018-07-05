@@ -1,13 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-// function rand() {
-//   return Math.round(Math.random() * 20) - 10;
-// }
+import fetchWeather from '../../actions/weather';
+
 
 function getModalStyle() {
   const top = 50;
@@ -31,8 +32,21 @@ const styles = theme => ({
 });
 
 class WeatherWidgetModal extends React.Component {
+  state = {
+    zip: '',
+  };
+
+  onInputChange(event) {
+    this.setState({
+      zip: event.target.value,
+    });
+  }
+
+  onSubmit() {
+    this.props.fetchWeather(this.state.zip);
+  }
+
   render() {
-    console.log('MODAL', this.props);
     const { classes } = this.props;
     return (
       <div>
@@ -47,8 +61,12 @@ class WeatherWidgetModal extends React.Component {
               Enter New Zipcode
             </Typography><br />
             <Typography variant="subheading" id="simple-modal-description">
-              Zip: <input type="text"></input>
-              <Button type="submit">Submit</Button>
+              Zip: <input
+              type="text"
+              onChange={this.onInputChange.bind(this)}
+              value={this.state.zip}
+              ></input>
+              <Button onClick={() => { this.onSubmit(); this.props.close(); }} type="submit">Submit</Button>
             </Typography>
           </div>
         </Modal>
@@ -61,5 +79,11 @@ WeatherWidgetModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// We need an intermediary variable for handling the recursive nesting.
-export default withStyles(styles)(WeatherWidgetModal);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchWeather }, dispatch);
+};
+
+export default compose(
+  withStyles(styles),
+  connect(null, mapDispatchToProps),
+)(WeatherWidgetModal);
