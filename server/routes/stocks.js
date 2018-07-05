@@ -29,16 +29,21 @@ let pushToDevice = (payload, token) => {
     });
 };
 
-let mapData = (sym, input) => {
-  return { Symbol: sym.toUpperCase(), Price: input[0] };
+let mapData = (symbols) => {
+  return Object.keys(symbols).map((symbol) => {
+    return {
+      Symbol: symbol,
+      Price: String(symbols[symbol].quote.latestPrice),
+    };
+  });
 };
 
 let eventSource;
 
 router.get('/api/stocks', (req, res) => {
   // hardcoded stock symbol for testing
-  let symbol = 'aapl';
-  let targetUrl = 'https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb,googl,amzn&types=quote';
+  let symbols = 'aapl,fb,googl,amzn';
+  let targetUrl = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=quote`;
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
   let result;
@@ -57,7 +62,7 @@ router.get('/api/stocks', (req, res) => {
       // memorize the fresh data set
       result = data;
       console.log(result);
-      // pushToDevice(mapData(symbol, result), req.session.particleToken);
+      pushToDevice(mapData(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -69,9 +74,9 @@ router.get('/api/stocks', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
-      console.log(result);
-      // pushToDevice(mapData(symbol, result), req.session.particleToken);
+      // console.log(result);
       const data = result;
+      pushToDevice(mapData(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
 

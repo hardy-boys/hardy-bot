@@ -36,9 +36,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   particleToken: '',
-  cookie: {
-    secure: false,
-  },
 }));
 
 //
