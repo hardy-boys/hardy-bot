@@ -48,7 +48,6 @@ class WeatherWidgetModal extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log('PROPS', this.props);
     return (
       <div>
         <Modal

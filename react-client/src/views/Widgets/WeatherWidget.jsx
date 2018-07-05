@@ -25,7 +25,7 @@ class WeatherWidget extends React.Component {
       let { name, wind } = this.props.weather.weatherData;
       return (
         <div style={{
-            width: '550px', opacity: '.75', float: 'right',
+            width: '550px', float: 'right',
         }}>
           <div style={{
               width: '50%', float: 'left', minHeight: '150px', position: 'relative',
