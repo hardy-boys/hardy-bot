@@ -125,7 +125,7 @@ router.post('/api/weather', (req, res) => {
       result = data;
       // io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
       console.log(result);
-      pushToDevice(mapData(result), req.session.particleToken);
+      // pushToDevice(mapData(result), req.session.particleToken);
       res.send(result);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -140,7 +140,7 @@ router.post('/api/weather', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
-      pushToDevice(mapData(result), req.session.particleToken);
+      // pushToDevice(mapData(result), req.session.particleToken);
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
