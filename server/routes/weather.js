@@ -1,5 +1,6 @@
 const actions = require('../../react-client/src/actions/types');
 const particleHelpers = require('../helpers/particleHelpers.js');
+const dbHelpers = require('../../database/controllers/dbHelpers');
 
 require('dotenv').config();
 const express = require('express');
@@ -66,7 +67,7 @@ router.post('/api/weather', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       // res.send(result);
-      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
+      io.emit('action', { type: actions.WEATHER_DATA_UPDATE, payload: result });
       particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
     })
 
@@ -87,6 +88,17 @@ router.post('/api/weather', (req, res) => {
 router.get('/api/weather/close', (req, res) => {
   eventSource.close();
   res.status(200).end('Weather polling stopped');
+});
+
+router.post('/widgets/weather/save', (req, res) => {
+  const { userId, widgetName, zipcode } = req.body;
+  dbHelpers.saveWeatherWidgetConfig(userId, widgetName, zipcode)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((error) => {
+      res.send(error);
+    });
 });
 
 module.exports = router;
