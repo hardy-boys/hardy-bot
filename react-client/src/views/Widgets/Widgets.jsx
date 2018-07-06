@@ -68,15 +68,15 @@ const styles = {
 };
 
 class Widgets extends React.Component {
-  componentDidMount() {
-    axios.get('/particle/login')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+//   componentDidMount() {
+//     axios.get('/particle/login')
+//       .then((res) => {
+//         console.log(res.data);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   }
 
   render() {
     const { classes } = this.props;
