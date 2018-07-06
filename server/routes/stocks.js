@@ -28,6 +28,7 @@ let mapParticle = (symbols) => {
 let eventSource;
 
 router.post('/api/stocks', (req, res) => {
+  console.log('REQUEST', req.body);
   // hardcoded stock symbol for testing
   let stockSymbols = req.body.symbols.join(',');
   let targetUrl = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${stockSymbols}&types=quote`;
@@ -46,12 +47,12 @@ router.post('/api/stocks', (req, res) => {
     // is pushed by Streamdata.io coming from the API
     .onData((data) => {
       console.log('data received');
+      res.send(data);
       // memorize the fresh data set
       result = data;
       console.log(result);
       particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
-      // res.send(data);
+      // io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -65,6 +66,7 @@ router.post('/api/stocks', (req, res) => {
       console.log('RESULT', result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       const data = result;
+      // res.send(data);
       particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
@@ -73,13 +75,13 @@ router.post('/api/stocks', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      io.emit('action', { type: actions.STOCK_REQUEST_ERROR, data: error });
+      res.send(error);
       eventSource.close();
     });
 
   eventSource.open();
 
-  res.status(200).end('Stock polling started');
+  // res.status(200).end('Stock polling started');
 });
 
 router.get('/api/stocks/close', (req, res) => {
