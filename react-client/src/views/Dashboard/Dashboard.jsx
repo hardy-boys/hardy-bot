@@ -53,16 +53,16 @@ class Dashboard extends React.Component {
   //   };
   // }
 
-  // componentDidMount() {
-  //   // this.getUserDevices(this.state.userId);
-  //   axios.get('/particle/login')
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
+  componentDidMount() {
+    // this.getUserDevices(this.state.userId);
+    axios.get('/particle/login')
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   // getUserDevices(userId) {
   //   axios.get(`/users/${userId}`)
