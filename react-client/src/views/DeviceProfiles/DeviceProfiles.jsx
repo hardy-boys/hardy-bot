@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -47,6 +49,7 @@ const styles = {
 
 function DeviceProfiles(props) {
   const { classes } = props;
+  const { profiles } = props;
   return (
     <Grid container>
       <GridItem xs={12} sm={12} md={12}>
@@ -173,4 +176,10 @@ function DeviceProfiles(props) {
   );
 }
 
-export default withStyles(styles)(DeviceProfiles);
+const mapStateToProps = (state) => {
+  return {
+    profiles: state.profiles,
+  };
+};
+
+export default compose(withStyles(styles, connect(mapStateToProps))(DeviceProfiles));

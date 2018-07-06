@@ -1,13 +1,11 @@
 /* Data provided for free by IEX (https://iextrading.com/developer) .View IEX’s Terms of Use(https://iextrading.com/api-exhibit-a/) */
 const actions = require('../../react-client/src/actions/types');
+const particleHelpers = require('../helpers/particleHelpers.js');
 
 require('dotenv').config();
 const express = require('express');
-const Particle = require('particle-api-js');
 
 const router = express.Router();
-
-let particle = new Particle();
 
 // add EventSource dependency
 const streamdataio = require('streamdataio-js-sdk/dist/bundles/streamdataio-node');
@@ -18,18 +16,7 @@ const jsonPatch = require('fast-json-patch');
 // you MUST provide a valid token for your request to go through.
 const appToken = process.env.STREAMDATA_STOCKS;
 
-let pushToDevice = (payload, token) => {
-  let payloadJSON = JSON.stringify(payload);
-  particle.publishEvent({ name: 'stocks', data: payloadJSON, auth: token })
-    .then((res) => {
-      if (res.body.ok) { console.log(`Event published succesfully with payload: ${payloadJSON}`); }
-    })
-    .catch((err) => {
-      console.log(`Failed to publish event: ${err}`);
-    });
-};
-
-let mapData = (symbols) => {
+let mapParticle = (symbols) => {
   return Object.keys(symbols).map((symbol) => {
     return {
       Symbol: symbol,
@@ -62,7 +49,7 @@ router.post('/api/stocks', (req, res) => {
       // memorize the fresh data set
       result = data;
       console.log(result);
-      pushToDevice(mapData(data), req.session.particleToken);
+      particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
       // res.send(data);
     })
@@ -78,7 +65,7 @@ router.post('/api/stocks', (req, res) => {
       console.log('RESULT', result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       const data = result;
-      pushToDevice(mapData(data), req.session.particleToken);
+      particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
       io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
     })
 
