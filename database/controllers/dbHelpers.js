@@ -1,15 +1,14 @@
 const db = require('../models');
 const sequelize = require('sequelize');
 
-const saveProfile = (profileName, widgetNames) => {
+const saveProfile = (userId, profileName, widgetNames) => {
+  // TODO: implement userId filtering
+  console.log('DB: saving profile ', profileName);
   db.models.Profile.findOrCreate({
     where: {
       name: profileName,
     },
   })
-  // db.models.Profile.create({
-  //   name: profileName,
-  // })
     .then((profile) => {
       widgetNames.forEach((widgetName) => {
         db.models.Widget.findOne({
@@ -20,6 +19,23 @@ const saveProfile = (profileName, widgetNames) => {
             widget.addProfile(profile[0]);
           });
       });
+    })
+    .catch((err) => {
+      console.log('Error saving profile ', err);
+    })
+};
+
+const loadUserProfiles = (userId, profileName) => {
+  db.models.Profile.findAll({
+    where: {
+      name: profileName,
+    },
+  })
+    .then((profile) => {
+      // do stuff
+    })
+    .catch((err) => {
+      console.log('Error saving profile ', err);
     });
 };
 
@@ -37,5 +53,6 @@ const getUserDevices = (userId) => {
 
 module.exports = {
   saveProfile,
+  loadUserProfiles,
   getUserDevices,
 };
