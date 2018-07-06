@@ -1,4 +1,13 @@
-import { STOCK_REQUEST_RECEIVED, STOCK_REQUEST_ERROR, STOCK_DATA_RECEIVED, STOCK_DATA_UPDATE, STOCK_SYMBOL_ADDED } from '../actions/types';
+import {
+  START_STOCK_POLLING,
+  STOCK_POLLING_SUCCESSFUL,
+  STOP_STOCK_POLLING,
+  STOCK_POLLING_STOPPED,
+  STOCK_REQUEST_ERROR,
+  STOCK_DATA_RECEIVED,
+  STOCK_DATA_UPDATE,
+  STOCK_SYMBOL_ADDED,
+} from '../actions/types';
 
 const fakeStockData = {
   AAPL: {
@@ -39,27 +48,27 @@ const initialState = {
   fetching: false,
   fetched: false,
   stockSymbols: ['AAPL', 'FB', 'GOOGL', 'AMZN'],
-  stocksData: { data: fakeStockData },
+  stocksData: fakeStockData,
   error: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case STOCK_REQUEST_RECEIVED:
+    case START_STOCK_POLLING:
       return { ...state, fetching: true };
     case STOCK_REQUEST_ERROR:
-      return { ...state, fetching: false, error: action.data };
+      return { ...state, fetching: false, error: action.payload };
     case STOCK_DATA_RECEIVED:
       return {
         ...state,
         fetched: true,
         fetching: false,
-        stocksData: action.data,
+        stocksData: action.payload,
       };
     case STOCK_DATA_UPDATE:
       return {
         ...state,
-        stocksData: action.data,
+        stocksData: action.payload,
       };
     case STOCK_SYMBOL_ADDED:
       return {
