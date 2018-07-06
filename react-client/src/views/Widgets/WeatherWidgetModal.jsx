@@ -2,12 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import PropTypes from 'prop-types';
+
+// @material-ui/core components
+
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-import fetchWeather from '../../actions/weather';
+// redux actions
+
+import { fetchWeather } from '../../actions/weather';
 
 
 function getModalStyle() {

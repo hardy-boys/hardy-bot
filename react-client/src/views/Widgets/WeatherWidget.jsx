@@ -1,9 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
+import axios from 'axios';
+
+// @material-ui/core components
 
 import Button from 'components/CustomButtons/Button.jsx';
+
+// components
+
 import WeatherWidgetModal from './WeatherWidgetModal';
+
+// actions
+
+import { startWeatherPolling, stopWeatherPolling } from '../../actions/weather';
 
 class WeatherWidget extends React.Component {
   // Temporary state until it gets refactored to Redux
@@ -18,6 +28,14 @@ class WeatherWidget extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  componentDidMount() {
+    this.props.startWeatherPolling(this.props.weather.zipcode);
+  }
+
+  componentWillUnmount() {
+    this.props.stopWeatherPolling();
+  }
 
   render() {
     if (this.props.weather.fetched) {
@@ -91,4 +109,8 @@ const mapStateToProps = (state) => {
   return { weather: state.weather };
 };
 
-export default compose(connect(mapStateToProps))(WeatherWidget);
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ startWeatherPolling, stopWeatherPolling }, dispatch);
+};
+
+export default compose(connect(mapStateToProps, mapDispatchtoProps))(WeatherWidget);

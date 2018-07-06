@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-import { fetchStocks, addNewStock } from '../../actions/stocks';
+import { fetchStocks, addNewStock, stopStocksPolling } from '../../actions/stocks';
 
 
 function getModalStyle() {
@@ -45,15 +45,7 @@ class StocksWidgetModal extends React.Component {
 
   onSubmit() {
     this.props.addNewStock(this.state.symbol);
-    this.stopStocksPolling();
     this.props.fetchStocks([...this.props.stocks.stockSymbols, this.state.symbol]);
-  }
-
-  stopStocksPolling() {
-    axios.get('/api/stocks/close')
-      .then((res) => {
-        console.log(res.data);
-      });
   }
 
   render() {
@@ -94,7 +86,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchStocks, addNewStock }, dispatch);
+  return bindActionCreators({ fetchStocks, addNewStock, stopStocksPolling }, dispatch);
 };
 
 export default compose(
