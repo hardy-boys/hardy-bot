@@ -22,13 +22,14 @@ const saveProfile = (userId, profileName, widgetNames) => {
     })
     .catch((err) => {
       console.log('Error saving profile ', err);
-    })
+    });
 };
 
 const loadUserProfiles = (userId, profileName) => {
   db.models.Profile.findAll({
     where: {
       name: profileName,
+      attributes: ['id'],
     },
   })
     .then((profile) => {
@@ -36,6 +37,26 @@ const loadUserProfiles = (userId, profileName) => {
     })
     .catch((err) => {
       console.log('Error saving profile ', err);
+    });
+};
+
+const saveWeatherWidgetConfig = (userId, widgetName, zipcode) => {
+  return db.models.Widget.findOne({
+    where: {
+      name: widgetName,
+    },
+  })
+    .then((widget) => {
+      let zip = { 0: zipcode };
+      return widget.addUser(userId, {
+        through: { configuration: JSON.stringify(zip) },
+      })
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          return err;
+        });
     });
 };
 
@@ -51,8 +72,10 @@ const getUserDevices = (userId) => {
     });
 };
 
+
 module.exports = {
   saveProfile,
   loadUserProfiles,
+  saveWeatherWidgetConfig,
   getUserDevices,
 };
