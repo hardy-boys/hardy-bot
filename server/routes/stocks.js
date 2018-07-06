@@ -68,7 +68,7 @@ router.post('/api/stocks', (req, res) => {
       const data = result;
       // res.send(data);
       particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
-      io.emit('action', { type: actions.STOCK_DATA_UPDATE, data: { data } });
+      io.emit('action', { type: actions.STOCK_DATA_UPDATE, payload: data });
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource
