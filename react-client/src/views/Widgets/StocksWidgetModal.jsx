@@ -45,6 +45,7 @@ class StocksWidgetModal extends React.Component {
 
   onSubmit() {
     this.props.addNewStock(this.state.symbol);
+    this.props.stopStocksPolling();
     this.props.fetchStocks([...this.props.stocks.stockSymbols, this.state.symbol]);
   }
 
