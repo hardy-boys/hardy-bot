@@ -17,6 +17,7 @@ const appToken = process.env.STREAMDATA_WEATHER;
 
 let mapParticle = (input) => {
   return {
+    name: input.name,
     main: input.weather[0].main,
     temp: Math.round(input.main.temp),
     humidity: input.main.humidity,
@@ -28,15 +29,15 @@ let eventSource;
 let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
 
 
-router.get('/api/weather', (req, res) => {
-  let zip = '78701';
+router.post('/api/weather', (req, res) => {
+  let { zip } = req.body;
   let targetUrl = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&zip=${zip}&units=imperial`;
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
 
   let result;
   const io = req.app.get('socketio');
-  io.emit('action', { type: actions.WEATHER_REQUEST_RECEIVED });
+  // io.emit('action', { type: actions.WEATHER_REQUEST_RECEIVED });
 
   eventSource
     // the standard 'open' callback will be called when connection is established with the server
@@ -47,10 +48,11 @@ router.get('/api/weather', (req, res) => {
     // is pushed by Streamdata.io coming from the API
     .onData((data) => {
       console.log('data received');
+      res.send(data);
       // memorize the fresh data set
       result = data;
       console.log(result);
-      io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
+      // io.emit('action', { type: actions.WEATHER_DATA_RECEIVED, data: result });
       particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
@@ -61,9 +63,9 @@ router.get('/api/weather', (req, res) => {
       console.log('patch: ', patch);
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
-      console.log('RESULT', result);
       // do whatever you wish with the update data
       console.log(result);
+      // res.send(result);
       io.emit('action', { type: actions.WEATHER_DATA_UPDATE, data: result });
       particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
     })
@@ -72,13 +74,14 @@ router.get('/api/weather', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
+      res.send(error);
       eventSource.close();
-      io.emit('action', { type: actions.WEATHER_REQUEST_ERROR, data: error });
+      // io.emit('action', { type: actions.WEATHER_REQUEST_ERROR, data: error });
     });
 
   eventSource.open();
 
-  res.status(200).end('Weather polling started');
+  // res.status(200).end('Weather polling started');
 });
 
 router.get('/api/weather/close', (req, res) => {

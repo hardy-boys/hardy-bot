@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import io from 'socket.io-client';
 import axios from 'axios';
+
 // @material-ui/core components
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
+
 // core components
+
 import GridItem from 'components/Grid/GridItem.jsx';
-// import Table from "components/Table/Table.jsx";
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
@@ -65,66 +68,15 @@ const styles = {
 };
 
 class Widgets extends React.Component {
-  constructor(props) {
-    super(props);
-
-    // Quick button click handlers for demonstration
-    this.startStocksPolling = this.startStocksPolling.bind(this);
-    this.stopStocksPolling = this.stopStocksPolling.bind(this);
-    this.startWeatherPolling = this.startWeatherPolling.bind(this);
-    this.stopWeatherPolling = this.stopWeatherPolling.bind(this);
-  }
-
-  componentDidMount() {
-    axios.get('/particle/login')
-      .then((res) => {
-        console.log(res.data);
-        this.startWeatherPolling();
-        this.startStocksPolling();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  componentWillUnmount() {
-    this.stopStocksPolling();
-    this.stopWeatherPolling();
-  }
-
-  startStocksPolling() {
-    axios.get('/api/stocks')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  startWeatherPolling() {
-    axios.get('/api/weather')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  stopStocksPolling() {
-    axios.get('/api/stocks/close')
-      .then((res) => {
-        console.log(res.data);
-      });
-  }
-
-  stopWeatherPolling() {
-    axios.get('/api/weather/close')
-      .then((res) => {
-        console.log(res.data);
-      });
-  }
+  // componentDidMount() {
+  //   axios.get('/particle/login')
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   render() {
     const { classes } = this.props;
@@ -200,12 +152,16 @@ class Widgets extends React.Component {
 //   return bindActionCreators({ fetchWeather }, dispatch);
 // };
 
-// Need access to user info in order to get zipcode for initial weather load
+// Give component access to Redux application state
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    stocks: state.stocks,
   };
 };
 
-export default withStyles(styles)(Widgets);
+// Connect component to Redux store
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+)(Widgets);
 
