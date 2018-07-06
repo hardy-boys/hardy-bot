@@ -17,6 +17,7 @@ const appToken = process.env.STREAMDATA_WEATHER;
 
 let mapParticle = (input) => {
   return {
+    name: input.name,
     main: input.weather[0].main,
     temp: Math.round(input.main.temp),
     humidity: input.main.humidity,
