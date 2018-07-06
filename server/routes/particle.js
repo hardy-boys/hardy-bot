@@ -1,79 +1,73 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const Particle = require('particle-api-js');
+const particleHelpers = require('../helpers/particleHelpers.js');
 
 const router = express.Router();
 
-let particle = new Particle();
-
 router.get('/particle/login', (req, res) => {
-  if (req.session.particleToken) {
+  let { particleToken } = req.session;
+
+  if (particleToken) {
     console.log('Already logged into Particle');
     res.status(200).end('Already logged into Particle');
   } else {
-    particle.login({ username: process.env.PARTICLE_EMAIL, password: process.env.PARTICLE_PASS })
+    particleHelpers.login()
       .then((data) => {
-        req.session.particleToken = data.body.access_token;
-        console.log('Successfully logged into Particle cloud', req.session.particleToken);
-        return particle.listDevices({ auth: req.session.particleToken });
+        particleToken = data.body.access_token;
+        // Save particle cloud token to req.session
+        req.session.particleToken = particleToken;
+        console.log('Particle: Successfully logged into Particle cloud', particleToken);
+        return particleHelpers.listDevices(particleToken);
       })
       .then((devices) => {
         console.log('Devices: ', devices);
-        res.status(200).end('Login successful');
+        res.status(200).end('Particle: Login successful');
       })
       .catch((err) => {
-        console.log('Could not log in.', err);
+        console.log('Particle: Could not log in.', err);
         res.status(401).end(err);
       });
   }
 });
 
-router.get('/particle/flash/:widget', (req, res) => {
-  let binName = '';
-  let { widget } = req.params;
-  if (widget === 'weather') {
-    binName = 'DateTimeWeatherWidget.bin';
-  } else if (widget === 'stocks') {
-    binName = 'StocksWidget.bin';
-  } else {
-    console.log('Err: No device firmware was found for widget: ', widget);
-    res.status(404).end(`No device firmware was found for widget: ${widget}`);
-    return;
-  }
+router.post('/particle/flash', (req, res) => {
+  let { deviceName } = req.body;
+  let { particleToken } = req.session;
 
-  let binPath = path.resolve(__dirname, '../resource/firmware', binName);
-  particle.flashDevice({
-    deviceId: 'savvy-fox',
-    files: { firmware: binPath },
-    auth: req.session.particleToken,
-  })
+  if (!req.body || !deviceName) {
+    res.status(400).send('Particle Err: Improperly formatted flash request');
+  }
+  // Hardcoded to WidgetLoader firmware for now
+  let binPath = path.resolve(__dirname, '../resource/firmware', 'WidgetLoader.bin');
+  particleHelpers.flashDevice(deviceName, binPath, particleToken)
     .then((data) => {
-      console.log('Device flashing started successfully:', data, '\n', 'firmware: ', binName);
-      res.status(200).end(`Flashing device firmware ${binName}...`);
+      console.log('Particle: Started flashing WidgetLoader.bin...');
+      res.status(200).end('Particle: Started flashing WidgetLoader.bin...');
     })
     .catch((err) => {
-      console.log('An error occurred while flashing the device:', err);
-      res.status(500).end('Error attempting to flash device firmware');
+      console.log('Particle Err: An error occurred while flashing the device:', err);
+      res.status(500).end('Particle Err: Error attempting to flash device firmware', err);
     });
 });
 
-router.get('/particle/view/:widgetID', (req, res) => {
-  let { widgetID } = req.params;
+router.post('/particle/view', (req, res) => {
+  // endpoint for testing new widget views
+  let { deviceName, widgetID } = req.body;
+  let { particleToken } = req.session;
+
+  if (!req.body || !deviceName) {
+    res.status(400).send('Err: Improperly formatted flash request');
+  }
   console.log(widgetID);
-  particle.callFunction({
-    deviceId: 'savvy-fox',
-    name: 'changeView',
-    argument: widgetID,
-    auth: req.session.particleToken,
-  })
+  particleHelpers.callFunction(deviceName, 'changeView', widgetID, particleToken)
     .then((data) => {
-      console.log('Function called succesfully, returned ', data);
-      res.status(200).end('Function called succesfully, returned ', data);
+      console.log('Particle: Function called succesfully, returned ', data);
+      res.status(200).end('Particle: Function called succesfully, returned ', data);
     })
     .catch((err) => {
-      console.log('An error occurred calling widget change view: ', err);
-      res.status(500).end('An error occurred calling widget change view: ', err);
+      console.log('Particle Err: An error occurred calling widget change view: ', err);
+      res.status(500).end('Particle Err: An error occurred calling widget change view: ', err);
     });
 });
 
