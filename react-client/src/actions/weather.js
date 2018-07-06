@@ -4,9 +4,11 @@ import {
   START_WEATHER_POLLING,
   STOP_WEATHER_POLLING,
   WEATHER_POLLING_STOPPED,
-  WEATHER_ZIPCODE_CHANGED,
   WEATHER_DATA_RECEIVED,
   WEATHER_REQUEST_ERROR,
+  SAVE_WEATHER_CONFIG,
+  WEATHER_CONFIG_SAVED,
+  WEATHER_CONFIG_SAVE_ERROR,
 } from './types';
 
 const startWeatherPolling = (zip) => {
@@ -41,7 +43,7 @@ const stopWeatherPolling = () => {
 
 const fetchWeather = (zip) => {
   return (dispatch) => {
-    dispatch({ type: WEATHER_ZIPCODE_CHANGED });
+    dispatch({ type: START_WEATHER_POLLING });
     axios.post('/api/weather', { zip })
       .then((weather) => {
         dispatch({ type: WEATHER_DATA_RECEIVED, payload: weather.data });
@@ -52,9 +54,25 @@ const fetchWeather = (zip) => {
   };
 };
 
+const saveWidgetConfig = (userId, widgetName, zipcode) => {
+  return (dispatch) => {
+    dispatch({ type: SAVE_WEATHER_CONFIG });
+    axios.post('/widgets/weather/save', { userId, widgetName, zipcode })
+      .then((res) => {
+        console.log('REDUX RES', res);
+        dispatch({ type: WEATHER_CONFIG_SAVED, payload: res.data[0] });
+      })
+      .catch((error) => {
+        console.log('ERR', error);
+        dispatch({ type: WEATHER_CONFIG_SAVE_ERROR, payload: error });
+      });
+  };
+};
+
 
 export {
   startWeatherPolling,
   stopWeatherPolling,
   fetchWeather,
+  saveWidgetConfig,
 };
