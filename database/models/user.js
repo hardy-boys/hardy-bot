@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       through: 'user_devices',
       foreignKey: 'user_id',
     });
+    User.belongsToMany(models.Widget, {
+      through: models.UserWidgetConfig,
+    });
   };
 
   return User;
