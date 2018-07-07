@@ -60,7 +60,6 @@ export default (state = initialState, action) => {
         ...state,
         saving: false,
         saved: true,
-        config: action.payload,
       };
     case WEATHER_REQUEST_ERROR:
       return {
