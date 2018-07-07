@@ -1,9 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const UserWidgetConfig = sequelize.define('user_widget_config', {
     configuration: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: true,
-      defaultValue: {},
     },
   });
 
