@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 // redux actions
 
-import { fetchWeather } from '../../actions/weather';
+import { fetchWeather, saveWidgetConfig } from '../../actions/weather';
 
 
 function getModalStyle() {
@@ -48,7 +48,10 @@ class WeatherWidgetModal extends React.Component {
   }
 
   onSubmit() {
+    const { widgetName } = this.props.weather;
     this.props.fetchWeather(this.state.zip);
+    // need to get user id from redux state
+    this.props.saveWidgetConfig(1, widgetName, this.state.zip);
   }
 
   render() {
@@ -84,11 +87,17 @@ WeatherWidgetModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = (state) => {
+  return {
+    weather: state.weather,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchWeather }, dispatch);
+  return bindActionCreators({ fetchWeather, saveWidgetConfig }, dispatch);
 };
 
 export default compose(
   withStyles(styles),
-  connect(null, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(WeatherWidgetModal);

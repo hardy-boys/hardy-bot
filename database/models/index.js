@@ -31,6 +31,7 @@ const models = {
   Device: sequelize.import('./devices'),
   Profile: sequelize.import('./profiles'),
   Widget: sequelize.import('./widgets'),
+  UserWidgetConfig: sequelize.import('./userWidgetConfigs'),
 };
 
 // create relationships between all tables with associations

@@ -1,28 +1,35 @@
 import {
-  START_STOCK_POLLING,
-  STOP_STOCK_POLLING,
-  STOCK_POLLING_STOPPED,
-  WEATHER_REQUEST_RECEIVED,
-  WEATHER_REQUEST_ERROR,
+  START_WEATHER_POLLING,
+  STOP_WEATHER_POLLING,
+  WEATHER_POLLING_STOPPED,
   WEATHER_DATA_RECEIVED,
   WEATHER_DATA_UPDATE,
-  WEATHER_ZIPCODE_CHANGED,
+  WEATHER_REQUEST_ERROR,
+  SAVE_WEATHER_CONFIG,
+  WEATHER_CONFIG_SAVED,
+  WEATHER_CONFIG_SAVE_ERROR,
 } from '../actions/types';
 
 const initialState = {
+  widgetName: 'Weather',
+  zipcode: 78702,
+  weatherData: {},
+  config: {},
+  saving: false,
+  saved: false,
   fetching: false,
   fetched: false,
   error: null,
-  zipcode: 78702,
-  weatherData: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case START_STOCK_POLLING:
+    case START_WEATHER_POLLING:
       return { ...state, fetching: true };
-    case WEATHER_REQUEST_ERROR:
-      return { ...state, error: action.payload };
+    case STOP_WEATHER_POLLING:
+      return {
+        ...state,
+      };
     case WEATHER_DATA_RECEIVED:
       return {
         ...state,
@@ -37,11 +44,34 @@ export default (state = initialState, action) => {
         fetching: false,
         weatherData: action.payload,
       };
-    case WEATHER_ZIPCODE_CHANGED:
+    case WEATHER_POLLING_STOPPED:
       return {
         ...state,
         fetched: false,
-        fetching: true,
+        fetching: false,
+      };
+    case SAVE_WEATHER_CONFIG:
+      return {
+        ...state,
+        saving: true,
+      };
+    case WEATHER_CONFIG_SAVED:
+      return {
+        ...state,
+        saving: false,
+        saved: true,
+        config: action.payload,
+      };
+    case WEATHER_REQUEST_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case WEATHER_CONFIG_SAVE_ERROR:
+      return {
+        ...state,
+        saved: false,
+        error: action.payload,
       };
     default:
       return state;
