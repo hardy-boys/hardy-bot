@@ -1,12 +1,14 @@
 import {
   START_STOCK_POLLING,
-  STOCK_POLLING_SUCCESSFUL,
   STOP_STOCK_POLLING,
   STOCK_POLLING_STOPPED,
   STOCK_REQUEST_ERROR,
   STOCK_DATA_RECEIVED,
   STOCK_DATA_UPDATE,
   STOCK_SYMBOL_ADDED,
+  SAVE_STOCKS_CONFIG,
+  STOCKS_CONFIG_SAVED,
+  STOCKS_CONFIG_SAVE_ERROR,
 } from '../actions/types';
 
 const fakeStockData = {
@@ -45,10 +47,13 @@ const fakeStockData = {
 };
 
 const initialState = {
+  widgetName: 'StocksWidget',
+  stockSymbols: ['AAPL', 'FB', 'GOOGL'],
+  stocksData: fakeStockData,
+  saving: false,
+  saved: false,
   fetching: false,
   fetched: false,
-  stockSymbols: ['AAPL', 'FB', 'GOOGL', 'AMZN'],
-  stocksData: fakeStockData,
   error: null,
 };
 
@@ -56,8 +61,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case START_STOCK_POLLING:
       return { ...state, fetching: true };
-    case STOCK_REQUEST_ERROR:
-      return { ...state, fetching: false, error: action.payload };
+    case STOP_STOCK_POLLING:
+      return {
+        ...state,
+      };
     case STOCK_DATA_RECEIVED:
       return {
         ...state,
@@ -68,7 +75,34 @@ export default (state = initialState, action) => {
     case STOCK_DATA_UPDATE:
       return {
         ...state,
+        fetched: true,
+        fetching: false,
         stocksData: action.payload,
+      };
+    case STOCK_POLLING_STOPPED:
+      return {
+        ...state,
+        fetched: false,
+        fetching: false,
+      };
+    case SAVE_STOCKS_CONFIG:
+      return {
+        ...state,
+        saving: true,
+      };
+    case STOCKS_CONFIG_SAVED:
+      return {
+        ...state,
+        saving: false,
+        saved: true,
+      };
+    case STOCK_REQUEST_ERROR:
+      return { ...state, fetching: false, error: action.payload };
+    case STOCKS_CONFIG_SAVE_ERROR:
+      return {
+        ...state,
+        saved: false,
+        error: action.payload,
       };
     case STOCK_SYMBOL_ADDED:
       return {
