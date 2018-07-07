@@ -96,6 +96,10 @@ const saveStockWidgetConfig = (userId, widgetName, stockSymbols) => {
     });
 };
 
+const saveTrafficWidgetConfig = (userId, widgetName, trafficConfig) => {
+  // TODO
+};
+
 const getUserDevices = (userId) => {
   return db.models.User.findOne({
     where: {
