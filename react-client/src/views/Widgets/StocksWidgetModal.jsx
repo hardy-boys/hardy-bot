@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-import { fetchStocks, addNewStock, stopStocksPolling } from '../../actions/stocks';
+
+import { addNewStock, fetchStocks, stopStocksPolling, saveWidgetConfig } from '../../actions/stocks';
 
 
 function getModalStyle() {
@@ -44,13 +45,18 @@ class StocksWidgetModal extends React.Component {
   }
 
   onSubmit() {
-    this.props.addNewStock(this.state.symbol);
+    const { widgetName } = this.props.stocks;
+    const stockSymbols = [...this.props.stocks.stockSymbols, this.state.symbol];
     this.props.stopStocksPolling();
-    this.props.fetchStocks([...this.props.stocks.stockSymbols, this.state.symbol]);
+    this.props.addNewStock(this.state.symbol);
+    this.props.saveWidgetConfig(1, widgetName, stockSymbols);
+    // need to get userID from session
+    this.props.fetchStocks(stockSymbols);
   }
 
   render() {
     const { classes } = this.props;
+    const { stockSymbols } = this.props.stocks;
     return (
       <div>
         <Modal
@@ -61,10 +67,14 @@ class StocksWidgetModal extends React.Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="title" id="modal-title">
-              Enter New Stock
+              Remove or Add New Stocks
             </Typography><br />
             <Typography variant="subheading" id="simple-modal-description">
-              Symbol: <input
+              <div>
+                {stockSymbols.map(stock =>
+                  <p key={stock}>{stock}</p>)}
+              </div>
+              Add Stock: <input
                 type="text"
                 onChange={this.onInputChange.bind(this)}
                 value={this.state.symbol}
@@ -87,7 +97,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchStocks, addNewStock, stopStocksPolling }, dispatch);
+  return bindActionCreators({
+    fetchStocks,
+    addNewStock,
+    stopStocksPolling,
+    saveWidgetConfig,
+  }, dispatch);
 };
 
 export default compose(
