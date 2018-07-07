@@ -7,6 +7,9 @@ import {
   STOCK_REQUEST_ERROR,
   STOCK_DATA_RECEIVED,
   STOCK_SYMBOL_ADDED,
+  SAVE_STOCKS_CONFIG,
+  STOCKS_CONFIG_SAVED,
+  STOCKS_CONFIG_SAVE_ERROR,
 } from './types';
 
 const startStocksPolling = (stockSymbols) => {
@@ -61,9 +64,23 @@ const fetchStocks = (stockSymbols) => {
   };
 };
 
+const saveWidgetConfig = (userId, widgetName, payload) => {
+  return (dispatch) => {
+    dispatch({ type: SAVE_STOCKS_CONFIG });
+    axios.post('/widgets/stocks/save', { userId, widgetName, payload })
+      .then((res) => {
+        dispatch({ type: STOCKS_CONFIG_SAVED });
+      })
+      .catch((error) => {
+        dispatch({ type: STOCKS_CONFIG_SAVE_ERROR, payload: error });
+      });
+  };
+};
+
 export {
   startStocksPolling,
   stopStocksPolling,
   fetchStocks,
   addNewStock,
+  saveWidgetConfig,
 };

@@ -47,9 +47,29 @@ const saveWeatherWidgetConfig = (userId, widgetName, zipcode) => {
     },
   })
     .then((widget) => {
-      let zip = { 0: zipcode };
+      let zip = { zipcodes: [zipcode] };
       return widget.addUser(userId, {
-        through: { configuration: JSON.stringify(zip) },
+        through: { configuration: zip },
+      })
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          return err;
+        });
+    });
+};
+
+const saveStockWidgetConfig = (userId, widgetName, stockSymbols) => {
+  return db.models.Widget.findOne({
+    where: {
+      name: widgetName,
+    },
+  })
+    .then((widget) => {
+      let stocks = { stocks: stockSymbols };
+      return widget.addUser(userId, {
+        through: { configuration: stocks },
       })
         .then((result) => {
           return result;
@@ -77,5 +97,6 @@ module.exports = {
   saveProfile,
   loadUserProfiles,
   saveWeatherWidgetConfig,
+  saveStockWidgetConfig,
   getUserDevices,
 };

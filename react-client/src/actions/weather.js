@@ -60,7 +60,7 @@ const saveWidgetConfig = (userId, widgetName, zipcode) => {
     axios.post('/widgets/weather/save', { userId, widgetName, zipcode })
       .then((res) => {
         console.log('REDUX RES', res);
-        dispatch({ type: WEATHER_CONFIG_SAVED, payload: res.data[0] });
+        dispatch({ type: WEATHER_CONFIG_SAVED });
       })
       .catch((error) => {
         console.log('ERR', error);

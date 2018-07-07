@@ -11,7 +11,7 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  widgetName: 'Weather',
+  widgetName: 'DateTimeWeatherWidget',
   zipcode: 78702,
   weatherData: {},
   config: {},
@@ -60,7 +60,6 @@ export default (state = initialState, action) => {
         ...state,
         saving: false,
         saved: true,
-        config: action.payload,
       };
     case WEATHER_REQUEST_ERROR:
       return {
