@@ -9,30 +9,57 @@ router.post('/profile/save', (req, res) => {
   if (!req.body || !req.body.profileName || !req.body.widgetNames) {
     res.status(400).send('Err: Improperly formatted profile save request');
   }
-  dbHelpers.saveProfile(req.body.profileName, req.body.widgetNames);
+  dbHelpers.saveProfile(null, req.body.profileName, req.body.widgetNames);
   res.status(201).send('Saving profile to db...');
 });
 
 router.get('/profile/loadAll', (req, res) => {
-  dbHelpers.loadUserProfiles();
-  res.status(200).send('OK');
+  let returnProfiles = {};
+  dbHelpers.loadUserProfiles(null)
+    .then((profiles) => {
+      profiles.forEach((profile) => {
+        returnProfiles[profile.dataValues.name] = [];
+        console.log(`Profile: ${profile.dataValues.name} \n`);
+        profile.widgets.forEach((widget) => {
+          returnProfiles[profile.dataValues.name].push(widget.dataValues.name);
+          console.log(`  -  Widget: ${widget.dataValues.name} \n`);
+        });
+      });
+      console.log('Loaded profiles: ', returnProfiles);
+      res.status(200).send(JSON.stringify(returnProfiles));
+    })
+    .catch((err) => {
+      console.log('Error loading profiles ', err);
+      res.status(500).send('Error loading profiles ', err);
+    });
 });
 
 router.post('/profile/apply', (req, res) => {
-  let { deviceName, profileID } = req.body;
-  let { particleToken } = req.session;
-
-  if (!req.body || !req.body.profileName || !req.body.widgetNames) {
+  // format => profileDetails: { profile: ['widget1','widget2' ...] , slideshow: t/f }
+  if (!req.body || !req.body.deviceName || !req.body.profileData) {
+    console.log('Err: Improperly formatted profile apply request');
     res.status(400).send('Err: Improperly formatted profile apply request');
   }
-  particleHelpers.callFunction(deviceName, 'setProfile', profileID, particleToken)
+  let { deviceName, profileData } = req.body;
+  let { particleToken } = req.session;
+
+  // prepare profile data to be sent to Particle function
+  profileData = JSON.stringify(profileData);
+  console.log(profileData);
+
+  particleHelpers.callFunction(deviceName, 'setProfile', profileData, particleToken)
     .then((data) => {
-      console.log('Particle: Profile applied successfully, returned ', data);
-      res.status(200).end('Particle: Profile applied successfully, returned ', data);
+      if (data.body.return_value === -1) {
+        console.log('Particle: Error applying profile ', data);
+        res.status(500).end('Particle: Error applying profile ', JSON.stringify(data));
+      } else {
+        console.log('Particle: Profile applied successfully, returned ', data);
+        res.status(200).end('Particle: Profile applied successfully, returned ', JSON.stringify(data));
+      }
     })
     .catch((err) => {
       console.log('Particle Err: An error occurred setting profile: ', err);
-      res.status(500).end('Particle Err: An error occurred setting profile: ', err);
+      res.status(500).end('Particle Err: An error occurred setting profile: ', JSON.stringify(err));
     });
 });
 
