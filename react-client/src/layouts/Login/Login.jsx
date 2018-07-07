@@ -37,7 +37,7 @@ const styles = {
 function Login(props) {
   const { classes } = props;
   return (
-    <div style={{margin: '70px'}}>
+    <div style={{ margin: '70px' }}>
       <Grid container justify='center'>
         <GridItem xs={12} sm={12} md={3}>
           <Card>
@@ -70,7 +70,7 @@ function Login(props) {
             <CardFooter>
               <Button color="primary" fullWidth={true}>Login</Button>
             </CardFooter>
-            <div style={{textAlign:'center'}}>
+            <div style={{ textAlign: 'center' }}>
               <p>Don't have an account? <a className='signup' href='/signup'>Sign up</a></p>
             </div>
           </Card>
