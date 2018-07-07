@@ -11,7 +11,7 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  widgetName: 'Weather',
+  widgetName: 'DateTimeWeatherWidget',
   zipcode: 78702,
   weatherData: {},
   config: {},
