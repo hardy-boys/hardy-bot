@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const axios = require('axios');
 const particleHelpers = require('../helpers/particleHelpers.js');
 
 const router = express.Router();
@@ -68,6 +69,26 @@ router.post('/particle/view', (req, res) => {
     .catch((err) => {
       console.log('Particle Err: An error occurred calling widget change view: ', err);
       res.status(500).end('Particle Err: An error occurred calling widget change view: ', err);
+    });
+});
+
+router.post('/particle/stats', (req, res) => {
+  let { deviceName } = req.body;
+  let { particleToken } = req.session;
+
+  if (!req.body || !deviceName) {
+    res.status(400).send('Err: Invalid device name or request body');
+  }
+
+  let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
+  axios.get(diagnosticUrl)
+    .then((result) => {
+      console.log('Particle: Diagnostic lookup returned ', result.data);
+      res.status(200).end(JSON.stringify(result.data));
+    })
+    .catch((err) => {
+      console.log('Particle Err: An error occurred looking up diagnostics ', err);
+      res.status(500).end('Particle Err: An error occurred looking up diagnostics ', err);
     });
 });
 
