@@ -1,5 +1,4 @@
 const db = require('../models');
-const sequelize = require('sequelize');
 
 const saveProfile = (userId, profileName, widgetNames) => {
   // TODO: implement userId filtering
@@ -54,6 +53,28 @@ const loadUserProfiles = (userId) => {
       },
     ],
   });
+};
+
+const getUserWidgetConfigs = (userId) => {
+  return db.models.UserWidgetConfig.findAll({
+    where: {
+      userId,
+    },
+    attributes: ['configuration'],
+    include: [{
+      model: db.models.Widget,
+      attributes: ['name'],
+    }],
+    raw: true,
+  })
+    .then((configs) => {
+      // console.log('USER CONFIGS RETRIEVED', configs);
+      return configs;
+    })
+    .catch((err) => {
+      // console.log('ERROR RETRIEVING CONFIGS', err);
+      return err;
+    });
 };
 
 const saveWeatherWidgetConfig = (userId, widgetName, zipcode) => {
@@ -119,4 +140,5 @@ module.exports = {
   saveWeatherWidgetConfig,
   saveStockWidgetConfig,
   getUserDevices,
+  getUserWidgetConfigs,
 };
