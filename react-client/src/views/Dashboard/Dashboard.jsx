@@ -1,32 +1,32 @@
 import React from 'react';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+
 // react plugin for creating charts
+
 import ChartistGraph from 'react-chartist';
+
 // @material-ui/core
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
+
 // @material-ui/icons
+
 import ContentCopy from '@material-ui/icons/ContentCopy';
 import Store from '@material-ui/icons/Store';
 import InfoOutline from '@material-ui/icons/InfoOutline';
 import Warning from '@material-ui/icons/Warning';
 import DateRange from '@material-ui/icons/DateRange';
 import LocalOffer from '@material-ui/icons/LocalOffer';
-// import Update from "@material-ui/icons/Update";
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import AccessTime from '@material-ui/icons/AccessTime';
-// import Accessibility from "@material-ui/icons/Accessibility";
-// import BugReport from "@material-ui/icons/BugReport";
-// import Code from "@material-ui/icons/Code";
-// import Cloud from "@material-ui/icons/Cloud";
+
 // core components
+
 import GridItem from 'components/Grid/GridItem.jsx';
-// import Table from "components/Table/Table.jsx";
-// import Tasks from "components/Tasks/Tasks.jsx";
-// import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
 import Danger from 'components/Typography/Danger.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
@@ -34,15 +34,19 @@ import CardIcon from 'components/Card/CardIcon.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
 import CardFooter from 'components/Card/CardFooter.jsx';
 
-// import { bugs, website, server } from "variables/general";
-
+// charts
 import {
   dailySalesChart,
   emailsSubscriptionChart,
   // completedTasksChart
 } from 'variables/charts';
 
+// styles
 import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardStyle.jsx';
+
+// actions
+
+import { getUserConfigs } from '../../actions/users';
 
 class Dashboard extends React.Component {
   // constructor(props) {
@@ -54,7 +58,10 @@ class Dashboard extends React.Component {
   // }
 
   componentDidMount() {
-    // this.getUserDevices(this.state.userId);
+    // Need to get userId from user session
+    const userId = 1;
+    this.props.getUserConfigs(userId);
+
     axios.get('/particle/login')
       .then((res) => {
         console.log(res.data);
@@ -215,15 +222,22 @@ class Dashboard extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return { userDevices: state.userDevices };
-};
-
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = (state) => {
+  return {
+    userDevices: state.userDevices,
+    user: state.user,
+  };
+};
+
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ getUserConfigs }, dispatch);
+};
+
 export default compose(
   withStyles(dashboardStyle),
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchtoProps),
 )(Dashboard);
