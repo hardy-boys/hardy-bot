@@ -21,21 +21,38 @@ class StocksWidget extends React.Component {
     open: false,
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
   componentDidMount() {
-    let { stockSymbols } = this.props.stocks;
-    this.props.startStocksPolling(stockSymbols);
+    let stocks = this.checkUserConfigs();
+    this.props.startStocksPolling(stocks);
   }
 
   componentWillUnmount() {
     this.props.stopStocksPolling();
+  }
+
+  handleOpen() {
+    this.setState({ open: true });
+  }
+
+  handleClose() {
+    this.setState({ open: false });
+  }
+
+  checkUserConfigs() {
+    let { widgetName } = this.props.stocks;
+    let { configurations } = this.props.user;
+    let stockSymbols;
+
+    if (configurations.length) {
+      configurations.forEach((config) => {
+        if (config['widget.name'] === widgetName) {
+          stockSymbols = config.configuration.stocks;
+        }
+      });
+    } else {
+      stockSymbols = this.props.stocks.stockSymbols;
+    }
+    return stockSymbols;
   }
 
   render() {
@@ -74,7 +91,10 @@ class StocksWidget extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { stocks: state.stocks };
+  return {
+    stocks: state.stocks,
+    user: state.user,
+  };
 };
 
 const mapDispatchtoProps = (dispatch) => {
