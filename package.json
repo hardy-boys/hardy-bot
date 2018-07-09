@@ -41,7 +41,7 @@
     "@types/markerclustererplus": "^2.1.33",
     "axios": "^0.18.0",
     "babel-eslint": "^8.2.3",
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "chartist": "^0.11.0",
     "classnames": "^2.2.6",

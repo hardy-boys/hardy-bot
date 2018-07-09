@@ -79,10 +79,15 @@ app.post('/subscribe', passport.authenticate('local-signup', {
   res.status(200).redirect('/');
 });
 
-app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureFlash: true,
-}));
+app.post('/loginEnter', passport.authenticate('local-login', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/widgets',
+  successFlash: 'Welcome!',
+  failureFlash: 'Invaid Username or Password.',
+}), (req, res) => {
+  console.log('user', req.user);
+  res.redirect('/dashboard');
+});
 
 app.get('/logout', (req, res) => {
   req.logout();
