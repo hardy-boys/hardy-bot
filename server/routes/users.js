@@ -11,4 +11,17 @@ router.get('/users/:userId', (req, res) => {
     });
 });
 
+router.get('/users/:userId/widgets/config', (req, res) => {
+  const { userId } = req.params;
+  dbHelpers.getUserWidgetConfigs(userId)
+    .then((configs) => {
+      console.log('RETRIEVED USER CONFIGS', configs);
+      res.send(configs);
+    })
+    .catch((err) => {
+      console.log('ERROR RETRIEVING USER CONFIGS', err);
+      res.send(err);
+    });
+});
+
 module.exports = router;
