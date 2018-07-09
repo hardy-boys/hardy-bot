@@ -28,9 +28,9 @@ let eventSource;
 let apiKey = process.env.NEWS_API_KEY;
 
 router.post('/api/news', (req, res) => {
-  let searchTerm = 'venezuela';
+  let { searchTerm } = req.body;
   let targetUrl = `http://newsapi.org/v2/everything?q=${searchTerm}&language=en&apiKey=${apiKey}`;
-  
+
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
 
   let result;
@@ -63,7 +63,7 @@ router.post('/api/news', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       // res.send(result);
-      // io.emit('action', { type: actions.WEATHER_DATA_UPDATE, payload: result });
+      io.emit('action', { type: actions.NEWS_DATA_UPDATE, payload: result });
       // particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
     })
 
@@ -76,6 +76,11 @@ router.post('/api/news', (req, res) => {
     });
 
   eventSource.open();
+});
+
+router.get('/api/news/close', (req, res) => {
+  eventSource.close();
+  res.status(200).end('News polling stopped');
 });
 
 module.exports = router;
