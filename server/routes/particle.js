@@ -105,14 +105,36 @@ router.post('/particle/stats', (req, res) => {
 
   // request latest devices status to send back to client
   let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/update?access_token=${particleToken}`;
-  axios.get(diagnosticUrl)
-    .then((result) => {
-      console.log('Particle: Diagnostic update request returned ', result.data);
-      res.status(200).end(JSON.stringify(result.data));
+  axios({
+    method: 'post',
+    url: diagnosticUrl,
+    timeout: 3000,
+  })
+    .then((currentStatus) => {
+      let currentData = currentStatus.data;
+      currentData.status = 'online'; // add a custom parameter to indicate device is online
+      console.log('Particle: Diagnostic update request returned ', currentData);
+      res.status(200).end(JSON.stringify(currentData));
     })
     .catch((err) => {
-      console.log('Particle Err: An error occurred requesting diagnostics update ', err);
-      res.status(500).end('Particle Err: An error occurred requesting diagnostics update ', err);
+      if (err.code && err.code === 'ECONNABORTED') {
+        console.log('Particle: Device is unreachable, getting last status');
+        let lastDiagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
+        axios.get(lastDiagnosticUrl)
+          .then((lastStatus) => {
+            let lastData = lastStatus.data;
+            lastData.status = 'offline'; // add a custom parameter to indicate device is offline
+            console.log('Particle: Last diagnostic request returned ', lastData);
+            res.status(200).end(JSON.stringify(lastData));
+          })
+          .catch((nextErr) => {
+            console.log('Particle Err: Last diagnostic request returned ', nextErr);
+            res.status(500).end(JSON.stringify(nextErr));
+          });
+      } else {
+        res.status(err.response.status).end(`Particle Err: An error occurred requesting diagnostics update: 
+        ${JSON.stringify(err.response.data)}`);
+      }
     });
 });
 
