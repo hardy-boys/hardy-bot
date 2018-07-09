@@ -2,7 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const Particle = require('particle-api-js');
+const actions = require('../../react-client/src/actions/types');
 const particleHelpers = require('../helpers/particleHelpers.js');
+
+let particle = new Particle();
 
 const router = express.Router();
 
@@ -76,19 +80,39 @@ router.post('/particle/stats', (req, res) => {
   let { deviceName } = req.body;
   let { particleToken } = req.session;
 
+  const io = req.app.get('socketio');
+
   if (!req.body || !deviceName) {
     res.status(400).send('Err: Invalid device name or request body');
   }
 
-  let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
+  // Subscribe to future Particle device status events
+  particle.getEventStream({ deviceId: deviceName, name: 'spark/status', auth: particleToken })
+    .then((stream) => {
+      stream.on('event', (data) => {
+        console.log('Particle status event: ', data);
+        io.emit('action', { type: actions.PARTICLE_DEVICE_STATUS, payload: data });
+      });
+    });
+
+  particle.getEventStream({ deviceId: deviceName, name: 'spark/device/diagnostics/update', auth: particleToken })
+    .then((stream) => {
+      stream.on('event', (data) => {
+        console.log('Particle diagnostics event: ', data);
+        io.emit('action', { type: actions.PARTICLE_DEVICE_DIAGNOSTICS, payload: data });
+      });
+    });
+
+  // request latest devices status to send back to client
+  let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/update?access_token=${particleToken}`;
   axios.get(diagnosticUrl)
     .then((result) => {
-      console.log('Particle: Diagnostic lookup returned ', result.data);
+      console.log('Particle: Diagnostic update request returned ', result.data);
       res.status(200).end(JSON.stringify(result.data));
     })
     .catch((err) => {
-      console.log('Particle Err: An error occurred looking up diagnostics ', err);
-      res.status(500).end('Particle Err: An error occurred looking up diagnostics ', err);
+      console.log('Particle Err: An error occurred requesting diagnostics update ', err);
+      res.status(500).end('Particle Err: An error occurred requesting diagnostics update ', err);
     });
 });
 
