@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 // redux actions
 
-import { } from '../../actions/weather';
+import { startNewsPolling } from '../../actions/news';
 
 
 function getModalStyle() {
@@ -48,10 +48,7 @@ class NewsWidgetModal extends React.Component {
   }
 
   onSubmit() {
-    const { widgetName } = this.props.weather;
-    this.props.fetchWeather(this.state.searchTerm);
-    // need to get user id from redux state
-    this.props.saveWidgetConfig(1, widgetName, this.state.searchTerm);
+    this.props.startNewsPolling(this.state.searchTerm);
   }
 
   render() {
@@ -89,12 +86,12 @@ NewsWidgetModal.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    weather: state.weather,
+    news: state.news,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ }, dispatch);
+  return bindActionCreators({ startNewsPolling }, dispatch);
 };
 
 export default compose(

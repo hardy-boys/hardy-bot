@@ -63,7 +63,7 @@ router.post('/api/news', (req, res) => {
       // do whatever you wish with the update data
       console.log(result);
       // res.send(result);
-      io.emit('action', { type: actions.NEWS_DATA_UPDATE, payload: result });
+      io.emit('action', { type: actions.NEWS_DATA_UPDATE, payload: result.articles });
       // particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
     })
 

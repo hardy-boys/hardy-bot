@@ -37,6 +37,7 @@ const stopNewsPolling = () => {
       });
   };
 };
+
 export {
   startNewsPolling,
   stopNewsPolling,
