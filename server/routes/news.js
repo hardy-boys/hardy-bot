@@ -29,7 +29,7 @@ let apiKey = process.env.NEWS_API_KEY;
 
 router.post('/api/news', (req, res) => {
   let { searchTerm } = req.body;
-  let targetUrl = `http://newsapi.org/v2/everything?q=${searchTerm}&language=en&apiKey=${apiKey}`;
+  let targetUrl = `http://newsapi.org/v2/top-headlines?q=${searchTerm}&language=en&apiKey=${apiKey}`;
 
   eventSource = streamdataio.createEventSource(targetUrl, appToken);
 
