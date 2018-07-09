@@ -20,8 +20,12 @@ import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
+
+// components
+
 import WeatherWidget from './WeatherWidget.jsx';
 import StocksWidget from './StocksWidget.jsx';
+import NewsWidget from './NewsWidget.jsx';
 
 const styles = {
   cardCategoryWhite: {
@@ -115,19 +119,20 @@ class Widgets extends React.Component {
                     </CardBody>
                   </Card>
                 </GridItem>
-                {/* <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={12}>
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
                         <DirectionsCar />
                       </CardIcon>
-                      <h4 className={classes.cardTitleBlack}>Traffic</h4>
+                      <h4 className={classes.cardTitleBlack}>News</h4>
                     </CardHeader>
                     <CardBody>
+                      <NewsWidget />
                     </CardBody>
                   </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
+                {/* <GridItem xs={12} sm={12} md={12}>
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
