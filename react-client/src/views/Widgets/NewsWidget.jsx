@@ -39,28 +39,31 @@ class NewsWidget extends React.Component {
 
   render() {
     console.log('PROPS', this.props);
-    // if (this.props.news.fetched) {
-    return (
+    if (this.props.news.fetched && this.props.news.articles.length) {
+      let articles = this.props.news.articles.slice(0, 5);
+      return (
         <div>
           Top News:
           <List>
-            <ListItem>
-              <ListItemText primary="News" secondary="July 7, 2018" />
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText primary="News2" secondary="July 7, 2018" />
-            </ListItem>
+            {articles.map(article =>
+              <div key= {article.title}>
+                <ListItem button component="a" href={article.url} target="_blank">
+                  <ListItemText primary={article.title} secondary={article.description} />
+                </ListItem>
+                <Divider />
+              </div>)}
           </List>
+          <Button color="primary">Edit Widget</Button>
+          <Button color="primary">Add to Profile</Button>
         </div>
-    );
-    // } else {
-    //   return (
-    //     <div>
-    //       <p>Loading...</p>
-    //     </div>
-    //   );
-    // }
+      );
+    } else {
+      return (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
   }
 }
 
