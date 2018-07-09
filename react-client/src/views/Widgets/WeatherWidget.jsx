@@ -21,6 +21,15 @@ class WeatherWidget extends React.Component {
     open: false,
   };
 
+  componentDidMount() {
+    let zip = this.checkUserConfigs();
+    this.props.startWeatherPolling(zip);
+  }
+
+  componentWillUnmount() {
+    this.props.stopWeatherPolling();
+  }
+
   handleOpen = () => {
     this.setState({ open: true });
   };
@@ -29,15 +38,25 @@ class WeatherWidget extends React.Component {
     this.setState({ open: false });
   };
 
-  componentDidMount() {
-    this.props.startWeatherPolling(this.props.weather.zipcode);
-  }
+  checkUserConfigs() {
+    let { widgetName } = this.props.weather;
+    let { configurations } = this.props.user;
+    let weatherZips;
 
-  componentWillUnmount() {
-    this.props.stopWeatherPolling();
+    if (configurations.length) {
+      configurations.forEach((config) => {
+        if (config['widget.name'] === widgetName) {
+          weatherZips = config.configuration.zipcodes;
+        }
+      });
+    } else {
+      weatherZips = this.props.weather.zipcode;
+    }
+    return weatherZips;
   }
 
   render() {
+    console.log('PROPS', this.props);
     if (this.props.weather.fetched) {
       let { temp, pressure, humidity } = this.props.weather.weatherData.main;
       let { name, wind } = this.props.weather.weatherData;
@@ -104,7 +123,10 @@ class WeatherWidget extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { weather: state.weather };
+  return {
+    weather: state.weather,
+    user: state.user,
+  };
 };
 
 const mapDispatchtoProps = (dispatch) => {
