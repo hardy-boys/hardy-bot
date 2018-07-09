@@ -6,6 +6,8 @@ import axios from 'axios';
 // @material-ui/core components
 
 import Button from 'components/CustomButtons/Button.jsx';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 // components
 
@@ -19,6 +21,7 @@ class WeatherWidget extends React.Component {
   // Temporary state until it gets refactored to Redux
   state = {
     open: false,
+    anchorEl: null,
   };
 
   componentDidMount() {
@@ -36,6 +39,14 @@ class WeatherWidget extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleProfileClose = () => {
+    this.setState({ anchorEl: null });
   };
 
   checkUserConfigs() {
@@ -60,6 +71,7 @@ class WeatherWidget extends React.Component {
     if (this.props.weather.fetched) {
       let { temp, pressure, humidity } = this.props.weather.weatherData.main;
       let { name, wind } = this.props.weather.weatherData;
+      let { anchorEl } = this.state;
       return (
         <div>
           <div style={{
@@ -109,6 +121,17 @@ class WeatherWidget extends React.Component {
               </div>
             </div>
           <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleProfileClose}
+          >
+            <MenuItem onClick={this.handleProfileClose}>Profile1</MenuItem>
+            <MenuItem onClick={this.handleProfileClose}>Profile2</MenuItem>
+            <MenuItem onClick={this.handleProfileClose}>Profile3</MenuItem>
+          </Menu>
           <WeatherWidgetModal open={this.state.open} close={this.handleClose.bind(this)}/>
         </div>
       );
