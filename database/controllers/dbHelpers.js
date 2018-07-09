@@ -1,6 +1,6 @@
 const db = require('../models');
 const sequelize = require('sequelize');
-const bcrypt = require('node-bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 const saveMember = (email, password, zipcode, callback) => {
   let hashedPW;

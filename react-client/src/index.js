@@ -27,7 +27,6 @@ ReactDOM.render(
         <Route path='/widgets' component= {Dashboard} />;
         <Route path='/map' component= {Dashboard} />;
         <Route path='/user' component= {Dashboard} />;
-        
       </Switch>
     </Router>
   </Provider>,
