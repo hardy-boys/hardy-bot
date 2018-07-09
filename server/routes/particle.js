@@ -1,7 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const axios = require('axios');
+const Particle = require('particle-api-js');
+const actions = require('../../react-client/src/actions/types');
 const particleHelpers = require('../helpers/particleHelpers.js');
+
+let particle = new Particle();
 
 const router = express.Router();
 
@@ -68,6 +73,68 @@ router.post('/particle/view', (req, res) => {
     .catch((err) => {
       console.log('Particle Err: An error occurred calling widget change view: ', err);
       res.status(500).end('Particle Err: An error occurred calling widget change view: ', err);
+    });
+});
+
+router.post('/particle/stats', (req, res) => {
+  let { deviceName } = req.body;
+  let { particleToken } = req.session;
+
+  const io = req.app.get('socketio');
+
+  if (!req.body || !deviceName) {
+    res.status(400).send('Err: Invalid device name or request body');
+  }
+
+  // Subscribe to future Particle device status events
+  particle.getEventStream({ deviceId: deviceName, name: 'spark/status', auth: particleToken })
+    .then((stream) => {
+      stream.on('event', (data) => {
+        console.log('Particle status event: ', data);
+        io.emit('action', { type: actions.PARTICLE_DEVICE_STATUS, payload: data });
+      });
+    });
+
+  particle.getEventStream({ deviceId: deviceName, name: 'spark/device/diagnostics/update', auth: particleToken })
+    .then((stream) => {
+      stream.on('event', (data) => {
+        console.log('Particle diagnostics event: ', data);
+        io.emit('action', { type: actions.PARTICLE_DEVICE_DIAGNOSTICS, payload: data });
+      });
+    });
+
+  // request latest devices status to send back to client
+  let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/update?access_token=${particleToken}`;
+  axios({
+    method: 'post',
+    url: diagnosticUrl,
+    timeout: 3000,
+  })
+    .then((currentStatus) => {
+      let currentData = currentStatus.data;
+      currentData.status = 'online'; // add a custom parameter to indicate device is online
+      console.log('Particle: Diagnostic update request returned ', currentData);
+      res.status(200).end(JSON.stringify(currentData));
+    })
+    .catch((err) => {
+      if (err.code && err.code === 'ECONNABORTED') {
+        console.log('Particle: Device is unreachable, getting last status');
+        let lastDiagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
+        axios.get(lastDiagnosticUrl)
+          .then((lastStatus) => {
+            let lastData = lastStatus.data;
+            lastData.status = 'offline'; // add a custom parameter to indicate device is offline
+            console.log('Particle: Last diagnostic request returned ', lastData);
+            res.status(200).end(JSON.stringify(lastData));
+          })
+          .catch((nextErr) => {
+            console.log('Particle Err: Last diagnostic request returned ', nextErr);
+            res.status(500).end(JSON.stringify(nextErr));
+          });
+      } else {
+        res.status(err.response.status).end(`Particle Err: An error occurred requesting diagnostics update: 
+        ${JSON.stringify(err.response.data)}`);
+      }
     });
 });
 
