@@ -94,7 +94,7 @@ router.post('/particle/stats', (req, res) => {
     .then((stream) => {
       stream.on('event', (data) => {
         console.log('Particle status event: ', data);
-        io.emit('action', { type: actions.DEVICE_STATUS_UPDATE, payload: data });
+        io.emit('action', { type: actions.DEVICE_STATUS_UPDATE, payload: { deviceName, data } });
       });
     });
 
@@ -102,27 +102,34 @@ router.post('/particle/stats', (req, res) => {
     .then((stream) => {
       stream.on('event', (data) => {
         console.log('Particle diagnostics event: ', data);
-        io.emit('action', { type: actions.DEVICE_DIAGNOSTICS_UPDATE, payload: data });
+        io.emit('action', { type: actions.DEVICE_DIAGNOSTICS_UPDATE, payload: { deviceName, data } });
       });
     });
 
   // request latest devices status to send back to client
-  let diagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/update?access_token=${particleToken}`;
+  let updateDiagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/update?access_token=${particleToken}`;
+  let lastDiagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
   axios({
     method: 'post',
-    url: diagnosticUrl,
+    url: updateDiagnosticUrl,
     timeout: 3000,
   })
-    .then((currentStatus) => {
-      let currentData = currentStatus.data;
-      currentData.status = 'online'; // add a custom parameter to indicate device is online
-      console.log('Particle: Diagnostic update request returned ', currentData);
-      res.status(200).end(JSON.stringify(currentData));
+    .then(() => {
+      axios.get(lastDiagnosticUrl)
+        .then((lastStatus) => {
+          let lastData = lastStatus.data;
+          lastData.status = 'online'; // add a custom parameter to indicate device is online
+          console.log('Particle: Last diagnostic request returned ', lastData);
+          res.status(200).end(JSON.stringify(lastData));
+        })
+        .catch((nextErr) => {
+          console.log('Particle Err: Last diagnostic request returned ', nextErr);
+          res.status(500).end(JSON.stringify(nextErr));
+        });
     })
     .catch((err) => {
       if (err.code && err.code === 'ECONNABORTED') {
         console.log('Particle: Device is unreachable, getting last status');
-        let lastDiagnosticUrl = `https://api.particle.io/v1/diagnostics/${deviceName}/last?access_token=${particleToken}`;
         axios.get(lastDiagnosticUrl)
           .then((lastStatus) => {
             let lastData = lastStatus.data;

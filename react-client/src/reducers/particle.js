@@ -62,13 +62,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gettingDeviceInfo: false,
-        error: action.payload,
+        deviceStats: action.payload,
       };
     case DEVICE_DIAGNOSTICS_UPDATE:
       return {
         ...state,
         gettingDeviceInfo: false,
-        error: action.payload,
+        deviceStats: action.payload,
       };
     default:
       return state;
