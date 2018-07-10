@@ -47,41 +47,18 @@ import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardS
 // actions
 
 import { getUserConfigs } from '../../actions/users';
+import { signInToParticle } from '../../actions/particle';
 
 class Dashboard extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     userId: 2,
-  //   };
-  // }
-
   componentDidMount() {
     // Need to get userId from user session
     const userId = 1;
     this.props.getUserConfigs(userId);
-
-    axios.get('/particle/login')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.props.signInToParticle();
   }
 
-  // getUserDevices(userId) {
-  //   axios.get(`/users/${userId}`)
-  //     .then((devices) => {
-  //       console.log('DEVICES', devices);
-  //     })
-  //     .catch((err) => {
-  //       console.log('ERROR', err);
-  //     });
-  // }
-
   render() {
+    console.log('DASHBOARD PROPS', this.props);
     const { classes } = this.props;
     return (
       <div>
@@ -228,13 +205,13 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    userDevices: state.userDevices,
     user: state.user,
+    particle: state.particle,
   };
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ getUserConfigs }, dispatch);
+  return bindActionCreators({ getUserConfigs, signInToParticle }, dispatch);
 };
 
 export default compose(
