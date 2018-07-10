@@ -56,6 +56,9 @@ const dashboardRoutes = [
   {
     redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect',
   },
+  // {
+  //   redirect: true, path: '/login', to: '/login', navbarName: 'Login',
+  // },
 ];
 
 export default dashboardRoutes;
