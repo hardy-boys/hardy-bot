@@ -13,5 +13,7 @@ router.get('/device_profiles', routeIndex);
 router.get('/widgets', routeIndex);
 router.get('/map', routeIndex);
 router.get('/user', routeIndex);
+router.get('/login', routeIndex);
+router.get('/signup', routeIndex);
 
 module.exports = router;

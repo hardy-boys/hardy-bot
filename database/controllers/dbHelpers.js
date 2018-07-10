@@ -1,4 +1,25 @@
 const db = require('../models');
+const sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+
+const saveMember = (email, password, zipcode, callback) => {
+  let hashedPW;
+  if (password) {
+    const salt = bcrypt.genSaltSync(3);
+    hashedPW = bcrypt.hashSync(password, salt);
+  }
+  db.models.User.create({
+    email,
+    password: hashedPW,
+    zipcode,
+  })
+    .then((result) => {
+      callback(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 const saveProfile = (userId, profileName, widgetNames) => {
   // TODO: implement userId filtering
@@ -135,6 +156,7 @@ const getUserDevices = (userId) => {
 
 
 module.exports = {
+  saveMember,
   saveProfile,
   loadUserProfiles,
   saveWeatherWidgetConfig,
