@@ -55,13 +55,17 @@ class NewsWidget extends React.Component {
   render() {
     console.log('PROPS', this.props);
     if (this.props.news.fetched && this.props.news.articles.length) {
-      let articles = this.props.news.articles;
+      let { articles } = this.props.news;
       let { anchorEl } = this.state;
       return (
         <div>
-          <h5>Top News:</h5>
+          <h5>Top Articles:</h5>
           <List>
-            <Infinite containerHeight={250} elementHeight={90} timeScrollStateLastsForAfterUserScrolls={1000}>
+            <Infinite
+            containerHeight={250}
+            elementHeight={90}
+            timeScrollStateLastsForAfterUserScrolls={1000}
+            >
             {articles.map(article =>
               <div key= {article.title}>
                 <ListItem button componernt="a" href={article.url} target="_blank">
