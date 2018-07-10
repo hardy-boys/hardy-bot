@@ -51,7 +51,7 @@ router.post('/api/stocks', (req, res) => {
       res.send(data);
       // memorize the fresh data set
       result = data;
-      console.log(result);
+      // console.log(result);
       particleHelpers.sendEventData('stocks', mapParticle(data), req.session.particleToken);
       // io.emit('action', { type: actions.STOCK_DATA_RECEIVED, data: { data } });
     })
@@ -64,7 +64,7 @@ router.post('/api/stocks', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
-      console.log('RESULT', result);
+      // console.log('RESULT', result);
       // pushToDevice(mapData(symbol, result), req.session.particleToken);
       const data = result;
       // res.send(data);

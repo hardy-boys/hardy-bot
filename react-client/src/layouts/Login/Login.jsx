@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -61,10 +63,23 @@ class Login extends React.Component {
   }
 
   handleLogin() {
+    const { history } = this.props;
     axios.post('/loginEnter', {
       email: this.state.email,
       password: this.state.password,
-    });
+    })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.login === 'success') {
+          history.push('/dashboard');
+        } else {
+          console.log('Invald Email or Password.');
+          history.push('/login');
+        }
+      })
+      .catch((err) => {
+        console.log(err.data);
+      });
   }
 
   handleKeyPress(event) {
@@ -132,4 +147,4 @@ class Login extends React.Component {
   }
 }
 
-export default withStyles(styles)(Login);
+export default compose(withStyles(styles, withRouter)(Login));
