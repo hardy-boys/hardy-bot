@@ -28,6 +28,7 @@ const profile = require('./routes/profile');
 const weather = require('./routes/weather');
 const news = require('./routes/news');
 const stocks = require('./routes/stocks');
+const traffic = require('./routes/traffic');
 const particle = require('./routes/particle');
 const users = require('./routes/users');
 
@@ -44,9 +45,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   particleToken: '',
-  cookie: {
-    secure: false,
-  },
 }));
 
 //
@@ -57,7 +55,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: false,
+    secure: true,
   },
 }));
 app.use(passport.initialize());
@@ -102,6 +100,7 @@ app.use(views);
 app.use(weather);
 app.use(news);
 app.use(stocks);
+app.use(traffic);
 app.use(profile);
 app.use(particle);
 app.use(users);

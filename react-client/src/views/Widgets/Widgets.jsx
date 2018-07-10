@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import io from 'socket.io-client';
 import axios from 'axios';
+
 // @material-ui/core components
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
+
 // core components
+
 import GridItem from 'components/Grid/GridItem.jsx';
-// import Table from "components/Table/Table.jsx";
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
@@ -17,8 +20,12 @@ import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
+
+// components
+
 import WeatherWidget from './WeatherWidget.jsx';
 import StocksWidget from './StocksWidget.jsx';
+import NewsWidget from './NewsWidget.jsx';
 
 const styles = {
   cardCategoryWhite: {
@@ -65,75 +72,8 @@ const styles = {
 };
 
 class Widgets extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      zipcode: 78702,
-    };
-
-    // Quick button click handlers for demonstration
-    this.startStocksPolling = this.startStocksPolling.bind(this);
-    this.stopStocksPolling = this.stopStocksPolling.bind(this);
-    this.startWeatherPolling = this.startWeatherPolling.bind(this);
-    this.stopWeatherPolling = this.stopWeatherPolling.bind(this);
-    // this.handleDeploy = this.handleDeploy.bind(this);
-  }
-
-  componentDidMount() {
-    axios.get('/particle/login')
-      .then((res) => {
-        console.log(res.data);
-        this.startWeatherPolling();
-        this.startStocksPolling();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  componentWillUnmount() {
-    this.stopStocksPolling();
-    this.stopWeatherPolling();
-  }
-
-  startStocksPolling() {
-    axios.get('/api/stocks')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  startWeatherPolling() {
-    axios.get('/api/weather')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  stopStocksPolling() {
-    axios.get('/api/stocks/close')
-      .then((res) => {
-        console.log(res.data);
-      });
-  }
-
-  stopWeatherPolling() {
-    axios.get('/api/weather/close')
-      .then((res) => {
-        console.log(res.data);
-      });
-  }
-
-  // handleDeploy(e, widgetName) {
-  //   console.log('Deploy clicked: ', widgetName);
-  //   axios.get(`/particle/flash/${widgetName}`)
+  // componentDidMount() {
+  //   axios.get('/particle/login')
   //     .then((res) => {
   //       console.log(res.data);
   //     })
@@ -185,13 +125,14 @@ class Widgets extends React.Component {
                       <CardIcon color="rose">
                         <DirectionsCar />
                       </CardIcon>
-                      <h4 className={classes.cardTitleBlack}>Traffic</h4>
+                      <h4 className={classes.cardTitleBlack}>News</h4>
                     </CardHeader>
                     <CardBody>
+                      <NewsWidget />
                     </CardBody>
                   </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
+                {/* <GridItem xs={12} sm={12} md={12}>
                   <Card>
                     <CardHeader color="rose" icon>
                       <CardIcon color="rose">
@@ -202,7 +143,7 @@ class Widgets extends React.Component {
                     <CardBody>
                     </CardBody>
                   </Card>
-                </GridItem>
+                </GridItem> */}
               </Grid>
             </CardBody>
           </Card>
@@ -216,12 +157,16 @@ class Widgets extends React.Component {
 //   return bindActionCreators({ fetchWeather }, dispatch);
 // };
 
-// const mapStateToProps = (state) => {
-//   return {
-//     weather: state.weather,
-//     stocks: state.stocks,
-//   };
-// };
+// Give component access to Redux application state
+const mapStateToProps = (state) => {
+  return {
+    stocks: state.stocks,
+  };
+};
 
-export default withStyles(styles)(Widgets);
+// Connect component to Redux store
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+)(Widgets);
 

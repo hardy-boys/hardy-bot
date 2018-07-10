@@ -1,18 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
+import axios from 'axios';
 import PropTypes from 'prop-types';
-
-// @material-ui/core components
-
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-// redux actions
 
-import { fetchWeather, saveWidgetConfig } from '../../actions/weather';
+import { addNewStock, fetchStocks, stopStocksPolling, saveWidgetConfig } from '../../actions/stocks';
 
 
 function getModalStyle() {
@@ -36,26 +33,30 @@ const styles = theme => ({
   },
 });
 
-class WeatherWidgetModal extends React.Component {
+class StocksWidgetModal extends React.Component {
   state = {
-    zip: '',
+    symbol: '',
   };
 
   onInputChange(event) {
     this.setState({
-      zip: event.target.value,
+      symbol: event.target.value,
     });
   }
 
   onSubmit() {
-    const { widgetName } = this.props.weather;
-    this.props.fetchWeather(this.state.zip);
-    // need to get user id from redux state
-    this.props.saveWidgetConfig(1, widgetName, this.state.zip);
+    const { widgetName } = this.props.stocks;
+    const stockSymbols = [...this.props.stocks.stockSymbols, this.state.symbol];
+    this.props.stopStocksPolling();
+    this.props.addNewStock(this.state.symbol);
+    this.props.saveWidgetConfig(1, widgetName, stockSymbols);
+    // need to get userID from session
+    this.props.fetchStocks(stockSymbols);
   }
 
   render() {
     const { classes } = this.props;
+    const { stockSymbols } = this.props.stocks;
     return (
       <div>
         <Modal
@@ -66,13 +67,17 @@ class WeatherWidgetModal extends React.Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="title" id="modal-title">
-              Enter New Zipcode
+              Remove or Add New Stocks
             </Typography><br />
             <Typography variant="subheading" id="simple-modal-description">
-              Zip: <input
-              type="text"
-              onChange={this.onInputChange.bind(this)}
-              value={this.state.zip}
+              <div>
+                {stockSymbols.map(stock =>
+                  <p key={stock}>{stock}</p>)}
+              </div>
+              Add Stock: <input
+                type="text"
+                onChange={this.onInputChange.bind(this)}
+                value={this.state.symbol}
               ></input>
               <Button onClick={() => { this.onSubmit(); this.props.close(); }} type="submit">Submit</Button>
             </Typography>
@@ -83,21 +88,24 @@ class WeatherWidgetModal extends React.Component {
   }
 }
 
-WeatherWidgetModal.propTypes = {
+StocksWidgetModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  return {
-    weather: state.weather,
-  };
+  return { stocks: state.stocks };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchWeather, saveWidgetConfig }, dispatch);
+  return bindActionCreators({
+    fetchStocks,
+    addNewStock,
+    stopStocksPolling,
+    saveWidgetConfig,
+  }, dispatch);
 };
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
-)(WeatherWidgetModal);
+)(StocksWidgetModal);

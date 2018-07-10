@@ -1,28 +1,78 @@
-// import axios from 'axios';
+import axios from 'axios';
 
-// import config from '../../src/config';
+import {
+  START_WEATHER_POLLING,
+  STOP_WEATHER_POLLING,
+  WEATHER_POLLING_STOPPED,
+  WEATHER_DATA_RECEIVED,
+  WEATHER_REQUEST_ERROR,
+  SAVE_WEATHER_CONFIG,
+  WEATHER_CONFIG_SAVED,
+  WEATHER_CONFIG_SAVE_ERROR,
+} from './types';
 
-// const FETCH_WEATHER = 'FETCH_WEATHER';
-// const RECEIVE_WEATHER = 'RECEIVE_WEATHER';
-// const FETCH_WEATHER_ERROR = 'FETCH_WEATHER_ERROR';
+const startWeatherPolling = (zip) => {
+  return (dispatch) => {
+    dispatch({ type: START_WEATHER_POLLING });
+    axios.post('/api/weather', { zip })
+      .then((res) => {
+        console.log(res.data);
+        dispatch({ type: WEATHER_DATA_RECEIVED, payload: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: WEATHER_REQUEST_ERROR, payload: err });
+      });
+  };
+};
 
-// const fetchWeather = (zip) => {
-//   return (dispatch) => {
-//     dispatch({ type: FETCH_WEATHER });
-//     axios.get(`http://api.openweathermap.org/data/2.5/weather?appid=${config.OPEN_WEATHER_MAP_API_KEY}&zip=${zip}&units=imperial`)
-//       .then((weather) => {
-//         dispatch({ type: RECEIVE_WEATHER, payload: weather.data });
-//       })
-//       .catch((error) => {
-//         dispatch({ type: FETCH_WEATHER_ERROR, payload: error });
-//       });
-//   };
-// };
+const stopWeatherPolling = () => {
+  return (dispatch) => {
+    dispatch({ type: STOP_WEATHER_POLLING });
+    axios.get('/api/weather/close')
+      .then((res) => {
+        console.log(res.data);
+        dispatch({ type: WEATHER_POLLING_STOPPED });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: WEATHER_REQUEST_ERROR });
+      });
+  };
+};
 
-// export {
-//   FETCH_WEATHER,
-//   RECEIVE_WEATHER,
-//   FETCH_WEATHER_ERROR,
-//   fetchWeather,
-// };
+const fetchWeather = (zip) => {
+  return (dispatch) => {
+    dispatch({ type: START_WEATHER_POLLING });
+    axios.post('/api/weather', { zip })
+      .then((weather) => {
+        dispatch({ type: WEATHER_DATA_RECEIVED, payload: weather.data });
+      })
+      .catch((error) => {
+        dispatch({ type: WEATHER_REQUEST_ERROR, payload: error });
+      });
+  };
+};
 
+const saveWidgetConfig = (userId, widgetName, zipcode) => {
+  return (dispatch) => {
+    dispatch({ type: SAVE_WEATHER_CONFIG });
+    axios.post('/widgets/weather/save', { userId, widgetName, zipcode })
+      .then((res) => {
+        console.log('REDUX RES', res);
+        dispatch({ type: WEATHER_CONFIG_SAVED });
+      })
+      .catch((error) => {
+        console.log('ERR', error);
+        dispatch({ type: WEATHER_CONFIG_SAVE_ERROR, payload: error });
+      });
+  };
+};
+
+
+export {
+  startWeatherPolling,
+  stopWeatherPolling,
+  fetchWeather,
+  saveWidgetConfig,
+};

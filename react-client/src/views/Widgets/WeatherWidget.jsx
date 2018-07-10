@@ -1,15 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
+import axios from 'axios';
+
+// @material-ui/core components
 
 import Button from 'components/CustomButtons/Button.jsx';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+// components
+
 import WeatherWidgetModal from './WeatherWidgetModal';
+
+// actions
+
+import { startWeatherPolling, stopWeatherPolling } from '../../actions/weather';
 
 class WeatherWidget extends React.Component {
   // Temporary state until it gets refactored to Redux
   state = {
     open: false,
+    anchorEl: null,
   };
+
+  componentDidMount() {
+    let zip = this.checkUserConfigs();
+    this.props.startWeatherPolling(zip);
+  }
+
+  componentWillUnmount() {
+    this.props.stopWeatherPolling();
+  }
 
   handleOpen = () => {
     this.setState({ open: true });
@@ -19,14 +41,39 @@ class WeatherWidget extends React.Component {
     this.setState({ open: false });
   };
 
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleProfileClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  checkUserConfigs() {
+    let { widgetName } = this.props.weather;
+    let { configurations } = this.props.user;
+    let weatherZips;
+
+    if (configurations.length) {
+      configurations.forEach((config) => {
+        if (config['widget.name'] === widgetName) {
+          weatherZips = config.configuration.zipcodes;
+        }
+      });
+    } else {
+      weatherZips = this.props.weather.zipcode;
+    }
+    return weatherZips;
+  }
+
   render() {
+    console.log('PROPS', this.props);
     if (this.props.weather.fetched) {
       let { temp, pressure, humidity } = this.props.weather.weatherData.main;
       let { name, wind } = this.props.weather.weatherData;
+      let { anchorEl } = this.state;
       return (
-        <div style={{
-            width: '550px', opacity: '.75', float: 'right',
-        }}>
+        <div>
           <div style={{
               width: '50%', float: 'left', minHeight: '150px', position: 'relative',
           }}>
@@ -74,6 +121,17 @@ class WeatherWidget extends React.Component {
               </div>
             </div>
           <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleProfileClose}
+          >
+            <MenuItem onClick={this.handleProfileClose}>Profile1</MenuItem>
+            <MenuItem onClick={this.handleProfileClose}>Profile2</MenuItem>
+            <MenuItem onClick={this.handleProfileClose}>Profile3</MenuItem>
+          </Menu>
           <WeatherWidgetModal open={this.state.open} close={this.handleClose.bind(this)}/>
         </div>
       );
@@ -88,7 +146,14 @@ class WeatherWidget extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { weather: state.weather };
+  return {
+    weather: state.weather,
+    user: state.user,
+  };
 };
 
-export default compose(connect(mapStateToProps))(WeatherWidget);
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ startWeatherPolling, stopWeatherPolling }, dispatch);
+};
+
+export default compose(connect(mapStateToProps, mapDispatchtoProps))(WeatherWidget);

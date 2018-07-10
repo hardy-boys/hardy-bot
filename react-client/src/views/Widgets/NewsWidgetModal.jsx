@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 // redux actions
 
-import { fetchWeather, saveWidgetConfig } from '../../actions/weather';
+import { startNewsPolling } from '../../actions/news';
 
 
 function getModalStyle() {
@@ -36,22 +36,19 @@ const styles = theme => ({
   },
 });
 
-class WeatherWidgetModal extends React.Component {
+class NewsWidgetModal extends React.Component {
   state = {
-    zip: '',
+    searchTerm: '',
   };
 
   onInputChange(event) {
     this.setState({
-      zip: event.target.value,
+      searchTerm: event.target.value,
     });
   }
 
   onSubmit() {
-    const { widgetName } = this.props.weather;
-    this.props.fetchWeather(this.state.zip);
-    // need to get user id from redux state
-    this.props.saveWidgetConfig(1, widgetName, this.state.zip);
+    this.props.startNewsPolling(this.state.searchTerm);
   }
 
   render() {
@@ -66,13 +63,13 @@ class WeatherWidgetModal extends React.Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="title" id="modal-title">
-              Enter New Zipcode
+              Enter New Search Term
             </Typography><br />
             <Typography variant="subheading" id="simple-modal-description">
-              Zip: <input
-              type="text"
-              onChange={this.onInputChange.bind(this)}
-              value={this.state.zip}
+              Lookup: <input
+                type="text"
+                onChange={this.onInputChange.bind(this)}
+                value={this.state.searchTerm}
               ></input>
               <Button onClick={() => { this.onSubmit(); this.props.close(); }} type="submit">Submit</Button>
             </Typography>
@@ -83,21 +80,21 @@ class WeatherWidgetModal extends React.Component {
   }
 }
 
-WeatherWidgetModal.propTypes = {
+NewsWidgetModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    weather: state.weather,
+    news: state.news,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchWeather, saveWidgetConfig }, dispatch);
+  return bindActionCreators({ startNewsPolling }, dispatch);
 };
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
-)(WeatherWidgetModal);
+)(NewsWidgetModal);

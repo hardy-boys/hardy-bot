@@ -21,15 +21,31 @@ const saveMember = (email, password, zipcode, callback) => {
     });
 };
 
-const saveProfile = (profileName, widgetNames) => {
-  db.models.Profile.findOrCreate({
+const saveProfile = (userId, profileName, widgetNames) => {
+  // TODO: implement userId filtering
+  console.log('DB: saving profile ', profileName);
+
+  // delete the old profile and its associations
+  db.models.Profile.findOne({
     where: {
       name: profileName,
     },
   })
-  // db.models.Profile.create({
-  //   name: profileName,
-  // })
+    .then((profile) => {
+      if (profile) {
+        console.log('Deleting ', profileName);
+        return profile.destroy();
+      } else {
+        console.log('Profile does not already exist, creating...');
+      }
+    })
+    .then(() => {
+      return db.models.Profile.findOrCreate({
+        where: {
+          name: profileName,
+        },
+      });
+    })
     .then((profile) => {
       widgetNames.forEach((widgetName) => {
         db.models.Widget.findOne({
@@ -37,10 +53,93 @@ const saveProfile = (profileName, widgetNames) => {
           where: { name: widgetName },
         })
           .then((widget) => {
-            widget.addProfile(profile[0]);
+            if (widget) {
+              widget.addProfile(profile[0]);
+              console.log(`Successfully added widget ${widget.dataValues.id} to ${profile[0].dataValues.name}`);
+            }
           });
       });
+    })
+    .catch((err) => {
+      console.log('Error in saveProfile ', err);
     });
+};
+
+const loadUserProfiles = (userId) => {
+  console.log('Loading Profiles: \n');
+  return db.models.Profile.findAll({
+    include: [
+      {
+        model: db.models.Widget,
+      },
+    ],
+  });
+};
+
+const getUserWidgetConfigs = (userId) => {
+  return db.models.UserWidgetConfig.findAll({
+    where: {
+      userId,
+    },
+    attributes: ['configuration'],
+    include: [{
+      model: db.models.Widget,
+      attributes: ['name'],
+    }],
+    raw: true,
+  })
+    .then((configs) => {
+      // console.log('USER CONFIGS RETRIEVED', configs);
+      return configs;
+    })
+    .catch((err) => {
+      // console.log('ERROR RETRIEVING CONFIGS', err);
+      return err;
+    });
+};
+
+const saveWeatherWidgetConfig = (userId, widgetName, zipcode) => {
+  return db.models.Widget.findOne({
+    where: {
+      name: widgetName,
+    },
+  })
+    .then((widget) => {
+      let zip = { zipcodes: [zipcode] };
+      return widget.addUser(userId, {
+        through: { configuration: zip },
+      })
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          return err;
+        });
+    });
+};
+
+const saveStockWidgetConfig = (userId, widgetName, stockSymbols) => {
+  return db.models.Widget.findOne({
+    where: {
+      name: widgetName,
+    },
+  })
+    .then((widget) => {
+      let stocks = { stocks: stockSymbols };
+      return widget.addUser(userId, {
+        through: { configuration: stocks },
+      })
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          return err;
+        });
+    });
+};
+
+const saveTrafficWidgetConfig = (userId, widgetName, trafficConfig) => {
+  // TODO
 };
 
 const getUserDevices = (userId) => {
@@ -55,8 +154,13 @@ const getUserDevices = (userId) => {
     });
 };
 
+
 module.exports = {
   saveMember,
   saveProfile,
+  loadUserProfiles,
+  saveWeatherWidgetConfig,
+  saveStockWidgetConfig,
   getUserDevices,
+  getUserWidgetConfigs,
 };
