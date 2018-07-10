@@ -20,7 +20,8 @@ const tasksStyle = {
     display: "flex",
     border: "none",
     padding: "12px 8px !important",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
+    justifyContent: "flex-end"
   },
   tableCell: {
     ...defaultFont,
@@ -28,15 +29,15 @@ const tasksStyle = {
     verticalAlign: "middle",
     border: "none",
     lineHeight: "1.42857143",
-    fontSize: "14px"
+    fontSize: "14px",
   },
   tableActionButton: {
     width: "27px",
-    height: "27px"
+    height: "27px",
   },
   tableActionButtonIcon: {
     width: "17px",
-    height: "17px"
+    height: "17px",
   },
   edit: {
     backgroundColor: "transparent",

@@ -14,14 +14,16 @@ router.post('/profile/save', (req, res) => {
 });
 
 router.get('/profile/loadAll', (req, res) => {
-  let returnProfiles = {};
+  let returnProfiles = [];
   dbHelpers.loadUserProfiles(null)
     .then((profiles) => {
       profiles.forEach((profile) => {
-        returnProfiles[profile.dataValues.name] = [];
+        returnProfiles.push({
+          profile: profile.dataValues.name,
+          widgets: profile.widgets.map(widget => widget.dataValues.name),
+        });
         console.log(`Profile: ${profile.dataValues.name} \n`);
         profile.widgets.forEach((widget) => {
-          returnProfiles[profile.dataValues.name].push(widget.dataValues.name);
           console.log(`  -  Widget: ${widget.dataValues.name} \n`);
         });
       });
