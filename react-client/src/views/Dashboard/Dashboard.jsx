@@ -97,7 +97,7 @@ class Dashboard extends React.Component {
           </GridItem>
         </Grid>
         <Grid container>
-          <GridItem xs={4} sm={4} md={4}>
+          <GridItem xs={12} sm={12} md={4}>
             <Card>
               <CardHeader color="success" stats icon>
                 <CardIcon color="success">
@@ -116,7 +116,7 @@ class Dashboard extends React.Component {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={4} sm={4} md={4}>
+          <GridItem xs={12} sm={12} md={4}>
             <Card>
               <CardHeader color="warning" stats icon>
                 <CardIcon color="warning">
@@ -141,7 +141,7 @@ class Dashboard extends React.Component {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={4} sm={4} md={4}>
+          <GridItem xs={12} sm={12} md={4}>
             <Card>
               <CardHeader color="danger" stats icon>
                 <CardIcon color="danger">
