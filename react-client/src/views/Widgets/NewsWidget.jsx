@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import axios from 'axios';
+import Infinite from 'react-infinite';
 
 // @material-ui/core components
 
@@ -12,6 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
 
 // components
 
@@ -54,19 +55,25 @@ class NewsWidget extends React.Component {
   render() {
     console.log('PROPS', this.props);
     if (this.props.news.fetched && this.props.news.articles.length) {
-      let articles = this.props.news.articles.slice(0, 5);
+      let { articles } = this.props.news;
       let { anchorEl } = this.state;
       return (
         <div>
-          <h5>Top News:</h5>
+          <h5>Top Articles:</h5>
           <List>
+            <Infinite
+            containerHeight={250}
+            elementHeight={90}
+            timeScrollStateLastsForAfterUserScrolls={1000}
+            >
             {articles.map(article =>
               <div key= {article.title}>
-                <ListItem button component="a" href={article.url} target="_blank">
+                <ListItem button componernt="a" href={article.url} target="_blank">
                   <ListItemText primary={article.title} secondary={article.description} />
                 </ListItem>
                 <Divider />
               </div>)}
+            </Infinite>
           </List>
           <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
           <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
