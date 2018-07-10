@@ -66,7 +66,7 @@ router.post('/loginEnter', (req, res) => {
     }
     req.login(user, (error) => {
       if (error) {
-        console.error(error);
+        console.log('login:', error);
         res.status(401).send({ login: 'failed' });
       } else {
         res.status(200).send({ login: 'success' });

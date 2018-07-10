@@ -4,7 +4,6 @@ const dbHelpers = require('../../database/controllers/dbHelpers');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 
-
 //
 // ─── LOCAL STRATEGY ─────────────────────────────────────────────────────────────
 //
@@ -38,25 +37,37 @@ exports.passportHelper = () => {
       passReqToCallback: true,
     },
     ((req, username, password, done) => {
+      let user;
       db.models.User.findOne({ where: { email: username } })
         .then((foundUser) => {
           if (foundUser) {
-            bcrypt.compare(password, foundUser.dataValues.password)
-              .then((valid) => {
-                console.log('VALID PASSWORD', valid);
-                if (valid) {
-                  done(null, foundUser.dataValues);
-                }
-              })
-              .catch(console.log);
+            user = foundUser;
+            return bcrypt.compare(password, foundUser.dataValues.password);
+          } else {
+            done('no such user');
           }
+        })
+        .then((valid) => {
+          if (valid) {
+            console.log('VALID PASSWORD', valid);
+            done(null, user.dataValues);
+          } else {
+            done('wrong password', user.dataValues);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
         });
     }),
   ));
 
   passport.serializeUser((user, done) => {
     console.log('SERIALIZE USER\n', user);
-    done(null, user);
+    if (user) {
+      done(null, user);
+    } else {
+      done('invalid user');
+    }
   });
 
   passport.deserializeUser((obj, done) => {
