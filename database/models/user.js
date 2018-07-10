@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    zipcode: {
+      type: DataTypes.INTEGER(6),
+      allowNull: false,
+    },
   });
 
   User.associate = (models) => {
