@@ -19,7 +19,7 @@ router.get('/profile/loadAll', (req, res) => {
     .then((profiles) => {
       profiles.forEach((profile) => {
         returnProfiles.push({
-          name: profile.dataValues.name,
+          profile: profile.dataValues.name,
           widgets: profile.widgets.map(widget => widget.dataValues.name),
         });
         console.log(`Profile: ${profile.dataValues.name} \n`);

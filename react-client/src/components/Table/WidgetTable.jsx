@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
-import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
@@ -16,64 +15,40 @@ import Check from '@material-ui/icons/Check';
 import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyle.jsx';
 
 class WidgetTable extends React.Component {
-  state = {
-    checked: this.props.checkedIndexes,
-  };
-  handleToggle = value => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  handleEditClicked(widgetInfo) {
+    this.props.editWidget(widgetInfo);
+  }
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    this.setState({
-      checked: newChecked,
-    });
-  };
+  handleDeleteClicked(widgetInfo) {
+    this.props.deleteWidget(widgetInfo);
+  }
 
   render() {
-    const { classes, widgetIndexes, widgets } = this.props;
+    const { classes, widgets, profileName } = this.props;
     return (
       <Table className={classes.table}>
         <TableBody>
           {widgets.map((widget, index) => (
             <TableRow key={index} className={classes.tableRow}>
               <TableCell className={classes.tableCell}>
-              </TableCell>
-              <TableCell className={classes.tableCell}>
                 {widget}
+                <IconButton
+                  aria-label="Edit"
+                  className={classes.tableActionButton}
+                  onClick={() => this.handleEditClicked({ profile: profileName, widget })}
+                >
+                  <Edit
+                    className={
+                      `${classes.tableActionButtonIcon} ${classes.edit}`
+                    }
+                  />
+                </IconButton>
               </TableCell>
               <TableCell className={classes.tableActions}>
-                <Tooltip
-                  id="tooltip-top"
-                  title="Edit Widget"
-                  placement="top"
-                  classes={{ tooltip: classes.tooltip }}
-                >
-                  <IconButton
-                    aria-label="Edit"
-                    className={classes.tableActionButton}
-                  >
-                    <Edit
-                      className={
-                        `${classes.tableActionButtonIcon} ${classes.edit}`
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  id="tooltip-top-start"
-                  title="Remove Widget"
-                  placement="top"
-                  classes={{ tooltip: classes.tooltip }}
-                >
                   <IconButton
                     aria-label="Close"
                     className={classes.tableActionButton}
+                    onClick={() => this.handleDeleteClicked({ profile: profileName, widget })}
                   >
                     <Close
                       className={
@@ -81,7 +56,6 @@ class WidgetTable extends React.Component {
                       }
                     />
                   </IconButton>
-                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

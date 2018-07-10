@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
+
 import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 // core components
 import GridItem from 'components/Grid/GridItem.jsx';
+
 // import Table from "components/Table/Table.jsx";
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
@@ -20,6 +22,9 @@ import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
+import IconButton from '@material-ui/core/IconButton';
+import Edit from '@material-ui/icons/Edit';
+import Close from '@material-ui/icons/Close';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
 import { MoonLoader } from 'react-spinners';
 
@@ -61,13 +66,30 @@ class DeviceProfiles extends React.Component {
       });
   }
 
-  handleOpen() {
-    this.setState({ open: true });
+  editWidget(widgetInfo) {
+    console.log('Edit widget: ', widgetInfo);
   }
 
-  handleClose() {
-    this.setState({ open: false });
+  deleteWidget(widgetInfo) {
+    console.log('Delete widget: ', widgetInfo);
+    let newProfiles = this.state.profiles;
+    let { profile } = widgetInfo;
+    let { widget } = widgetInfo;
+
+    let updateProfile = this.state.profiles.find(el => el.profile === profile);
+    let index = this.state.profiles.findIndex(el => el.profile === profile);
+    updateProfile.widgets.splice(updateProfile.widgets.indexOf(widget), 1);
+    newProfiles[index] = updateProfile;
+
+    this.setState({
+      profiles: newProfiles,
+    });
   }
+
+  saveChanges() {
+    // TODO: save changes to database
+  }
+
   render() {
     const { classes } = this.props;
     const { profiles } = this.state;
@@ -96,11 +118,45 @@ class DeviceProfiles extends React.Component {
               <GridItem xs={12} sm={12} md={6} key={index}>
                 <Card>
                   <CardHeader color="primary">
-                    <h4 className={classes.cardTitleWhite}>{profile.name}</h4>
+                    <Grid
+                      container
+                      alignItems='flex-end'
+                      direction='row'
+                      justify='space-between'
+                    >
+                      <h4 className={classes.cardTitleWhite}>{profile.profile}</h4>
+                      <div>
+                        <IconButton
+                          aria-label="Edit"
+                          className={classes.tableActionButton}
+                          onClick={() => {}}
+                        >
+                          <Edit
+                            className={
+                              `${classes.tableActionButtonIcon} ${classes.edit}`
+                            }
+                          />
+                        </IconButton>
+                        <IconButton
+                          aria-label="Close"
+                          className={classes.tableActionButton}
+                          onClick={() => {}}
+                        >
+                          <Close
+                            className={
+                              `${classes.tableActionButtonIcon} ${classes.close}`
+                            }
+                          />
+                        </IconButton>
+                      </div>
+                    </Grid>
                   </CardHeader>
                   <CardBody>
                     <WidgetTable
+                      profileName={profile.profile}
                       widgets={profile.widgets}
+                      editWidget={this.editWidget.bind(this)}
+                      deleteWidget={this.deleteWidget.bind(this)}
                     />
                   </CardBody>
                   <CardFooter>
