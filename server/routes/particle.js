@@ -15,7 +15,10 @@ router.get('/particle/login', (req, res) => {
 
   if (particleToken) {
     console.log('Already logged into Particle');
-    res.status(200).end('Already logged into Particle');
+    return particleHelpers.listDevices(particleToken)
+      .then((devices) => {
+        res.send(devices.body);
+      });
   } else {
     particleHelpers.login()
       .then((data) => {
@@ -26,12 +29,12 @@ router.get('/particle/login', (req, res) => {
         return particleHelpers.listDevices(particleToken);
       })
       .then((devices) => {
-        console.log('Devices: ', devices);
-        res.status(200).end('Particle: Login successful');
+        console.log('Devices: ', devices.body);
+        res.send(devices.body);
       })
       .catch((err) => {
         console.log('Particle: Could not log in.', err);
-        res.status(401).end(err);
+        res.send(err);
       });
   }
 });
