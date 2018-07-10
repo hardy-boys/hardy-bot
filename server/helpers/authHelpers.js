@@ -1,6 +1,6 @@
 const passport = require('passport');
-const db = require('../database/models/index');
-const dbHelpers = require('../database/controllers/dbHelpers');
+const db = require('../../database/models/index');
+const dbHelpers = require('../../database/controllers/dbHelpers');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -63,4 +63,12 @@ exports.passportHelper = () => {
     console.log('DESERIALIZE USER\n');
     done(null, obj);
   });
+};
+
+exports.isLogged = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
 };

@@ -64,7 +64,13 @@ class Login extends React.Component {
     axios.post('/loginEnter', {
       email: this.state.email,
       password: this.state.password,
-    });
+    })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.data);
+      });
   }
 
   handleKeyPress(event) {
