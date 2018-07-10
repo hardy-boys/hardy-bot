@@ -94,7 +94,7 @@ router.post('/particle/stats', (req, res) => {
     .then((stream) => {
       stream.on('event', (data) => {
         console.log('Particle status event: ', data);
-        io.emit('action', { type: actions.PARTICLE_DEVICE_STATUS, payload: data });
+        io.emit('action', { type: actions.DEVICE_STATUS_UPDATE, payload: data });
       });
     });
 
@@ -102,7 +102,7 @@ router.post('/particle/stats', (req, res) => {
     .then((stream) => {
       stream.on('event', (data) => {
         console.log('Particle diagnostics event: ', data);
-        io.emit('action', { type: actions.PARTICLE_DEVICE_DIAGNOSTICS, payload: data });
+        io.emit('action', { type: actions.DEVICE_DIAGNOSTICS_UPDATE, payload: data });
       });
     });
 
