@@ -5,9 +5,9 @@
   "main": "react-client/src/index.js",
   "scripts": {
     "react-dev": "NODE_ENV=development webpack --mode development --watch",
-    "react-prod": "webpack --mode production",
+    "react-prod": "NODE_ENV=production webpack --mode production --watch",
     "server-dev": "nodemon server/index.js",
-    "heroku-postbuild": "webpack --config ./webpack.config.js --progress",
+    "heroku-postbuild": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
     "start": "node server/index.js"
   },
   "engines": {
