@@ -32,7 +32,7 @@ const dropdownStyle = theme => ({
     popperClose: {
       pointerEvents: 'none',
     },
-    pooperResponsive: {
+    popperResponsive: {
         [theme.breakpoints.down('md')]: {
             zIndex: '1640',
             position: 'static',

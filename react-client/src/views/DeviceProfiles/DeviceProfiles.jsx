@@ -1,31 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-
 import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
-// core components
-import GridItem from 'components/Grid/GridItem.jsx';
-
-// import Table from "components/Table/Table.jsx";
-import Card from 'components/Card/Card.jsx';
-import CardHeader from 'components/Card/CardHeader.jsx';
-import CardFooter from 'components/Card/CardFooter.jsx';
-import CardBody from 'components/Card/CardBody.jsx';
-import Button from 'components/CustomButtons/Button.jsx';
-import AddIcon from '@material-ui/icons/Add';
+import Fade from '@material-ui/core/Fade';
+import IconButton from '@material-ui/core/IconButton';
+// @material-ui/icons
 import DeleteIcon from '@material-ui/icons/Delete';
 import CardIcon from 'components/Card/CardIcon.jsx';
 import Language from '@material-ui/icons/Language';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
 import GolfCourse from '@material-ui/icons/GolfCourse';
-import IconButton from '@material-ui/core/IconButton';
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
+import Done from '@material-ui/icons/Done';
+// core components
+import GridItem from 'components/Grid/GridItem.jsx';
+import Card from 'components/Card/Card.jsx';
+import CardHeader from 'components/Card/CardHeader.jsx';
+import CardFooter from 'components/Card/CardFooter.jsx';
+import CardBody from 'components/Card/CardBody.jsx';
+import Button from 'components/CustomButtons/Button.jsx';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
+import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 
 const styles = {
@@ -56,9 +56,10 @@ class DeviceProfiles extends React.Component {
     axios.get('/profile/loadAll')
       .then((result) => {
         let { data } = result;
+        let profileData = data.map((prof) => { prof.editing = false; return prof; });
         this.setState({
           loading: false,
-          profiles: data,
+          profiles: profileData,
         });
       })
       .catch((err) => {
@@ -72,18 +73,51 @@ class DeviceProfiles extends React.Component {
 
   deleteWidget(widgetInfo) {
     console.log('Delete widget: ', widgetInfo);
-    let newProfiles = this.state.profiles;
-    let { profile } = widgetInfo;
+    let profIdx = widgetInfo.index;
     let { widget } = widgetInfo;
-
-    let updateProfile = this.state.profiles.find(el => el.profile === profile);
-    let index = this.state.profiles.findIndex(el => el.profile === profile);
-    updateProfile.widgets.splice(updateProfile.widgets.indexOf(widget), 1);
-    newProfiles[index] = updateProfile;
+    let updatedProfiles = this.state.profiles;
+    let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget)
+    updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
 
     this.setState({
-      profiles: newProfiles,
+      profiles: updatedProfiles,
     });
+  }
+
+  handleEditClick = (profIdx) => {
+    let updatedProfiles = this.state.profiles;
+    updatedProfiles[profIdx].editing = true;
+
+    this.setState({
+      profiles: updatedProfiles,
+    });
+  }
+
+  handleDeleteClick = () => {
+    console.log('Delete clicked');
+  }
+
+  handleSaveClick = (profIdx) => {
+    // save to DB
+    let updatedProfiles = this.state.profiles;
+    updatedProfiles[profIdx].editing = false;
+
+    this.setState({
+      profiles: updatedProfiles,
+    });
+  }
+
+  handleCancelClick = (profIdx) => {
+    let updatedProfiles = this.state.profiles;
+    updatedProfiles[profIdx].editing = false;
+
+    this.setState({
+      profiles: updatedProfiles,
+    });
+  }
+
+  handleAddClick = () => {
+
   }
 
   saveChanges() {
@@ -129,7 +163,7 @@ class DeviceProfiles extends React.Component {
                         <IconButton
                           aria-label="Edit"
                           className={classes.tableActionButton}
-                          onClick={() => {}}
+                          onClick={() => { this.handleEditClick(index); }}
                         >
                           <Edit
                             className={
@@ -140,7 +174,7 @@ class DeviceProfiles extends React.Component {
                         <IconButton
                           aria-label="Close"
                           className={classes.tableActionButton}
-                          onClick={() => {}}
+                          onClick={() => { this.handleDeleteClick(index); }}
                         >
                           <Close
                             className={
@@ -152,23 +186,49 @@ class DeviceProfiles extends React.Component {
                     </Grid>
                   </CardHeader>
                   <CardBody>
-                    <WidgetTable
-                      profileName={profile.profile}
-                      widgets={profile.widgets}
-                      editWidget={this.editWidget.bind(this)}
-                      deleteWidget={this.deleteWidget.bind(this)}
-                    />
+                      <WidgetTable
+                        profileIndex={index}
+                        widgets={profile.widgets}
+                        editing={profile.editing}
+                        editWidget={this.editWidget.bind(this)}
+                        deleteWidget={this.deleteWidget.bind(this)}
+                      />
                   </CardBody>
-                  <CardFooter>
-                    <Grid
-                      container
-                      alignItems='flex-end'
-                      direction='row'
-                      justify='center'
-                    >
-                      <Button color="primary">Save Changes</Button>
-                    </Grid>
-                  </CardFooter>
+                  {profile.editing ?
+                    (<CardFooter>
+                      <Grid
+                        container
+                        alignItems='flex-end'
+                        direction='row'
+                        justify='space-between'
+                      >
+                        <Fade in={profile.editing}>
+                          <WidgetDropdown
+                          type={'add'}
+                          editing={profile.editing}
+                          />
+                        </Fade>
+                        <Fade in={profile.editing}>
+                          <div>
+                            <Button
+                              color="primary"
+                              disabled={!profile.editing}
+                              onClick={() => { this.handleSaveClick(index); }}
+                            ><Done />
+                              Save Changes
+                            </Button>
+                            <Button
+                              color="primary"
+                              disabled={!profile.editing}
+                              onClick={() => { this.handleCancelClick(index); }}
+                            ><Close />
+                              Cancel
+                            </Button>
+                          </div>
+                        </Fade>
+                      </Grid>
+                    </CardFooter>)
+                    : <div></div>}
                 </Card>
               </GridItem>
             );
