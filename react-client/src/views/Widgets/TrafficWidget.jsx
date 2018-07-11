@@ -74,15 +74,15 @@ class TrafficWidget extends React.Component {
 
     return (
         <div>
-          <Grid container justify="flex-end">
+          <Grid container>
             {Object.keys(trafficData).length ? (
-              <GridItem xs={5}>
-                <h6>Distance:</h6>{travelDistance}mi
-                <h6>Duration:</h6>{travelDuration}s
-                <h6>Duration with Traffic:</h6>{travelDurationTraffic}s
+              <GridItem xs={6}>
+                Distance:{travelDistance.toFixed(2)}mi<br />
+                Duration:{(travelDuration / 60).toFixed(2)}mins<br />
+                Duration with Traffic:{(travelDurationTraffic / 60).toFixed(2)}mins
               </GridItem>
             ) : (
-              <GridItem xs={5}>
+              <GridItem xs={6}>
                 <h5>Please enter an origin and destination</h5>
               </GridItem>
             )};
