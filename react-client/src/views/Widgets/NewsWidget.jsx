@@ -64,10 +64,10 @@ class NewsWidget extends React.Component {
             <Infinite
             containerHeight={250}
             elementHeight={90}
-            timeScrollStateLastsForAfterUserScrolls={1000}
+            timeScrollStateLastsForAfterUserScrolls={500}
             >
-            {articles.map(article =>
-              <div key= {article.title}>
+            {articles.map((article, index) =>
+              <div key={index}>
                 <ListItem button component="a" href={article.url} target="_blank">
                   <ListItemText primary={article.title} secondary={article.description} />
                 </ListItem>
