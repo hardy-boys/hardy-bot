@@ -27,9 +27,8 @@ let eventSource;
 let apiKey = process.env.BING_MAPS_API_KEY;
 
 router.post('/api/traffic', (req, res) => {
-  // hard coded values for testing
-  let origin = '11410%20Century%20Oaks%20Terrace,%20Austin,%20TX%2078758';
-  let destination = '800%20Brazos%20St,%20Austin,%20TX%2078701';
+  let { origin, destination } = req.body;
+
   let targetUrl = `http://dev.virtualearth.net/REST/v1/Routes?wayPoint.1=${origin}&waypoint.2=${destination}
   &optimize=timeWithTraffic&routeAttributes=routeSummariesOnly&maxSolutions=1&distanceUnit=mi&key=${apiKey}`;
 
