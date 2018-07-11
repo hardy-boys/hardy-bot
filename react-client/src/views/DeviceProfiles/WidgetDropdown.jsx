@@ -68,7 +68,7 @@ class WidgetDropdown extends React.Component {
           onClick={this.handleClick}
           className={classes.tableActionButton}
         >
-          <Edit className={classes.tableActionButton} />
+          <Edit className={classes.tableActionButtonIcon} />
         </IconButton>
       );
     }

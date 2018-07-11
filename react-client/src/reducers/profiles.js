@@ -1,9 +1,16 @@
-import { LOGGING_IN_DEVICE, ERROR_LOGGING_IN, LOGGED_IN } from '../actions/types';
+import {
+  LOGGING_IN_DEVICE,
+  ERROR_LOGGING_IN,
+  LOGGED_IN,
+  PROFILE_DATA_RECIEVED,
+} from '../actions/types';
 
 const initialState = {
   userId: 2,
   devices: [],
   currentDevice: {},
+  profileData: [],
+  loading: true,
   isOnline: false,
   loggingIn: false,
   loggedIn: false,
@@ -24,6 +31,12 @@ export default (state = initialState, action) => {
         devices: action.data.devices,
         currentDevice: action.data.currentDevice,
         isOnline: true,
+      };
+    case PROFILE_DATA_RECIEVED:
+      return {
+        ...state,
+        loading: false,
+        profileData: action.payload,
       };
     default:
       return state;
