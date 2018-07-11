@@ -32,15 +32,6 @@ class TrafficWidget extends React.Component {
     value: 0,
   };
 
-  componentDidMount() {
-    // let zip = this.checkUserConfigs();
-    // this.props.startWeatherPolling(zip);
-  }
-
-  componentWillUnmount() {
-    // this.props.stopWeatherPolling();
-  }
-
   handleOpen = () => {
     this.setState({ open: true });
   };
@@ -60,21 +51,43 @@ class TrafficWidget extends React.Component {
   // checkUserConfigs() {
   // }
 
+  setGaugeColor = (traffic) => {
+    if (traffic >= 0 && traffic <= 3.33) {
+      return 'green';
+    }
+    if (traffic >= 3.33 && traffic <= 6.66) {
+      return 'yellow';
+    }
+    if (traffic >= 6.66 && traffic <= 10) {
+      return 'red';
+    } else {
+      return '';
+    }
+  }
+
   render() {
-    console.log('PROPS', this.props);
+    // console.log('PROPS', this.props);
     let { travelDistance, travelDuration, travelDurationTraffic } = this.props.traffic.trafficData;
-    let traffic = Math.ceil((travelDurationTraffic - travelDuration) / 60);
-    // if (this.props.weather.fetched) {
+    let traffic = Math.ceil((travelDurationTraffic - travelDuration) / 60) || '';
+    let { trafficData } = this.props.traffic;
+
+
     return (
         <div>
           <Grid container justify="flex-end">
+            {Object.keys(trafficData).length ? (
+              <GridItem xs={5}>
+                <h6>Distance:</h6>{travelDistance}mi
+                <h6>Duration:</h6>{travelDuration}s
+                <h6>Duration with Traffic:</h6>{travelDurationTraffic}s
+              </GridItem>
+            ) : (
+              <GridItem xs={5}>
+                <h5>Please enter an origin and destination</h5>
+              </GridItem>
+            )};
             <GridItem xs={5}>
-              <h6>Distance:</h6>{travelDistance}mi
-              <h6>Duration:</h6>{travelDuration}s
-              <h6>Duration with Traffic:</h6>{travelDurationTraffic}s
-            </GridItem>
-            <GridItem xs={5}>
-              <Gauge value={traffic} min={0} max={10} width={200} height={175} label="Traffic" />
+              <Gauge color={this.setGaugeColor(traffic)} value={traffic} min={0} max={10} width={200} height={175} label="Traffic" />
             </GridItem>
           </Grid>
           <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
@@ -82,13 +95,6 @@ class TrafficWidget extends React.Component {
           <TrafficWidgetModal open={this.state.open} close={this.handleClose.bind(this)} />
         </div>
     );
-    // } else {
-    //   return (
-    //     <div>
-    //       <p>Loading...</p>
-    //     </div>
-    //   );
-    // }
   }
 }
 
