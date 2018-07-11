@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Manager, Target, Popper } from 'react-popper';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +23,7 @@ import dropdownStyle from 'assets/jss/material-dashboard-react/dropdownStyle.jsx
 import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyle.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 
+import { updateProfiles } from '../../actions/profiles';
 
 class WidgetDropdown extends React.Component {
   state = {
@@ -28,7 +31,7 @@ class WidgetDropdown extends React.Component {
   };
 
   handleClick = () => {
-    console.log(this.state.open)
+    console.log(this.state.open);
     this.setState(prevState => ({
       open: !prevState.open,
     }));
@@ -38,9 +41,29 @@ class WidgetDropdown extends React.Component {
     this.setState({ open: false });
   };
 
+  handleItemChange = (widget) => {
+    if (this.props.editing) {
+      const { type } = this.props;
+
+      if (type === 'edit') {
+        // update current widget if dropdown is on existing element
+        console.log('Update widget: ', widget);
+        let { profileIndex, widgetIndex } = this.props;
+        let updatedProfiles = this.props.profiles.profileData;
+        updatedProfiles[profileIndex].widgets[widgetIndex] = widget;
+        this.props.updateProfiles(updatedProfiles);
+        this.setState({ open: false });
+      } else if (type === 'add') {
+        // add new widget if dropdown is add button
+        console.log('Add widget: ', widget);
+      }
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const { editing } = this.props;
+    const { disabled } = this.props;
     const { type } = this.props;
     const { open } = this.state;
 
@@ -52,7 +75,7 @@ class WidgetDropdown extends React.Component {
           aria-label="Add"
           aria-owns={open ? 'menu-list' : null}
           aria-haspopup="true"
-          disabled={!editing}
+          disabled={disabled}
           onClick={this.handleClick}
           className={classes.buttonLink}
         >
@@ -105,7 +128,7 @@ class WidgetDropdown extends React.Component {
                       return (
                         <MenuItem
                           key={index}
-                          onClick={this.handleClose}
+                          onClick={() => { this.handleItemChange(widget); }}
                           className={classes.dropdownItem}
                         >
                           {widget}
@@ -123,5 +146,17 @@ class WidgetDropdown extends React.Component {
   }
 }
 
-export default withStyles(tasksStyle, dropdownStyle)(WidgetDropdown);
-// export default withStyles(dropdownStyle)(WidgetDropdown);
+const mapStateToProps = (state) => {
+  return {
+    profiles: state.profiles,
+  };
+};
+
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ updateProfiles }, dispatch);
+};
+
+export default compose(
+  withStyles(tasksStyle, dropdownStyle),
+  connect(mapStateToProps, mapDispatchtoProps),
+)(WidgetDropdown);

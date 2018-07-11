@@ -11,6 +11,7 @@ const initialState = {
   devices: [],
   currentDevice: {},
   profileData: [],
+  profileBackup: [],
   loading: true,
   isOnline: false,
   loggingIn: false,
@@ -38,6 +39,7 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         profileData: action.payload,
+        profileBackup: JSON.parse(JSON.stringify(action.payload)), // make a copy to restore later
       };
     case PROFILE_DATA_UPDATE:
       return {

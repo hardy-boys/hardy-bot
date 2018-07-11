@@ -15,6 +15,7 @@ const fetchProfilesFromDB = () => {
           prof.deleting = false;
           return prof;
         });
+        console.log('act ', profileData)
         dispatch({ type: PROFILE_DATA_RECIEVED, payload: profileData });
       })
       .catch((err) => {

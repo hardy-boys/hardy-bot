@@ -23,17 +23,16 @@ import { updateProfiles } from '../../actions/profiles';
 
 
 class WidgetTable extends React.Component {
-
   handleEditClicked(widget) {
     console.log('Edit widget: ', widget);
   }
 
   handleDeleteClicked(widget) {
     console.log('Delete widget: ', widget);
-    let profIdx = this.props.profileIndex;
+    let { profileIndex } = this.props;
     let updatedProfiles = this.props.profiles.profileData;
-    let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget);
-    updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
+    let widgetIdx = updatedProfiles[profileIndex].widgets.indexOf(widget);
+    updatedProfiles[profileIndex].widgets.splice(widgetIdx, 1);
     this.props.updateProfiles(updatedProfiles);
   }
 
@@ -56,6 +55,8 @@ class WidgetTable extends React.Component {
                   <WidgetDropdown
                     type={'edit'}
                     editing={editing}
+                    profileIndex={this.props.profileIndex}
+                    widgetIndex={index}
                   />
                   <Typography variant="body2" gutterBottom>
                     {widget}

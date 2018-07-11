@@ -31,7 +31,7 @@ import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 
-import { fetchProfilesFromDB, updateProfiles } from '../../actions/profiles';
+import { fetchProfilesFromDB, updateProfiles, backupProfiles } from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -55,6 +55,7 @@ class DeviceProfiles extends React.Component {
 
   componentDidMount() {
     this.props.fetchProfilesFromDB();
+    console.log(this.props.profiles.profileData);
   }
 
   handleEditProfileClick = (profIdx) => {
@@ -77,13 +78,10 @@ class DeviceProfiles extends React.Component {
   }
 
   handleCancelClick = (profIdx) => {
+    // restore profile state from backup
     let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].editing = false;
+    updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
     this.props.updateProfiles(updatedProfiles);
-  }
-
-  handleAddClick = () => {
-
   }
 
   handleModalClose = (profIdx) => {
@@ -133,6 +131,8 @@ class DeviceProfiles extends React.Component {
         <React.Fragment>
           <Grid container>
             {profiles.map((profile, index) => {
+              // limit to 4 widgets due to device restrictions
+              let widgetMax = profile.widgets.length >= 4;
               return (
                 <GridItem xs={12} sm={12} md={6} key={index}>
                   <Card>
@@ -167,7 +167,7 @@ class DeviceProfiles extends React.Component {
                           <IconButton
                             aria-label="Edit"
                             className={classes.tableActionButton}
-                            onClick={() => { this.handleEditProfileClick(index); }}
+                            onClick={() => { this.handleEditProfileClick(index, profiles); }}
                           >
                             <Edit
                               className={
@@ -207,7 +207,9 @@ class DeviceProfiles extends React.Component {
                           <Fade in={profile.editing}>
                             <WidgetDropdown
                             type={'add'}
+                            disabled={widgetMax}
                             editing={profile.editing}
+                            profileIndex={index}
                             />
                           </Fade>
                           <Fade in={profile.editing}>
