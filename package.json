@@ -5,9 +5,9 @@
   "main": "react-client/src/index.js",
   "scripts": {
     "react-dev": "NODE_ENV=development webpack --mode development --watch",
-    "react-prod": "webpack --mode production",
+    "react-prod": "NODE_ENV=production webpack --mode production --watch",
     "server-dev": "nodemon server/index.js",
-    "heroku-postbuild": "webpack --config ./webpack.config.js --progress",
+    "heroku-postbuild": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
     "start": "node server/index.js"
   },
   "engines": {
@@ -67,6 +67,7 @@
     "react-infinite": "^0.13.0",
     "react-popper": "^0.10.1",
     "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-spinners": "^0.3.2",
     "react-svg-gauge": "^1.0.8",
