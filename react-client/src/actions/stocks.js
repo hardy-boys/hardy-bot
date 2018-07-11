@@ -17,7 +17,7 @@ const startStocksPolling = (stockSymbols) => {
     dispatch({ type: START_STOCK_POLLING });
     axios.post('/api/stocks', { symbols: stockSymbols })
       .then((res) => {
-        console.log('RESPONSE', res.data);
+        // console.log('RESPONSE', res.data);
         dispatch({ type: STOCK_DATA_RECEIVED, payload: res.data });
       })
       .catch((err) => {

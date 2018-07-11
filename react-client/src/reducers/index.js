@@ -6,6 +6,7 @@ import NewsReducer from './news';
 import ProfilesReducer from './profiles';
 import UserReducer from './users';
 import ParticleReducer from './particle';
+import TrafficReducer from './traffic';
 
 const rootReducer = combineReducers({
   user: UserReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   weather: WeatherReducer,
   stocks: StocksReducer,
   news: NewsReducer,
+  traffic: TrafficReducer,
 });
 
 export default rootReducer;

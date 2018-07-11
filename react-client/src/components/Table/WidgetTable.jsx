@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,48 +8,67 @@ import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
 // @material-ui/icons
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
 import Check from '@material-ui/icons/Check';
 // core components
 import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyle.jsx';
+import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
+import Typography from '@material-ui/core/Typography';
+
+import { updateProfiles } from '../../actions/profiles';
+
 
 class WidgetTable extends React.Component {
-  handleEditClicked(widgetInfo) {
-    this.props.editWidget(widgetInfo);
+
+  handleEditClicked(widget) {
+    console.log('Edit widget: ', widget);
   }
 
-  handleDeleteClicked(widgetInfo) {
-    this.props.deleteWidget(widgetInfo);
+  handleDeleteClicked(widget) {
+    console.log('Delete widget: ', widget);
+    let profIdx = this.props.profileIndex;
+    let updatedProfiles = this.props.profiles.profileData;
+    let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget);
+    updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
+    this.props.updateProfiles(updatedProfiles);
   }
 
   render() {
-    const { classes, widgets, profileName } = this.props;
+    const {
+      classes, widgets, editing,
+    } = this.props;
     return (
       <Table className={classes.table}>
         <TableBody>
           {widgets.map((widget, index) => (
             <TableRow key={index} className={classes.tableRow}>
               <TableCell className={classes.tableCell}>
-                {widget}
-                <IconButton
-                  aria-label="Edit"
-                  className={classes.tableActionButton}
-                  onClick={() => this.handleEditClicked({ profile: profileName, widget })}
+                <Grid
+                  container
+                  alignItems='flex-start'
+                  direction='row'
+                  justify='flex-start'
                 >
-                  <Edit
-                    className={
-                      `${classes.tableActionButtonIcon} ${classes.edit}`
-                    }
+                  <WidgetDropdown
+                    type={'edit'}
+                    editing={editing}
                   />
-                </IconButton>
+                  <Typography variant="body2" gutterBottom>
+                    {widget}
+                  </Typography>
+                </Grid>
               </TableCell>
               <TableCell className={classes.tableActions}>
+                <Fade in={editing}>
                   <IconButton
                     aria-label="Close"
+                    disabled={!editing}
                     className={classes.tableActionButton}
-                    onClick={() => this.handleDeleteClicked({ profile: profileName, widget })}
+                    onClick={() => this.handleDeleteClicked({ widget })}
                   >
                     <Close
                       className={
@@ -56,6 +76,7 @@ class WidgetTable extends React.Component {
                       }
                     />
                   </IconButton>
+                </Fade>
               </TableCell>
             </TableRow>
           ))}
@@ -65,10 +86,17 @@ class WidgetTable extends React.Component {
   }
 }
 
-WidgetTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  tasksIndexes: PropTypes.arrayOf(PropTypes.number),
-  tasks: PropTypes.arrayOf(PropTypes.node),
+const mapStateToProps = (state) => {
+  return {
+    profiles: state.profiles,
+  };
 };
 
-export default withStyles(tasksStyle)(WidgetTable);
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ updateProfiles }, dispatch);
+};
+
+export default compose(
+  withStyles(tasksStyle),
+  connect(mapStateToProps, mapDispatchtoProps),
+)(WidgetTable);
