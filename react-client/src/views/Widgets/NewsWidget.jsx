@@ -53,7 +53,7 @@ class NewsWidget extends React.Component {
   };
 
   render() {
-    console.log('PROPS', this.props);
+    // console.log('PROPS', this.props);
     if (this.props.news.fetched && this.props.news.articles.length) {
       let { articles } = this.props.news;
       let { anchorEl } = this.state;
