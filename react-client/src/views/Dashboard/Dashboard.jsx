@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { MoonLoader } from 'react-spinners';
 
 // react plugin for creating charts
 
@@ -49,6 +50,10 @@ import { getUserConfigs } from '../../actions/users';
 import { signInToParticle } from '../../actions/particle';
 
 class Dashboard extends React.Component {
+  state = {
+    loading: true,
+  };
+
   componentDidMount() {
     // Need to get userId from user session
     const userId = 1;
@@ -59,9 +64,12 @@ class Dashboard extends React.Component {
   render() {
     console.log('DASHBOARD PROPS', this.props);
     const { classes } = this.props;
-    const { devices } = this.props.particle;
+    const { devices, deviceInfo } = this.props.particle;
 
-    if (devices.length) {
+
+    if (devices.length && deviceInfo.deviceStats && deviceInfo.deviceStats.diagnostics.payload) {
+      let used = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.used / 1000));
+      let total = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.total / 1000));
       return (
         <div>
           <Grid container>
@@ -69,7 +77,7 @@ class Dashboard extends React.Component {
               <Card>
                 <CardHeader color="info">
                 {/* Get device info from db */}
-                  <h4 className={classes.cardTitleWhite}>Savvy Fox</h4>
+                  <h4 className={classes.cardTitleWhite}>{deviceInfo.deviceName}</h4>
                   <p className={classes.cardCategoryWhite}>LCD Display</p>
                 </CardHeader>
               </Card>
@@ -84,7 +92,7 @@ class Dashboard extends React.Component {
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Status</p>
                   {/* This is data we need to get from the device */}
-                  <h3 className={classes.cardTitle}>Offline</h3>
+                  <h3 className={classes.cardTitle}>{deviceInfo.deviceStats.status}</h3>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
@@ -104,7 +112,7 @@ class Dashboard extends React.Component {
                   <p className={classes.cardCategory}>Used Space</p>
                   {/* This is data we need to get from the device */}
                   <h3 className={classes.cardTitle}>
-                    49/50 <small>GB</small>
+                    {used}/{total}<small>KB</small>
                   </h3>
                 </CardHeader>
                 <CardFooter stats>
@@ -200,9 +208,19 @@ class Dashboard extends React.Component {
       );
     } else {
       return (
-        <div>
-          <h1>Loading...</h1>
-        </div>
+        <Grid
+          container
+          spacing={16}
+          alignItems='center'
+          direction='column'
+          justify='center'
+        >
+          <h1>Loading device...</h1>
+          <MoonLoader
+            color={'#333333'}
+            loading={this.state.loading}
+          />
+        </Grid>
       );
     }
   }

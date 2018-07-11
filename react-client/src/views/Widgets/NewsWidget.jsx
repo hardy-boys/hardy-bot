@@ -68,7 +68,7 @@ class NewsWidget extends React.Component {
             >
             {articles.map(article =>
               <div key= {article.title}>
-                <ListItem button componernt="a" href={article.url} target="_blank">
+                <ListItem button component="a" href={article.url} target="_blank">
                   <ListItemText primary={article.title} secondary={article.description} />
                 </ListItem>
                 <Divider />

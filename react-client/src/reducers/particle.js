@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   devices: [],
-  deviceStats: [],
+  deviceInfo: [],
   signingInToParticle: false,
   signedInToParticle: false,
   gettingDeviceInfo: false,
@@ -50,7 +50,7 @@ export default (state = initialState, action) => {
         ...state,
         gettingDeviceInfo: false,
         deviceInfoReceived: true,
-        deviceStats: action.payload,
+        deviceInfo: action.payload,
       };
     case ERROR_RETRIEVING_DEVICE_INFO:
       return {
@@ -62,13 +62,28 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gettingDeviceInfo: false,
-        deviceStats: action.payload,
+        deviceInfo: {
+          ...state.deviceInfo,
+          deviceStats: {
+            ...state.deviceInfo.deviceStats,
+            status: action.payload.status.data,
+          },
+        },
       };
     case DEVICE_DIAGNOSTICS_UPDATE:
       return {
         ...state,
         gettingDeviceInfo: false,
-        deviceStats: action.payload,
+        deviceInfo: {
+          ...state.deviceInfo,
+          deviceStats: {
+            ...state.deviceInfo.deviceStats,
+            diagnostics: {
+              ...state.deviceInfo.deviceStats.diagnostics,
+              payload: JSON.parse(action.payload.diagnostics.data),
+            },
+          },
+        },
       };
     default:
       return state;

@@ -92,17 +92,17 @@ router.post('/particle/stats', (req, res) => {
   // Subscribe to future Particle device status events
   particle.getEventStream({ deviceId: deviceName, name: 'spark/status', auth: particleToken })
     .then((stream) => {
-      stream.on('event', (data) => {
-        console.log('Particle status event: ', data);
-        io.emit('action', { type: actions.DEVICE_STATUS_UPDATE, payload: { deviceName, data } });
+      stream.on('event', (status) => {
+        console.log('Particle status event: ', status);
+        io.emit('action', { type: actions.DEVICE_STATUS_UPDATE, payload: { deviceName, status } });
       });
     });
 
   particle.getEventStream({ deviceId: deviceName, name: 'spark/device/diagnostics/update', auth: particleToken })
     .then((stream) => {
-      stream.on('event', (data) => {
-        console.log('Particle diagnostics event: ', data);
-        io.emit('action', { type: actions.DEVICE_DIAGNOSTICS_UPDATE, payload: { deviceName, data } });
+      stream.on('event', (diagnostics) => {
+        console.log('Particle diagnostics event: ', diagnostics);
+        io.emit('action', { type: actions.DEVICE_DIAGNOSTICS_UPDATE, payload: { deviceName, diagnostics } });
       });
     });
 
