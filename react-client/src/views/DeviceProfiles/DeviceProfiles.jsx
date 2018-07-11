@@ -31,7 +31,7 @@ import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 
-import { fetchProfilesFromDB } from '../../actions/profiles';
+import { fetchProfilesFromDB, updateProfiles } from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -57,58 +57,29 @@ class DeviceProfiles extends React.Component {
     this.props.fetchProfilesFromDB();
   }
 
-  editWidget(widgetInfo) {
-    console.log('Edit widget: ', widgetInfo);
-  }
-
-  deleteWidget(widgetInfo) {
-    console.log('Delete widget: ', widgetInfo);
-    let profIdx = widgetInfo.index;
-    let { widget } = widgetInfo;
-    let updatedProfiles = this.state.profiles;
-    let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget);
-    updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
-  }
-
   handleEditProfileClick = (profIdx) => {
-    let updatedProfiles = this.state.profiles;
+    let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].editing = true;
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   handleDeleteProfileClick = (profIdx) => {
-    let updatedProfiles = this.state.profiles;
+    let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].deleting = true;
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   handleSaveClick = (profIdx) => {
-    // save to DB
-    let updatedProfiles = this.state.profiles;
+    let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].editing = false;
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
+    this.props.updateProfiles(updatedProfiles);
+    // save to DB
   }
 
   handleCancelClick = (profIdx) => {
-    let updatedProfiles = this.state.profiles;
+    let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].editing = false;
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   handleAddClick = () => {
@@ -116,28 +87,19 @@ class DeviceProfiles extends React.Component {
   }
 
   handleModalClose = (profIdx) => {
-    let updatedProfiles = this.state.profiles;
+    let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].deleting = false;
-
-    this.setState({
-      profiles: updatedProfiles,
-    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   handleModalConfirm = (profIdx) => {
-    let closeModal = this.state.profiles;
+    let closeModal = this.props.profiles.profileData;
     closeModal[profIdx].deleting = false;
-
-    // make sure modal is closed before deleting profile
-    this.setState({
-      profiles: closeModal,
-    }, () => {
-      let updatedProfiles = this.state.profiles;
-      updatedProfiles.splice(profIdx, 1);
-      this.setState({
-        profiles: updatedProfiles,
-      });
-    });
+    this.props.updateProfiles(closeModal);
+    // todo: make sure modal is closed before deleting profile w/ prom,i
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles.splice(profIdx, 1);
+    this.props.updateProfiles(updatedProfiles);
     // TODO: delete from database
   }
 
@@ -222,8 +184,6 @@ class DeviceProfiles extends React.Component {
                           profileIndex={index}
                           widgets={profile.widgets}
                           editing={profile.editing}
-                          editWidget={this.editWidget.bind(this)}
-                          deleteWidget={this.deleteWidget.bind(this)}
                         />
                     </CardBody>
                     {profile.editing ?
@@ -309,7 +269,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ fetchProfilesFromDB }, dispatch);
+  return bindActionCreators({ fetchProfilesFromDB, updateProfiles }, dispatch);
 };
 
 export default compose(

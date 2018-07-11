@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import {
   PROFILE_DATA_RECIEVED,
+  PROFILE_DATA_UPDATE,
 } from './types';
 
 const fetchProfilesFromDB = () => {
@@ -22,6 +23,13 @@ const fetchProfilesFromDB = () => {
   };
 };
 
+const updateProfiles = (profileData) => {
+  return (dispatch) => {
+    dispatch({ type: PROFILE_DATA_UPDATE, payload: profileData });
+  };
+};
+
 export {
   fetchProfilesFromDB,
+  updateProfiles,
 };

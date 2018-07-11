@@ -3,6 +3,7 @@ import {
   ERROR_LOGGING_IN,
   LOGGED_IN,
   PROFILE_DATA_RECIEVED,
+  PROFILE_DATA_UPDATE,
 } from '../actions/types';
 
 const initialState = {
@@ -36,6 +37,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        profileData: action.payload,
+      };
+    case PROFILE_DATA_UPDATE:
+      return {
+        ...state,
         profileData: action.payload,
       };
     default:

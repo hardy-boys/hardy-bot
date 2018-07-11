@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,17 +19,28 @@ import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyl
 import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import Typography from '@material-ui/core/Typography';
 
+import { updateProfiles } from '../../actions/profiles';
+
+
 class WidgetTable extends React.Component {
   handleEditClicked(widgetInfo) {
-    this.props.editWidget(widgetInfo);
+    console.log('Edit widget: ', widgetInfo);
   }
 
   handleDeleteClicked(widgetInfo) {
-    this.props.deleteWidget(widgetInfo);
+    console.log('Delete widget: ', widgetInfo);
+    let profIdx = widgetInfo.index;
+    let { widget } = widgetInfo;
+    let updatedProfiles = this.props.profiles.profileData;
+    let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget);
+    updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
+    this.props.updateProfiles(updatedProfiles);
   }
 
   render() {
-    const { classes, widgets, profileIndex, editing } = this.props;
+    const {
+      classes, widgets, profileIndex, editing,
+    } = this.props;
     return (
       <Table className={classes.table}>
         <TableBody>
@@ -74,10 +86,17 @@ class WidgetTable extends React.Component {
   }
 }
 
-WidgetTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  tasksIndexes: PropTypes.arrayOf(PropTypes.number),
-  tasks: PropTypes.arrayOf(PropTypes.node),
+const mapStateToProps = (state) => {
+  return {
+    profiles: state.profiles,
+  };
 };
 
-export default withStyles(tasksStyle)(WidgetTable);
+const mapDispatchtoProps = (dispatch) => {
+  return bindActionCreators({ updateProfiles }, dispatch);
+};
+
+export default compose(
+  withStyles(tasksStyle),
+  connect(mapStateToProps, mapDispatchtoProps),
+)(WidgetTable);
