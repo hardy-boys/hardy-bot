@@ -20,8 +20,8 @@ import WidgetsPage from 'views/Widgets/Widgets.jsx';
 const dashboardRoutes = [
   {
     path: '/dashboard',
-    sidebarName: 'Dashboard',
-    navbarName: 'Material Dashboard',
+    sidebarName: 'Device Dashboard',
+    navbarName: 'Device Dashboard',
     icon: Dashboard,
     component: DashboardPage,
   },
@@ -34,15 +34,15 @@ const dashboardRoutes = [
   },
   {
     path: '/widgets',
-    sidebarName: 'Widgets',
-    navbarName: 'Widgets',
+    sidebarName: 'Widgets Store',
+    navbarName: 'Widgets Store',
     icon: Notifications, // Need to change this
     component: WidgetsPage,
   },
   {
     path: '/map',
-    sidebarName: 'Map',
-    navbarName: 'Map',
+    sidebarName: 'Device Location',
+    navbarName: 'Device Location',
     icon: LocationOn,
     component: Maps,
   },
