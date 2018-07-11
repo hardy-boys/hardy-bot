@@ -82,6 +82,7 @@ router.post('/particle/view', (req, res) => {
 router.post('/particle/stats', (req, res) => {
   let { deviceName } = req.body;
   let { particleToken } = req.session;
+  console.log('particleToken: ', particleToken)
 
   const io = req.app.get('socketio');
 
