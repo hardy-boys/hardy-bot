@@ -13,7 +13,7 @@ const startNewsPolling = (searchTerm) => {
     dispatch({ type: START_NEWS_POLLING });
     axios.post('/api/news', { searchTerm })
       .then((res) => {
-        console.log('RESPONSE', res.data);
+        // console.log('RESPONSE', res.data);
         dispatch({ type: NEWS_DATA_RECEIVED, payload: res.data.articles });
       })
       .catch((err) => {
