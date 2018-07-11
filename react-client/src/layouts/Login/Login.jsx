@@ -93,7 +93,7 @@ class Login extends React.Component {
     return (
       <div style={{ margin: '70px' }}>
         <Grid container justify='center'>
-          <GridItem xs={12} sm={12} md={3}>
+          <GridItem xs={12} sm={6} md={4}>
             <Card>
               <CardHeader color="primary">
                 <h4 className={classes.cardTitleWhite}>HardyBot</h4>

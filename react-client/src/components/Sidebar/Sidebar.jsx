@@ -44,26 +44,26 @@ const Sidebar = ({ ...props }) => {
           [` ${classes.whiteFont}`]: activeRoute(prop.path),
         });
         return (
-          <NavLink
-            to={prop.path}
-            className={activePro + classes.item}
-            activeClassName="active"
-            key={key}
-          >
-            <ListItem button className={classes.itemLink + listItemClasses}>
-              <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
-                <prop.icon />
-              </ListItemIcon>
-              <ListItemText
-                primary={prop.sidebarName}
-                className={classes.itemText + whiteFontClasses}
-                disableTypography={true}
-              />
-            </ListItem>
-          </NavLink>
-        );
-      })}
-      <Button style={{ position: 'absolute', bottom: '10px', width: '99%' }} color="rose">Logout</Button>
+            <NavLink
+              to={prop.path}
+              className={activePro + classes.item}
+              activeClassName="active"
+              key={key}
+            >
+              <ListItem button className={classes.itemLink + listItemClasses}>
+                <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
+                  <prop.icon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={prop.sidebarName}
+                  className={classes.itemText + whiteFontClasses}
+                  disableTypography={true}
+                />
+              </ListItem>
+            </NavLink>
+          );
+        })}
+        <Button style={{ position: 'absolute', bottom: '10px', width: '90%', margin: '12px' }} color="rose">Logout</Button>
     </List>
   );
   let brand = (
