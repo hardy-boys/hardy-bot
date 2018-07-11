@@ -52,7 +52,6 @@ const styles = {
 };
 
 class DeviceProfiles extends React.Component {
-
   componentDidMount() {
     this.props.fetchProfilesFromDB();
     console.log(this.props.profiles.profileData);
@@ -101,8 +100,19 @@ class DeviceProfiles extends React.Component {
     // TODO: delete from database
   }
 
-  saveChanges() {
+  saveChanges = () => {
     // TODO: save changes to database
+  }
+
+  handleAddProfileClick = () => {
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles.push({
+      profile: 'NewProfile',
+      widgets: [],
+      editing: true,
+      deleting: false,
+    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   render() {
@@ -236,8 +246,8 @@ class DeviceProfiles extends React.Component {
                   </Card>
                   <DeleteProfileModal
                     open={profile.deleting}
-                    close={this.handleModalClose.bind(this)}
-                    confirm={this.handleModalConfirm.bind(this)}
+                    close={this.handleModalClose}
+                    confirm={this.handleModalConfirm}
                     profileName={profile.profile}
                     profileIndex={index}
                     />
@@ -255,7 +265,7 @@ class DeviceProfiles extends React.Component {
           <Button
             color="primary"
             aria-label="Add"
-            onClick={null}
+            onClick={this.handleAddProfileClick}
             className={classes.buttonLink}
           >
             <Add className={
