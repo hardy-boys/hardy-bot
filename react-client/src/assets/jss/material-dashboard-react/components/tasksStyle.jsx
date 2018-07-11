@@ -21,7 +21,7 @@ const tasksStyle = {
     border: "none",
     padding: "12px 8px !important",
     verticalAlign: "middle",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   tableCell: {
     ...defaultFont,
@@ -34,20 +34,22 @@ const tasksStyle = {
   tableActionButton: {
     width: "27px",
     height: "27px",
+    zIndex: "1",
   },
   tableActionButtonIcon: {
     width: "17px",
     height: "17px",
+    zIndex: "1",
   },
   edit: {
     backgroundColor: "transparent",
     color: primaryColor,
-    boxShadow: "none"
+    boxShadow: "none",
   },
   close: {
     backgroundColor: "transparent",
     color: dangerColor,
-    boxShadow: "none"
+    boxShadow: "none",
   }
 };
 export default tasksStyle;

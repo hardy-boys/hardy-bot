@@ -143,16 +143,26 @@ class DeviceProfiles extends React.Component {
                         direction='row'
                         justify='space-between'
                       >
-                        <h4 className={classes.cardTitleWhite}>
-                        {profile.profile}
-                          {/* <CustomInput
+                      {profile.editing ?
+                          (<CustomInput
+                            onEnter
                             labelText="ProfileName"
                             id="profilename"
+                            inputProps={{
+                              value: profile.profile,
+                              // onChange: this.enterEmail,
+                              // onKeyPress: this.handleKeyPress,
+                            }}
                             formControlProps={{
                               fullWidth: false,
-                            }}
-                          /> */}
-                        </h4>
+                            }}/>
+                          ) :
+                          (
+                          <h4 className={classes.cardTitleWhite}>
+                            {profile.profile}
+                          </h4>
+                          )
+                      }
                         <div>
                           <IconButton
                             aria-label="Edit"

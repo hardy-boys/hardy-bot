@@ -23,14 +23,14 @@ import { updateProfiles } from '../../actions/profiles';
 
 
 class WidgetTable extends React.Component {
-  handleEditClicked(widgetInfo) {
-    console.log('Edit widget: ', widgetInfo);
+
+  handleEditClicked(widget) {
+    console.log('Edit widget: ', widget);
   }
 
-  handleDeleteClicked(widgetInfo) {
-    console.log('Delete widget: ', widgetInfo);
-    let profIdx = widgetInfo.index;
-    let { widget } = widgetInfo;
+  handleDeleteClicked(widget) {
+    console.log('Delete widget: ', widget);
+    let profIdx = this.props.profileIndex;
     let updatedProfiles = this.props.profiles.profileData;
     let widgetIdx = updatedProfiles[profIdx].widgets.indexOf(widget);
     updatedProfiles[profIdx].widgets.splice(widgetIdx, 1);
@@ -39,7 +39,7 @@ class WidgetTable extends React.Component {
 
   render() {
     const {
-      classes, widgets, profileIndex, editing,
+      classes, widgets, editing,
     } = this.props;
     return (
       <Table className={classes.table}>
@@ -68,7 +68,7 @@ class WidgetTable extends React.Component {
                     aria-label="Close"
                     disabled={!editing}
                     className={classes.tableActionButton}
-                    onClick={() => this.handleDeleteClicked({ index: profileIndex, widget })}
+                    onClick={() => this.handleDeleteClicked({ widget })}
                   >
                     <Close
                       className={

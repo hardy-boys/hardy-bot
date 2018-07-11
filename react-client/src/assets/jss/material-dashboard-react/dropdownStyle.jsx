@@ -15,7 +15,7 @@ const dropdownStyle = theme => ({
     links:{
         width: '20px',
         height: '20px',
-        zIndex: '4',
+        zIndex: '9999 !important',
         [theme.breakpoints.down('md')]:{
             display: 'block',
             width: '30px',
@@ -25,7 +25,7 @@ const dropdownStyle = theme => ({
         },
     },
     linkText: {
-        zIndex: '4',
+        zIndex: '9999 !important',
         ...defaultFont,
         fontSize: '14px',
     },

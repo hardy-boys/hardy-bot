@@ -16,25 +16,28 @@ import Edit from '@material-ui/icons/Edit';
 import Add from '@material-ui/icons/Add';
 
 // core components
-
+import widgetNames from 'variables/widgetNames.js';
 import dropdownStyle from 'assets/jss/material-dashboard-react/dropdownStyle.jsx';
 import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyle.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
-
-let widgetNames = ['DateTimeWeatherWidget', 'StocksWidget', 'NewsWidget', 'TrafficWidget', 'SportsWidget'];
 
 
 class WidgetDropdown extends React.Component {
   state = {
     open: false,
   };
+
   handleClick = () => {
-    this.setState({ open: !this.state.open });
+    console.log(this.state.open)
+    this.setState(prevState => ({
+      open: !prevState.open,
+    }));
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
+
   render() {
     const { classes } = this.props;
     const { editing } = this.props;
@@ -121,3 +124,4 @@ class WidgetDropdown extends React.Component {
 }
 
 export default withStyles(tasksStyle, dropdownStyle)(WidgetDropdown);
+// export default withStyles(dropdownStyle)(WidgetDropdown);
