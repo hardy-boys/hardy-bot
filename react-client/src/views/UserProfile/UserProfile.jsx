@@ -18,13 +18,6 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import avatar from 'assets/img/faces/marc.jpg';
 
 const styles = {
-  cardCategoryWhite: {
-    color: 'rgba(255,255,255,.62)',
-    margin: '0',
-    fontSize: '14px',
-    marginTop: '0',
-    marginBottom: '0',
-  },
   cardTitleWhite: {
     color: '#FFFFFF',
     marginTop: '0px',
@@ -116,8 +109,7 @@ class UserProfile extends React.Component {
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-                <p className={classes.cardCategoryWhite}>Complete your profile</p>
+                <h4 className={classes.cardTitleWhite}>Profile</h4>
               </CardHeader>
               <CardBody>
                 <Grid container>
@@ -152,7 +144,7 @@ class UserProfile extends React.Component {
                 <Button color="primary"
                 onClick={this.handleEditProfile}
                 disabled={!this.state.edit}>Edit Profile</Button>
-                <Button color="primary"
+                <Button
                 onClick={this.handleUpdate}
                 color={this.state.updateButton}
                 disabled={this.state.edit}>Update</Button>

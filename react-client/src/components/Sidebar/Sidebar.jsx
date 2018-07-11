@@ -10,6 +10,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from 'components/CustomButtons/Button.jsx';
 // core components
 import HeaderLinks from 'components/Header/HeaderLinks.jsx';
 
@@ -62,6 +63,7 @@ const Sidebar = ({ ...props }) => {
           </NavLink>
         );
       })}
+      <Button style={{ position: 'absolute', bottom: '10px', width: '99%' }} color="rose">Logout</Button>
     </List>
   );
   let brand = (
