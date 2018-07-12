@@ -1,5 +1,8 @@
 /* eslint-disable */
 import React from "react";
+import axios from 'axios';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
@@ -16,7 +19,7 @@ import dashboardRoutes from "routes/dashboard.jsx";
 import dashboardStyle from "assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
 import image from "../../assets/img/sidebar-2.jpg";
-// import logo from "../../assets/img/rtd2.png";
+import logo from "../../assets/img/hardybotlogo.png";
 
 const switchRoutes = (
   <Switch>
@@ -51,6 +54,16 @@ class App extends React.Component {
       }
     }
   }
+  handleLogout() {
+    const { history } = this.props;
+    axios.get('/logout')
+      .then((res) => {
+          history.push('/login');
+      })
+      .catch((err) => {
+        console.log('error logging out');
+      });
+  }
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -58,7 +71,8 @@ class App extends React.Component {
         <Sidebar
           routes={dashboardRoutes}
           logoText={"Hardy Bot"}
-          //logo={logo}
+          logout={this.handleLogout.bind(this)}
+          logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
@@ -66,11 +80,11 @@ class App extends React.Component {
           {...rest}
         />
         <div className={classes.mainPanel} ref="mainPanel">
-          <Header
+          {/* <Header
             routes={dashboardRoutes}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
-          />
+          /> */}
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {this.getRoute() ? (
             <div className={classes.content}>
@@ -90,4 +104,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(App);
+export default compose(withStyles(dashboardStyle, withRouter)(App));

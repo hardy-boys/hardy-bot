@@ -20,7 +20,7 @@ exports.passportHelper = () => {
       db.models.User.findOne({ where: { email: username } })
         .then((foundUser) => {
           if (!foundUser) {
-            dbHelpers.saveMember(username, password, req.body.zip, (userToSave) => {
+            dbHelpers.saveMember(username, password, req.body.zip, req.body.particleToken, (userToSave) => {
               done(null, userToSave.dataValues);
             });
           } else {

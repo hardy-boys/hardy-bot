@@ -102,7 +102,7 @@ class Signup extends React.Component {
         <GridItem xs={12} sm={6} md={4}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>HardyBot</h4>
+            <img src='../../assets/img/hardybotlogo.png' style={{ width: '100px' }}/>
               <p className={classes.cardCategoryWhite}>Sign up</p>
             </CardHeader>
             <CardBody>
@@ -172,6 +172,7 @@ class Signup extends React.Component {
             </CardFooter>
             <div style={{ textAlign: 'center' }}>
               <p>Already have an account? <a className='login' href='/login'>Login</a></p>
+              <p>Get Particle Token <a className='particleToken' href='https://login.particle.io/login'>here</a></p>
             </div>
           </Card>
         </GridItem>

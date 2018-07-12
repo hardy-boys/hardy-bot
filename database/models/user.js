@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(6),
       allowNull: false,
     },
+    particleToken: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   });
 
   User.associate = (models) => {
