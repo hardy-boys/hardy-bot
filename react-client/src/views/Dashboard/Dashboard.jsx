@@ -96,8 +96,8 @@ class Dashboard extends React.Component {
           <Grid container>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="info" stats icon>
-                  <CardIcon color="info">
+                <CardHeader color={deviceInfo.deviceStats.status === 'online' ? 'success' : 'danger'} stats icon>
+                  <CardIcon color={deviceInfo.deviceStats.status === 'online' ? 'success' : 'danger'}>
                     <Store />
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Status</p>
@@ -115,8 +115,8 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="info" stats icon>
-                  <CardIcon color="info">
+                <CardHeader color="warning" stats icon>
+                  <CardIcon color="warning">
                     <ContentCopy />
                   </CardIcon>
                   <p className={classes.cardCategory}>Used Space</p>
@@ -126,15 +126,6 @@ class Dashboard extends React.Component {
                   </h3>
                 </CardHeader>
                 <CardFooter stats>
-                  <div className={classes.stats}>
-                    <Danger>
-                      <Warning />
-                    </Danger>
-                    {/* Dynamically render based on avaialable space */}
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      Get more space
-                    </a>
-                  </div>
                 </CardFooter>
               </Card>
             </GridItem>
@@ -161,7 +152,7 @@ class Dashboard extends React.Component {
           <Grid container>
             <GridItem xs={12} sm={12} md={6}>
               <Card chart>
-                <CardHeader color="info">
+                <CardHeader color="primary">
                   <ChartistGraph
                     className="ct-chart"
                     data={dailySalesChart.data}
@@ -190,7 +181,7 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <Card chart>
-                <CardHeader color="info">
+                <CardHeader color="primary">
                   <ChartistGraph
                     className="ct-chart"
                     data={emailsSubscriptionChart.data}
