@@ -19,7 +19,7 @@ router.post('/profile/delete', (req, res) => {
     res.status(400).send('Err: Improperly formatted profile delete request');
   }
   dbHelpers.deleteProfile(null, req.body.profileName);
-  res.status(201).send('Deleting profile from db...');
+  res.status(200).send('Processing delete profile from db request...');
 });
 
 router.get('/profile/loadAll', (req, res) => {

@@ -29,6 +29,7 @@ const fetchProfilesFromDB = () => {
 
 const deployProfileToDevice = (profile, device) => {
   return (dispatch) => {
+    console.log('Deploying profile to device');
     axios.post('/profile/apply', {
       deviceName: device,
       profileData:
@@ -38,8 +39,7 @@ const deployProfileToDevice = (profile, device) => {
       },
     })
       .then((result) => {
-        console.log(result.data);
-        dispatch({ type: null, payload: null });
+        console.log('Successfully deployed: ', result.data);
       })
       .catch((err) => {
         console.log(`Error loading profiles: ${err}`);
@@ -68,8 +68,44 @@ const updateProfileWidgets = (profileName, widgetName) => {
   };
 };
 
-const saveProfileToDB = () => {
+const saveProfileToDB = (profileData, profIdx, prevName) => {
+  return (dispatch) => {
+    // 1) set mode to not editing and finalize local state changes
+    let _profileData = profileData;
+    _profileData[profIdx].editing = false;
+    dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
 
+    // 2) remove old profile from db if previously established
+    if (prevName) {
+      axios.post('/profile/delete', {
+        profileName: prevName,
+      })
+        .then(() => {
+          // 3) save new profiles to db
+          return axios.post('/profile/save', {
+            profileName: _profileData[profIdx].profile,
+            widgetNames: _profileData[profIdx].widgets,
+          });
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(`Error in save profile function: ${err}`);
+        });
+    } else {
+      axios.post('/profile/save', {
+        profileName: _profileData[profIdx].profile,
+        widgetNames: _profileData[profIdx].widgets,
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(`Error in save profile function: ${err}`);
+        });
+    }
+  };
 };
 
 const deleteProfileFromDB = (profileData, profIdx) => {

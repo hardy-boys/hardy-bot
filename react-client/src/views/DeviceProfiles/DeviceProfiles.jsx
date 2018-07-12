@@ -35,6 +35,8 @@ import FormControl from '@material-ui/core/FormControl';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
+import SnackbarContent from 'components/Snackbar/SnackbarContent.jsx';
+
 
 import {
   fetchProfilesFromDB,
@@ -98,11 +100,23 @@ class DeviceProfiles extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleSaveClick = (profIdx) => {
+  handleDeleteModalClose = (profIdx) => {
     let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].editing = false;
+    updatedProfiles[profIdx].deleting = false;
     this.props.updateProfiles(updatedProfiles);
-    // save to DB
+  }
+
+  handleDeleteModalConfirm = (profIdx) => {
+    let currentProfiles = this.props.profiles.profileData;
+    this.props.deleteProfileFromDB(currentProfiles, profIdx);
+  }
+
+  handleSaveProfileClick = (profIdx) => {
+    let currentProfiles = this.props.profiles.profileData;
+    console.log(profIdx);
+    let prevName = this.props.profiles.profileBackup[profIdx] ?
+      this.props.profiles.profileBackup[profIdx].profile : null;
+    this.props.saveProfileToDB(currentProfiles, profIdx, prevName);
   }
 
   handleCancelClick = (profIdx) => {
@@ -113,12 +127,6 @@ class DeviceProfiles extends React.Component {
       updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
       this.props.updateProfiles(updatedProfiles);
     }
-  }
-
-  handleDeleteModalClose = (profIdx) => {
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].deleting = false;
-    this.props.updateProfiles(updatedProfiles);
   }
 
   handleWidgetModalSelect = (widget, profIdx) => {
@@ -145,17 +153,8 @@ class DeviceProfiles extends React.Component {
 
   handleDeployClick = (profIdx) => {
     const { deviceInfo } = this.props.particle;
-    const { profile } = this.props.profiles.profileData[profIdx];
+    let profile = this.props.profiles.profileData[profIdx];
     this.props.deployProfileToDevice(profile, deviceInfo.deviceName);
-  }
-
-  handleDeleteModalConfirm = (profIdx) => {
-    let currentProfiles = this.props.profiles.profileData;
-    this.props.deleteProfileFromDB(currentProfiles, profIdx);
-  }
-
-  saveChanges = () => {
-    // TODO: save changes to database
   }
 
   handleAddProfileClick = () => {
@@ -203,6 +202,9 @@ class DeviceProfiles extends React.Component {
       pageView = (
         <React.Fragment>
           <Grid container>
+            {/* <GridItem xs={12} sm={12} md={6}>
+              <SnackbarContent color='info' message={'Test Notification'} />
+            </GridItem> */}
             {profiles.map((profile, index) => {
               // limit to 4 widgets due to device restrictions
               let widgetMax = profile.widgets.length >= 4;
@@ -317,7 +319,7 @@ class DeviceProfiles extends React.Component {
                               <Button
                                 color="primary"
                                 disabled={!profile.editing}
-                                onClick={() => { this.handleSaveClick(index); this.handleProfileNameChange(null, index); }}
+                                onClick={() => { this.handleSaveProfileClick(index); this.handleProfileNameChange(null, index); }}
                               ><Save />
                                 Save Changes
                               </Button>

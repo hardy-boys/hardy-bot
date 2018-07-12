@@ -80,8 +80,10 @@ const deleteProfile = (userId, profileName) => {
         console.log('db deleteProfile: Profile does not exist');
       }
     })
-    .then(() => {
-      console.log('db deleteProfile: Successfully deleted ', profileName);
+    .then((result) => {
+      if (result) {
+        console.log('db deleteProfile: Successfully deleted ', profileName);
+      }
     })
     .catch((err) => {
       console.log('Error in deleteProfile ', err);
