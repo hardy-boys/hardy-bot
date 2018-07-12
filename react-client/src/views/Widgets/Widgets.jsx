@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import io from 'socket.io-client';
-import axios from 'axios';
+import { compose } from 'redux';
 
 // @material-ui/core components
 
@@ -73,16 +71,6 @@ const styles = {
 };
 
 class Widgets extends React.Component {
-  // componentDidMount() {
-  //   axios.get('/particle/login')
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-
   render() {
     const { classes } = this.props;
     return (
@@ -154,10 +142,6 @@ class Widgets extends React.Component {
     );
   }
 }
-
-// const mapDispatchToProps = (dispatch) => {
-//   return bindActionCreators({ fetchWeather }, dispatch);
-// };
 
 // Give component access to Redux application state
 const mapStateToProps = (state) => {

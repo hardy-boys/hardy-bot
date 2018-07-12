@@ -3,6 +3,9 @@ import axios from 'axios';
 import {
   PROFILE_DATA_RECIEVED,
   PROFILE_DATA_UPDATE,
+  UPDATING_PROFILE_WIDGETS,
+  PROFILE_WIDGETS_UPDATED,
+  ERROR_UPDATING_PROFILE_WIDGETS,
 } from './types';
 
 const fetchProfilesFromDB = () => {
@@ -30,7 +33,23 @@ const updateProfiles = (profileData) => {
   };
 };
 
+const updateProfileWidgets = (profileName, widgetName) => {
+  return (dispatch) => {
+    dispatch({ type: UPDATING_PROFILE_WIDGETS });
+    axios.post('/profile/updateWidgets', { profileName, widgetName })
+      .then((result) => {
+        console.log('SUCCESS IN UPDATING PROFILE', result);
+        dispatch({ type: PROFILE_WIDGETS_UPDATED, payload: result });
+      })
+      .catch((err) => {
+        console.log('ERROR UPDATING PROFILE', err);
+        dispatch({ type: ERROR_UPDATING_PROFILE_WIDGETS, payload: err });
+      });
+  };
+};
+
 export {
   fetchProfilesFromDB,
   updateProfiles,
+  updateProfileWidgets,
 };
