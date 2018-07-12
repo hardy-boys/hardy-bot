@@ -4,11 +4,15 @@ import {
   container
 } from "assets/jss/material-dashboard-react.jsx";
 
+import ns from "../../nord-styles.jsx";
+
+
 const appStyle = theme => ({
   wrapper: {
     position: "relative",
     top: "0",
-    height: "100vh"
+    height: "100vh",
+    background: ns.nord5
   },
   mainPanel: {
     [theme.breakpoints.up("md")]: {

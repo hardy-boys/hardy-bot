@@ -11,6 +11,8 @@ import {
   dangerColor
 } from "assets/jss/material-dashboard-react.jsx";
 
+import ns from "../../nord-styles.jsx";
+
 const sidebarStyle = theme => ({
   drawerPaper: {
     border: "none",
@@ -107,8 +109,7 @@ const sidebarStyle = theme => ({
       height: "100%",
       content: '""',
       display: "block",
-      background: "#000",
-      opacity: ".8"
+      background: ns.nord1,
     }
   },
   list: {
