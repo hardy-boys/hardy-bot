@@ -14,10 +14,10 @@ import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
-import Language from '@material-ui/icons/Language';
+import Subject from '@material-ui/icons/Subject';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import WbSunny from '@material-ui/icons/WbSunny';
-import GolfCourse from '@material-ui/icons/GolfCourse';
+import TrendingUp from '@material-ui/icons/TrendingUp';
 
 // components
 
@@ -99,7 +99,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="warning" icon>
                       <CardIcon color="warning">
-                        <Language />
+                        <TrendingUp />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>Stocks</h4>
                     </CardHeader>
@@ -112,7 +112,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="warning" icon>
                       <CardIcon color="warning">
-                        <DirectionsCar />
+                        <Subject />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>News</h4>
                     </CardHeader>
@@ -125,7 +125,7 @@ class Widgets extends React.Component {
                   <Card>
                     <CardHeader color="warning" icon>
                       <CardIcon color="warning">
-                        <GolfCourse />
+                        <DirectionsCar />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>Traffic</h4>
                     </CardHeader>

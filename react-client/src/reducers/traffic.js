@@ -2,6 +2,7 @@ import {
   GETTING_TRAFFIC_DATA,
   TRAFFIC_DATA_RECEIVED,
   TRAFFIC_REQUEST_ERROR,
+  TRAFFIC_DATA_UPDATE,
 } from '../actions/types';
 
 const initialState = {
@@ -31,6 +32,13 @@ export default (state = initialState, action) => {
         ...state,
         fetching: false,
         error: action.payload,
+      };
+    case TRAFFIC_DATA_UPDATE:
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        trafficData: action.payload,
       };
     default:
       return state;
