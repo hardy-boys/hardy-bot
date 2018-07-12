@@ -19,7 +19,7 @@ import dashboardRoutes from "routes/dashboard.jsx";
 import dashboardStyle from "assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
 import image from "../../assets/img/sidebar-2.jpg";
-// import logo from "../../assets/img/rtd2.png";
+import logo from "../../assets/img/hardybotlogo.png";
 
 const switchRoutes = (
   <Switch>
@@ -72,7 +72,7 @@ class App extends React.Component {
           routes={dashboardRoutes}
           logoText={"Hardy Bot"}
           logout={this.handleLogout.bind(this)}
-          //logo={logo}
+          logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}

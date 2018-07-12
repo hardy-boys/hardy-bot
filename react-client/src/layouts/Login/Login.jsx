@@ -96,7 +96,7 @@ class Login extends React.Component {
           <GridItem xs={12} sm={6} md={4}>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>HardyBot</h4>
+              <img src='../../assets/img/hardybotlogo.png' style={{ width: '100px' }}/>
                 <p className={classes.cardCategoryWhite}>Login</p>
               </CardHeader>
               <CardBody>
