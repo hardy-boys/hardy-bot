@@ -36,7 +36,13 @@ import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
 
-import { fetchProfilesFromDB, updateProfiles, deployProfileToDevice } from '../../actions/profiles';
+import {
+  fetchProfilesFromDB,
+  updateProfiles,
+  deployProfileToDevice,
+  saveProfileToDB,
+  deleteProfileFromDB,
+} from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -101,10 +107,13 @@ class DeviceProfiles extends React.Component {
   }
 
   handleCancelClick = (profIdx) => {
-    // restore profile state from backup
     let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
-    this.props.updateProfiles(updatedProfiles);
+    // don't process new/empty profiles
+    if (updatedProfiles[profIdx].widgets.length) {
+      // restore profile state from backup
+      updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
+      this.props.updateProfiles(updatedProfiles);
+    }
   }
 
   handleDeleteModalClose = (profIdx) => {
@@ -121,6 +130,12 @@ class DeviceProfiles extends React.Component {
     let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].widgets.push(widget);
     this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleWidgetModalClose = () => {
+    this.setState({
+      showWidgetSelectModal: null,
+    });
   }
 
   handleAddWidgetClick = (profIdx) => {
@@ -156,16 +171,17 @@ class DeviceProfiles extends React.Component {
       widgets: [],
       editing: true,
       deleting: false,
-      widgetModalOpen: false,
     });
     this.props.updateProfiles(updatedProfiles);
   }
 
   handleProfileNameChange = (e, profIdx) => {
-    console.log(`Editing profile name, Index: ${profIdx} Value: ${e.target.value}`);
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].profile = e.target.value;
-    this.props.updateProfiles(updatedProfiles);
+    if (e) {
+      console.log(`Editing profile name, Index: ${profIdx} Value: ${e.target.value}`);
+      let updatedProfiles = this.props.profiles.profileData;
+      updatedProfiles[profIdx].profile = e.target.value;
+      this.props.updateProfiles(updatedProfiles);
+    }
   }
 
   render() {
@@ -333,6 +349,7 @@ class DeviceProfiles extends React.Component {
                     />
                   <WidgetSelectModal
                     open={this.state.showWidgetSelectModal === index}
+                    close={this.handleWidgetModalClose}
                     select={this.handleWidgetModalSelect}
                     profileIndex={index}
                     />
@@ -376,7 +393,13 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ fetchProfilesFromDB, updateProfiles, deployProfileToDevice }, dispatch);
+  return bindActionCreators({
+    fetchProfilesFromDB,
+    updateProfiles,
+    deployProfileToDevice,
+    saveProfileToDB,
+    deleteProfileFromDB,
+  }, dispatch);
 };
 
 export default compose(

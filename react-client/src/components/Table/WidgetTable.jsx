@@ -44,9 +44,13 @@ class WidgetTable extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
+  handleWidgetModalClose = () => {
+    this.setState({
+      showWidgetSelectModal: null,
+    });
+  }
+
   handleWidgetModalSelect = (widget, profIdx, widgetIdx) => {
-    console.log('Prof ', profIdx)
-    console.log('Widget ', widgetIdx)
     this.setState({
       showWidgetSelectModal: null,
     });
@@ -103,6 +107,7 @@ class WidgetTable extends React.Component {
                 </Fade>
               <WidgetSelectModal
                 open={this.state.showWidgetSelectModal === index}
+                close={this.handleWidgetModalClose}
                 select={this.handleWidgetModalSelect}
                 profileIndex={this.props.profileIndex}
                 widgetIndex={index}

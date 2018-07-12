@@ -68,9 +68,19 @@ const updateProfileWidgets = (profileName, widgetName) => {
   };
 };
 
+const saveProfileToDB = () => {
+  
+};
+
+const deleteProfileFromDB = () => {
+
+};
+
 export {
   fetchProfilesFromDB,
   updateProfiles,
   deployProfileToDevice,
   updateProfileWidgets,
+  saveProfileToDB,
+  deleteProfileFromDB,
 };
