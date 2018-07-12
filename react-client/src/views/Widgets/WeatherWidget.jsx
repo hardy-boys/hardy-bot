@@ -125,6 +125,7 @@ class WeatherWidget extends React.Component {
           <ProfilesModal
             open={this.state.openProfileModal}
             close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.weather.widgetName}
           />
         </div>
       );

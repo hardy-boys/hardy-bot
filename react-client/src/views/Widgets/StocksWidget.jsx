@@ -81,7 +81,6 @@ class StocksWidget extends React.Component {
     });
 
     if (this.props.stocks.fetched) {
-      let { anchorEl } = this.state;
       return (
         <div>
           <Table
@@ -98,6 +97,7 @@ class StocksWidget extends React.Component {
           <ProfilesModal
             open={this.state.openProfileModal}
             close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.stocks.widgetName}
           />
         </div>
       );
