@@ -30,6 +30,7 @@ import CustomInput from 'components/CustomInput/CustomInput.jsx';
 import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
+import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
 
 import { fetchProfilesFromDB, updateProfiles, backupProfiles } from '../../actions/profiles';
 
@@ -52,6 +53,9 @@ const styles = {
 };
 
 class DeviceProfiles extends React.Component {
+  state = {
+    showWidgetSelectModal: false,
+  }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
     console.log(this.props.profiles.profileData);
@@ -83,13 +87,30 @@ class DeviceProfiles extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleModalClose = (profIdx) => {
+  handleDeleteModalClose = (profIdx) => {
     let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].deleting = false;
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleModalConfirm = (profIdx) => {
+  handleWidgetModalSelect = (widget, profIdx) => {
+    this.setState({
+      showWidgetSelectModal: false,
+    });
+    console.log(`Selected ${widget}`);
+    console.log(profIdx)
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles[profIdx].widgets.push(widget);
+    this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleAddWidgetClick = (profIdx) => {
+    this.setState({
+      showWidgetSelectModal: profIdx,
+    });
+  }
+
+  handleDeleteModalConfirm = (profIdx) => {
     let closeModal = this.props.profiles.profileData;
     closeModal[profIdx].deleting = false;
     this.props.updateProfiles(closeModal);
@@ -111,6 +132,7 @@ class DeviceProfiles extends React.Component {
       widgets: [],
       editing: true,
       deleting: false,
+      widgetModalOpen: false,
     });
     this.props.updateProfiles(updatedProfiles);
   }
@@ -215,12 +237,15 @@ class DeviceProfiles extends React.Component {
                           justify='space-between'
                         >
                           <Fade in={profile.editing}>
-                            <WidgetDropdown
-                            type={'add'}
-                            disabled={widgetMax}
-                            editing={profile.editing}
-                            profileIndex={index}
-                            />
+                            <Button
+                              color="primary"
+                              disabled={widgetMax}
+                              onClick={() => { this.handleAddWidgetClick(index); }}
+                            >
+                              <Add className={
+                                `${classes.tableActionButtonIcon}`} />
+                              Add Widget
+                            </Button>
                           </Fade>
                           <Fade in={profile.editing}>
                             <div>
@@ -246,8 +271,14 @@ class DeviceProfiles extends React.Component {
                   </Card>
                   <DeleteProfileModal
                     open={profile.deleting}
-                    close={this.handleModalClose}
-                    confirm={this.handleModalConfirm}
+                    close={this.handleDeleteModalClose}
+                    confirm={this.handleDeleteModalConfirm}
+                    profileName={profile.profile}
+                    profileIndex={index}
+                    />
+                  <WidgetSelectModal
+                    open={this.state.showWidgetSelectModal === index}
+                    select={this.handleWidgetModalSelect}
                     profileName={profile.profile}
                     profileIndex={index}
                     />
