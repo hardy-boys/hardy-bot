@@ -62,9 +62,10 @@ router.post('/api/traffic', (req, res) => {
       // apply the patch to data using json patch API
       jsonPatch.applyPatch(result, patch);
       // do whatever you wish with the update data
-      console.log(result);
+      console.log('RESULT', result);
       // res.send(result);
-      io.emit('action', { type: actions.TRAFFIC_DATA_UPDATE, payload: result });
+      let data = result.data.resourceSets[0].resources[0];
+      io.emit('action', { type: actions.TRAFFIC_DATA_UPDATE, payload: data });
       particleHelpers.sendEventData('traffic', mapParticle(result), req.session.particleToken);
     })
 
