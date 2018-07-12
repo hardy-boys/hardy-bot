@@ -252,17 +252,20 @@ class DeviceProfiles extends React.Component {
                           )
                       }
                         <div>
-                          <IconButton
-                            aria-label="Deploy"
-                            className={classes.tableActionButton}
-                            onClick={() => { this.handleDeployClick(index); }}
-                          >
-                            <GetApp
-                              className={
-                                `${classes.tableActionButtonIcon} ${classes.edit}`
-                              }
-                            />
-                          </IconButton>
+                          <Fade in={!profile.editing}>
+                            <IconButton
+                              aria-label="Deploy"
+                              className={classes.tableActionButton}
+                              disabled={profile.editing}
+                              onClick={() => { this.handleDeployClick(index); }}
+                            >
+                              <GetApp
+                                className={
+                                  `${classes.tableActionButtonIcon} ${classes.edit}`
+                                }
+                              />
+                            </IconButton>
+                          </Fade>
                           <IconButton
                             aria-label="Edit"
                             className={classes.tableActionButton}
