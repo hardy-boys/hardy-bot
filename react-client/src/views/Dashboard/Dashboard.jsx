@@ -75,7 +75,7 @@ class Dashboard extends React.Component {
           <Grid container>
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <CardHeader color="info">
+                <CardHeader color="primary">
                 {/* Get device info from db */}
                   <h4 className={classes.cardTitleWhite}>{deviceInfo.deviceName}</h4>
                   <p className={classes.cardCategoryWhite}>LCD Display</p>
@@ -86,8 +86,8 @@ class Dashboard extends React.Component {
           <Grid container>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="success" stats icon>
-                  <CardIcon color="success">
+                <CardHeader color="info" stats icon>
+                  <CardIcon color="info">
                     <Store />
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Status</p>
@@ -105,8 +105,8 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="warning" stats icon>
-                  <CardIcon color="warning">
+                <CardHeader color="info" stats icon>
+                  <CardIcon color="info">
                     <ContentCopy />
                   </CardIcon>
                   <p className={classes.cardCategory}>Used Space</p>
@@ -130,8 +130,8 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="danger" stats icon>
-                  <CardIcon color="danger">
+                <CardHeader color="info" stats icon>
+                  <CardIcon color="info">
                     <InfoOutline />
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Profile</p>
@@ -151,7 +151,7 @@ class Dashboard extends React.Component {
           <Grid container>
             <GridItem xs={12} sm={12} md={6}>
               <Card chart>
-                <CardHeader color="success">
+                <CardHeader color="info">
                   <ChartistGraph
                     className="ct-chart"
                     data={dailySalesChart.data}
@@ -180,7 +180,7 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <Card chart>
-                <CardHeader color="warning">
+                <CardHeader color="info">
                   <ChartistGraph
                     className="ct-chart"
                     data={emailsSubscriptionChart.data}
