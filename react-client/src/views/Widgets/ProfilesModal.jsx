@@ -3,16 +3,15 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 
 // @material-ui/core components
+
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+
+// actions
 
 import { fetchProfilesFromDB } from '../../actions/profiles';
 

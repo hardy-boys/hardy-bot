@@ -10,9 +10,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 
 // components
 
@@ -25,7 +22,7 @@ import { startNewsPolling, stopNewsPolling } from '../../actions/news';
 
 class NewsWidget extends React.Component {
   state = {
-    open: false,
+    openEditModal: false,
     openProfileModal: false,
   };
 
@@ -37,12 +34,12 @@ class NewsWidget extends React.Component {
     this.props.stopNewsPolling();
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handleEditOpen = () => {
+    this.setState({ openEditModal: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleEditClose = () => {
+    this.setState({ openEditModal: false });
   };
 
   handleOpenProfile = () => {
@@ -75,10 +72,16 @@ class NewsWidget extends React.Component {
               </div>)}
             </Infinite>
           </List>
-          <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
           <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>
-          <NewsWidgetModal open={this.state.open} close={this.handleClose.bind(this)} />
-          <ProfilesModal open={this.state.openProfileModal} close={this.handleProfileClose.bind(this)}/>
+          <NewsWidgetModal
+            open={this.state.openEditModal}
+            close={this.handleEditClose.bind(this)}
+          />
+          <ProfilesModal
+            open={this.state.openProfileModal}
+            close={this.handleProfileClose.bind(this)}
+          />
         </div>
       );
     } else {

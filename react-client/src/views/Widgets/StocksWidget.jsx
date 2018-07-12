@@ -13,6 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 // components
 
 import StocksWidgetModal from './StocksWidgetModal';
+import ProfilesModal from './ProfilesModal';
 
 // actions
 
@@ -20,8 +21,8 @@ import { startStocksPolling, stopStocksPolling } from '../../actions/stocks';
 
 class StocksWidget extends React.Component {
   state = {
-    open: false,
-    anchorEl: null,
+    openEditModal: false,
+    openProfileModal: false,
   };
 
   componentDidMount() {
@@ -33,20 +34,20 @@ class StocksWidget extends React.Component {
     this.props.stopStocksPolling();
   }
 
-  handleOpen() {
-    this.setState({ open: true });
-  }
+  handleEditOpen = () => {
+    this.setState({ openEditModal: true });
+  };
 
-  handleClose() {
-    this.setState({ open: false });
-  }
+  handleEditClose = () => {
+    this.setState({ openEditModal: false });
+  };
 
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleOpenProfile = () => {
+    this.setState({ openProfileModal: true });
   };
 
   handleProfileClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ openProfileModal: false });
   };
 
   checkUserConfigs() {
@@ -88,19 +89,16 @@ class StocksWidget extends React.Component {
             tableHead={['Symbol', 'Price', 'Change', 'Price Chart']}
             tableData={stockData}
           />
-          <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
-          <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleProfileClose}
-          >
-            <MenuItem onClick={this.handleProfileClose}>Profile1</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile2</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile3</MenuItem>
-          </Menu>
-          <StocksWidgetModal open={this.state.open} close={this.handleClose.bind(this)}/>
+          <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>
+          <StocksWidgetModal
+            open={this.state.openEditModal}
+            close={this.handleEditClose.bind(this)}
+          />
+          <ProfilesModal
+            open={this.state.openProfileModal}
+            close={this.handleProfileClose.bind(this)}
+          />
         </div>
       );
     } else {
