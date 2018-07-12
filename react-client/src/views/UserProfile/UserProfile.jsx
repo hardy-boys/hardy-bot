@@ -3,9 +3,11 @@ import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 // core components
 import GridItem from 'components/Grid/GridItem.jsx';
-import CustomInput from 'components/CustomInput/CustomInput.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
@@ -16,13 +18,6 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import avatar from 'assets/img/faces/marc.jpg';
 
 const styles = {
-  cardCategoryWhite: {
-    color: 'rgba(255,255,255,.62)',
-    margin: '0',
-    fontSize: '14px',
-    marginTop: '0',
-    marginBottom: '0',
-  },
   cardTitleWhite: {
     color: '#FFFFFF',
     marginTop: '0px',
@@ -34,124 +29,131 @@ const styles = {
   },
 };
 
-function UserProfile(props) {
-  const { classes } = props;
-  return (
-    <div>
-      <Grid container>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <Grid container>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      disabled: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
-                    labelText="Username"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Email address"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </Grid>
-              <Grid container>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </Grid>
-              <Grid container>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </Grid>
-              <Grid container>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: '#AAAAAA' }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </Grid>
-            </CardBody>
-            <CardFooter>
-              <Button color="primary">Update Profile</Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </Grid>
-    </div>
-  );
+class UserProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: 'johndoe@gmail.com',
+      zip: '78741',
+      particleToken: 't49e0217s39t',
+      edit: true,
+    };
+    this.enterEmail = this.enterEmail.bind(this);
+    this.enterZip = this.enterZip.bind(this);
+    this.enterParticleToken = this.enterParticleToken.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleEditProfile = this.handleEditProfile.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+  }
+
+  enterEmail(e) {
+    this.setState({
+      email: e.target.value,
+    });
+  }
+
+  enterZip(e) {
+    this.setState({
+      zip: e.target.value,
+    });
+  }
+
+  enterParticleToken(e) {
+    this.setState({
+      particleToken: e.target.value,
+    });
+  }
+
+  handleKeyPress(event) {
+    if (event.key === 'Enter') {
+
+    }
+  }
+
+  handleEditProfile() {
+    this.setState({
+      edit: !this.state.edit,
+    });
+    if (this.state.edit) {
+      this.setState({
+        updateButton: 'rose',
+      });
+    } else {
+      this.setState({
+        updateButton: null,
+      });
+    }
+  }
+
+  handleUpdate() {
+    this.setState({
+      edit: !this.state.edit,
+    });
+    if (this.state.edit) {
+      this.setState({
+        updateButton: 'rose',
+      });
+    } else {
+      this.setState({
+        updateButton: null,
+      });
+    }
+  }
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <div>
+        <Grid container>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Profile</h4>
+              </CardHeader>
+              <CardBody>
+                <Grid container>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <FormControl error={!this.state.edit} fullWidth={true} disabled={this.state.edit} aria-describedby="name-error-text">
+                    <InputLabel htmlFor="name-error">{this.state.email}</InputLabel>
+                    <Input id="name-error" onChange={this.enterEmail} onKeyPress={this.handleKeyPress} />
+                    <FormHelperText id="name-error-text">Email</FormHelperText>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <FormControl error={!this.state.edit} fullWidth={true} disabled={this.state.edit} aria-describedby="name-error-text">
+                    <InputLabel htmlFor="name-error">{this.state.zip}</InputLabel>
+                    <Input id="name-error" fullWidth={true} onChange={this.enterZip} onKeyPress={this.handleKeyPress} />
+                    <FormHelperText id="name-error-text">ZIP</FormHelperText>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <FormControl error={!this.state.edit} fullWidth={true} disabled={this.state.edit} aria-describedby="name-error-text">
+                    <InputLabel htmlFor="name-error">{this.state.particleToken}</InputLabel>
+                    <Input id="name-error" fullWidth={true} onChange={this.enterParticleToken} onKeyPress={this.handleKeyPress} />
+                    <FormHelperText id="name-error-text">Particle Token</FormHelperText>
+                    </FormControl>
+                  </GridItem>
+                </Grid>
+                <Grid container>
+                </Grid>
+                <Grid container>
+                </Grid>
+              </CardBody>
+              <CardFooter>
+                <Button color="primary"
+                onClick={this.handleEditProfile}
+                disabled={!this.state.edit}>Edit Profile</Button>
+                <Button
+                onClick={this.handleUpdate}
+                color={this.state.updateButton}
+                disabled={this.state.edit}>Update</Button>
+              </CardFooter>
+            </Card>
+          </GridItem>
+        </Grid>
+      </div>
+    );
+  }
 }
 
 export default withStyles(styles)(UserProfile);
