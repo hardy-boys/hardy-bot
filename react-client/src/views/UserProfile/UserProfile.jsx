@@ -102,7 +102,6 @@ class UserProfile extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { edit } = this.state.edit;
     return (
       <div>
         <Grid container>

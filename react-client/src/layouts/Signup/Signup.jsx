@@ -42,32 +42,37 @@ class Signup extends React.Component {
       email: '',
       password: '',
       zip: '',
+      particleToken: '',
     };
     this.handleSubscribe = this.handleSubscribe.bind(this);
     this.enterEmail = this.enterEmail.bind(this);
     this.enterPassword = this.enterPassword.bind(this);
     this.enterZip = this.enterZip.bind(this);
+    this.enterParticleToken = this.enterParticleToken.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   enterPassword(e) {
-    console.log('test');
     this.setState({
       password: e.target.value,
     });
   }
 
   enterEmail(e) {
-    console.log('hi');
     this.setState({
       email: e.target.value,
     });
   }
 
   enterZip(e) {
-    console.log('hi');
     this.setState({
       zip: e.target.value,
+    });
+  }
+
+  enterParticleToken(e) {
+    this.setState({
+      particleToken: e.target.value,
     });
   }
 
@@ -77,6 +82,7 @@ class Signup extends React.Component {
       email: this.state.email,
       password: this.state.password,
       zip: this.state.zip,
+      particleToken: this.state.particleToken,
     });
   }
 
@@ -139,6 +145,20 @@ class Signup extends React.Component {
                     inputProps={{
                       value: this.state.zip,
                       onChange: this.enterZip,
+                      onKeyPress: this.handleKeyPress,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    labelText="Particle Token"
+                    id="particle_token"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      value: this.state.particleToken,
+                      onChange: this.enterParticleToken,
                       onKeyPress: this.handleKeyPress,
                     }}
                   />
