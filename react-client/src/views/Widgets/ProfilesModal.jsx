@@ -52,6 +52,7 @@ class ProfilesModal extends React.Component {
         this.props.updateProfileWidgets(this.state.profile, this.props.widgetName);
       },
     );
+    this.props.close();
   };
 
   render() {
