@@ -32,7 +32,7 @@ const container = {
   paddingLeft: "15px",
   marginRight: "auto",
   marginLeft: "auto",
-  background: ns.nord5
+  background: ns.nord6
 };
 
 const boxShadow = {
@@ -63,7 +63,7 @@ const dangerColor = ns.nord11;
 const successColor = ns.nord14;
 const infoColor = ns.nord8;
 const roseColor = "#e91e63";
-const grayColor = "#999999";
+const grayColor = ns.nord4;
 
 const primaryBoxShadow = {
   boxShadow:

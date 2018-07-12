@@ -12,7 +12,7 @@ const appStyle = theme => ({
     position: "relative",
     top: "0",
     height: "100vh",
-    background: ns.nord5
+    background: ns.nord6
   },
   mainPanel: {
     [theme.breakpoints.up("md")]: {
