@@ -10,13 +10,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 
 // components
 
 import NewsWidgetModal from './NewsWidgetModal';
+import ProfilesModal from './ProfilesModal';
 
 // actions
 
@@ -24,8 +22,8 @@ import { startNewsPolling, stopNewsPolling } from '../../actions/news';
 
 class NewsWidget extends React.Component {
   state = {
-    open: false,
-    anchorEl: null,
+    openEditModal: false,
+    openProfileModal: false,
   };
 
   componentDidMount() {
@@ -36,27 +34,26 @@ class NewsWidget extends React.Component {
     this.props.stopNewsPolling();
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handleEditOpen = () => {
+    this.setState({ openEditModal: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleEditClose = () => {
+    this.setState({ openEditModal: false });
   };
 
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleOpenProfile = () => {
+    this.setState({ openProfileModal: true });
   };
 
   handleProfileClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ openProfileModal: false });
   };
 
   render() {
     // console.log('PROPS', this.props);
     if (this.props.news.fetched && this.props.news.articles.length) {
       let { articles } = this.props.news;
-      let { anchorEl } = this.state;
       return (
         <div>
           <h5>Top Articles:</h5>
@@ -75,19 +72,17 @@ class NewsWidget extends React.Component {
               </div>)}
             </Infinite>
           </List>
-          <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
-          <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleProfileClose}
-          >
-            <MenuItem onClick={this.handleProfileClose}>Profile1</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile2</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile3</MenuItem>
-          </Menu>
-          <NewsWidgetModal open={this.state.open} close={this.handleClose.bind(this)} />
+          <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>
+          <NewsWidgetModal
+            open={this.state.openEditModal}
+            close={this.handleEditClose.bind(this)}
+          />
+          <ProfilesModal
+            open={this.state.openProfileModal}
+            close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.news.widgetName}
+          />
         </div>
       );
     } else {

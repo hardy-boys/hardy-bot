@@ -1,27 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import axios from 'axios';
 
 // @material-ui/core components
 
 import Button from 'components/CustomButtons/Button.jsx';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 // components
 
 import WeatherWidgetModal from './WeatherWidgetModal';
+import ProfilesModal from './ProfilesModal';
 
 // actions
 
 import { startWeatherPolling, stopWeatherPolling } from '../../actions/weather';
 
 class WeatherWidget extends React.Component {
-  // Temporary state until it gets refactored to Redux
   state = {
-    open: false,
-    anchorEl: null,
+    openEditModal: false,
+    openProfileModal: false,
   };
 
   componentDidMount() {
@@ -33,20 +30,20 @@ class WeatherWidget extends React.Component {
     this.props.stopWeatherPolling();
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handleEditOpen = () => {
+    this.setState({ openEditModal: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleEditClose = () => {
+    this.setState({ openEditModal: false });
   };
 
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleOpenProfile = () => {
+    this.setState({ openProfileModal: true });
   };
 
   handleProfileClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ openProfileModal: false });
   };
 
   checkUserConfigs() {
@@ -67,11 +64,10 @@ class WeatherWidget extends React.Component {
   }
 
   render() {
-    console.log('PROPS', this.props);
+    // console.log('PROPS', this.props);
     if (this.props.weather.fetched) {
       let { temp, pressure, humidity } = this.props.weather.weatherData.main;
       let { name, wind } = this.props.weather.weatherData;
-      let { anchorEl } = this.state;
       return (
         <div>
           <div style={{
@@ -120,19 +116,17 @@ class WeatherWidget extends React.Component {
                 <p><strong>101°</strong></p>
               </div>
             </div>
-          <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
-          <Button onClick={this.handleClick} color="primary">Add to Profile</Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleProfileClose}
-          >
-            <MenuItem onClick={this.handleProfileClose}>Profile1</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile2</MenuItem>
-            <MenuItem onClick={this.handleProfileClose}>Profile3</MenuItem>
-          </Menu>
-          <WeatherWidgetModal open={this.state.open} close={this.handleClose.bind(this)}/>
+          <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>
+          <WeatherWidgetModal
+            open={this.state.openEditModal}
+            close={this.handleEditClose.bind(this)}
+          />
+          <ProfilesModal
+            open={this.state.openProfileModal}
+            close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.weather.widgetName}
+          />
         </div>
       );
     } else {

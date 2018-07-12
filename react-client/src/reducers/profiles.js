@@ -4,6 +4,9 @@ import {
   LOGGED_IN,
   PROFILE_DATA_RECIEVED,
   PROFILE_DATA_UPDATE,
+  UPDATING_PROFILE_WIDGETS,
+  PROFILE_WIDGETS_UPDATED,
+  ERROR_UPDATING_PROFILE_WIDGETS,
 } from '../actions/types';
 
 const initialState = {
@@ -16,6 +19,8 @@ const initialState = {
   isOnline: false,
   loggingIn: false,
   loggedIn: false,
+  updatingProfile: false,
+  profileUpdated: false,
   error: null,
 };
 
@@ -45,6 +50,24 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profileData: action.payload,
+      };
+    case UPDATING_PROFILE_WIDGETS:
+      return {
+        ...state,
+        updatingProfile: true,
+      };
+    case PROFILE_WIDGETS_UPDATED:
+      return {
+        ...state,
+        updatingProfile: false,
+        profileUpdated: true,
+      };
+    case ERROR_UPDATING_PROFILE_WIDGETS:
+      return {
+        ...state,
+        updatingProfile: false,
+        profileUpdated: false,
+        error: action.payload,
       };
     default:
       return state;

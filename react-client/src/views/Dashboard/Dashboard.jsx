@@ -62,14 +62,24 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    console.log('DASHBOARD PROPS', this.props);
+    // console.log('DASHBOARD PROPS', this.props);
     const { classes } = this.props;
     const { devices, deviceInfo } = this.props.particle;
 
-
     if (devices.length && deviceInfo.deviceStats && deviceInfo.deviceStats.diagnostics.payload) {
-      let used = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.used / 1000));
-      let total = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.total / 1000));
+      let usedMemory = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.used / 1000));
+      let totalMemory = Math.ceil((deviceInfo.deviceStats.diagnostics.payload.device.system.memory.total / 1000));
+      let options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        timeZoneName: 'short',
+      };
+
+      let lastOnline = new Date(deviceInfo.deviceStats.diagnostics.updated_at).toLocaleString('en-US', options);
+
       return (
         <div>
           <Grid container>
@@ -98,7 +108,7 @@ class Dashboard extends React.Component {
                   <div className={classes.stats}>
                     <DateRange />
                     {/* This is data we need to get from the device */}
-                    Last 24 Hours
+                    Last Online: {lastOnline.toString()}
                   </div>
                 </CardFooter>
               </Card>
@@ -112,7 +122,7 @@ class Dashboard extends React.Component {
                   <p className={classes.cardCategory}>Used Space</p>
                   {/* This is data we need to get from the device */}
                   <h3 className={classes.cardTitle}>
-                    {used}/{total}<small>KB</small>
+                    {usedMemory}/{totalMemory}<small>KB</small>
                   </h3>
                 </CardHeader>
                 <CardFooter stats>
