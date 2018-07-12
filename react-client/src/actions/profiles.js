@@ -15,8 +15,28 @@ const fetchProfilesFromDB = () => {
           prof.deleting = false;
           return prof;
         });
-        console.log('act ', profileData)
+        console.log('act ', profileData);
         dispatch({ type: PROFILE_DATA_RECIEVED, payload: profileData });
+      })
+      .catch((err) => {
+        console.log(`Error loading profiles: ${err}`);
+      });
+  };
+};
+
+const deployProfileToDevice = (profile) => {
+  return (dispatch) => {
+    axios.post('/profile/apply', {
+      deviceName: 'savvy-fox',
+      profileData:
+      {
+        profile: profile.widgets,
+        switchMode: 'Manual',
+      },
+    })
+      .then((result) => {
+        console.log(result.data);
+        dispatch({ type: null, payload: null });
       })
       .catch((err) => {
         console.log(`Error loading profiles: ${err}`);
@@ -33,4 +53,5 @@ const updateProfiles = (profileData) => {
 export {
   fetchProfilesFromDB,
   updateProfiles,
+  deployProfileToDevice,
 };

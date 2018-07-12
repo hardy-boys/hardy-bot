@@ -17,6 +17,8 @@ import GolfCourse from '@material-ui/icons/GolfCourse';
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
 import Done from '@material-ui/icons/Done';
+import Save from '@material-ui/icons/Save';
+import GetApp from '@material-ui/icons/GetApp';
 import Add from '@material-ui/icons/Add';
 // core components
 import GridItem from 'components/Grid/GridItem.jsx';
@@ -31,7 +33,7 @@ import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
 
-import { fetchProfilesFromDB, updateProfiles, backupProfiles } from '../../actions/profiles';
+import { fetchProfilesFromDB, updateProfiles, deployProfileToDevice } from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -106,6 +108,11 @@ class DeviceProfiles extends React.Component {
     this.setState({
       showWidgetSelectModal: profIdx,
     });
+  }
+
+  handleDeployClick = (profIdx) => {
+    let { profileData } = this.props.profiles;
+    this.props.deployProfileToDevice(profileData[profIdx]);
   }
 
   handleDeleteModalConfirm = (profIdx) => {
@@ -195,6 +202,17 @@ class DeviceProfiles extends React.Component {
                       }
                         <div>
                           <IconButton
+                            aria-label="Deploy"
+                            className={classes.tableActionButton}
+                            onClick={() => { this.handleDeployClick(index); }}
+                          >
+                            <GetApp
+                              className={
+                                `${classes.tableActionButtonIcon} ${classes.edit}`
+                              }
+                            />
+                          </IconButton>
+                          <IconButton
                             aria-label="Edit"
                             className={classes.tableActionButton}
                             onClick={() => { this.handleEditProfileClick(index, profiles); }}
@@ -251,7 +269,7 @@ class DeviceProfiles extends React.Component {
                                 color="primary"
                                 disabled={!profile.editing}
                                 onClick={() => { this.handleSaveClick(index); }}
-                              ><Done />
+                              ><Save />
                                 Save Changes
                               </Button>
                               <Button
@@ -319,7 +337,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ fetchProfilesFromDB, updateProfiles }, dispatch);
+  return bindActionCreators({ fetchProfilesFromDB, updateProfiles, deployProfileToDevice }, dispatch);
 };
 
 export default compose(
