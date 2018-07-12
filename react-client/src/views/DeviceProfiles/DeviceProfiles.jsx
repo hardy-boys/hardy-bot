@@ -28,7 +28,10 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
-import CustomInput from 'components/CustomInput/CustomInput.jsx';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
@@ -49,6 +52,22 @@ const styles = {
       fontSize: '65%',
       fontWeight: '400',
       lineHeight: '1',
+    },
+  },
+  cssLabel: {
+    color: '#FFFFFF',
+  },
+  cssFocused: {
+    '&$cssFocused': {
+      color: '#FFFFFF',
+    },
+  },
+  cssUnderline: {
+    '&:before': {
+      borderBottomColor: '#FFFFFF',
+    },
+    '&:after': {
+      borderBottomColor: '#FFFFFF',
     },
   },
 };
@@ -142,6 +161,13 @@ class DeviceProfiles extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
+  handleProfileNameChange = (e, profIdx) => {
+    console.log(`Editing profile name, Index: ${profIdx} Value: ${e.target.value}`);
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles[profIdx].profile = e.target.value;
+    this.props.updateProfiles(updatedProfiles);
+  }
+
   render() {
     // console.log('PROPS', this.props);
     const { classes } = this.props;
@@ -181,23 +207,36 @@ class DeviceProfiles extends React.Component {
                         justify='space-between'
                       >
                       {profile.editing ?
-                          (<CustomInput
-                            onEnter
-                            labelText="ProfileName"
-                            id="profilename"
-                            inputProps={{
-                              value: profile.profile,
-                              // onChange: this.enterEmail,
-                              // onKeyPress: this.handleKeyPress,
-                            }}
-                            formControlProps={{
-                              fullWidth: false,
-                            }}/>
+                          (<FormControl fullWidth={false} >
+                            <InputLabel
+                              FormLabelClasses={{
+                                root: classes.cssLabel,
+                                focused: classes.cssFocused,
+                              }}
+                            >
+                              {profile.profile}
+                            </InputLabel>
+                            <Input
+                              classes={{
+                                root: classes.cssUnderline,
+                                focused: classes.cssFocused,
+                                underline: classes.cssUnderline,
+                              }}
+                              onChange={(e) => { this.handleProfileNameChange(e, index); } }
+                            />
+                            <FormHelperText
+                              classes={{
+                                root: classes.cssLabel,
+                              }}
+                             >
+                              ProfileName
+                             </FormHelperText>
+                          </FormControl>
                           ) :
                           (
-                          <h4 className={classes.cardTitleWhite}>
+                          <h3 className={classes.cardTitleWhite}>
                             {profile.profile}
-                          </h4>
+                          </h3>
                           )
                       }
                         <div>
@@ -268,7 +307,7 @@ class DeviceProfiles extends React.Component {
                               <Button
                                 color="primary"
                                 disabled={!profile.editing}
-                                onClick={() => { this.handleSaveClick(index); }}
+                                onClick={() => { this.handleSaveClick(index); this.handleProfileNameChange(null, index); }}
                               ><Save />
                                 Save Changes
                               </Button>
