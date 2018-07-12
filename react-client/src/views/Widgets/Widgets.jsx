@@ -84,8 +84,8 @@ class Widgets extends React.Component {
               <Grid container>
                 <GridItem xs={12} sm={12} md={12}>
                   <Card>
-                    <CardHeader color="info" icon>
-                      <CardIcon color="info">
+                    <CardHeader color="warning" icon>
+                      <CardIcon color="warning">
                         <WbSunny />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>Weather</h4>
@@ -97,8 +97,8 @@ class Widgets extends React.Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={12}>
                   <Card>
-                    <CardHeader color="info" icon>
-                      <CardIcon color="info">
+                    <CardHeader color="warning" icon>
+                      <CardIcon color="warning">
                         <TrendingUp />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>Stocks</h4>
@@ -110,8 +110,8 @@ class Widgets extends React.Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={12}>
                   <Card>
-                    <CardHeader color="info" icon>
-                      <CardIcon color="info">
+                    <CardHeader color="warning" icon>
+                      <CardIcon color="warning">
                         <Subject />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>News</h4>
@@ -123,8 +123,8 @@ class Widgets extends React.Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={12}>
                   <Card>
-                    <CardHeader color="info" icon>
-                      <CardIcon color="info">
+                    <CardHeader color="warning" icon>
+                      <CardIcon color="warning">
                         <DirectionsCar />
                       </CardIcon>
                       <h4 className={classes.cardTitleBlack}>Traffic</h4>
