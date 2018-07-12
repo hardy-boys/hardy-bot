@@ -154,6 +154,31 @@ const getUserDevices = (userId) => {
     });
 };
 
+const updateProfileWidgets = (profileName, widgetName) => {
+  return db.models.Profile.findOne({
+    where: {
+      name: profileName,
+    },
+    attributes: ['id'],
+    raw: true,
+  })
+    .then((profileId) => {
+      return db.models.Widget.findOne({
+        where: {
+          name: widgetName,
+        },
+      })
+        .then((widget) => {
+          return widget.addProfile(profileId.id);
+        })
+        .catch((err) => {
+          return err;
+        });
+    })
+    .catch((err) => {
+      return err;
+    });
+};
 
 module.exports = {
   saveMember,
@@ -163,4 +188,5 @@ module.exports = {
   saveStockWidgetConfig,
   getUserDevices,
   getUserWidgetConfigs,
+  updateProfileWidgets,
 };

@@ -65,4 +65,17 @@ router.post('/profile/apply', (req, res) => {
     });
 });
 
+router.post('/profile/updateWidgets', (req, res) => {
+  let { profileName, widgetName } = req.body;
+  dbHelpers.updateProfileWidgets(profileName, widgetName)
+    .then((result) => {
+      console.log('UPDATED PROFILE', result);
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log('ERROR UPDATING PROF', err);
+      res.send(err);
+    });
+});
+
 module.exports = router;

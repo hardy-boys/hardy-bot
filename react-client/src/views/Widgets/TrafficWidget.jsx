@@ -7,49 +7,36 @@ import Gauge from 'react-svg-gauge';
 
 import Grid from '@material-ui/core/Grid';
 import GridItem from 'components/Grid/GridItem.jsx';
-import Card from 'components/Card/Card.jsx';
-import CardHeader from 'components/Card/CardHeader.jsx';
-import CardIcon from 'components/Card/CardIcon.jsx';
-import CardBody from 'components/Card/CardBody.jsx';
-import CardFooter from 'components/Card/CardFooter.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
-// import Menu from '@material-ui/core/Menu';
-// import MenuItem from '@material-ui/core/MenuItem';
+
 
 // components
 
 import TrafficWidgetModal from './TrafficWidgetModal';
-
-// actions
-
-// import { startWeatherPolling, stopWeatherPolling } from '../../actions/weather';
+import ProfilesModal from './ProfilesModal';
 
 class TrafficWidget extends React.Component {
-  // Temporary state until it gets refactored to Redux
   state = {
-    open: false,
-    anchorEl: null,
+    openEditModal: false,
+    openProfileModal: false,
     value: 0,
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handleEditOpen = () => {
+    this.setState({ openEditModal: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleEditClose = () => {
+    this.setState({ openEditModal: false });
   };
 
-  // handleClick = (event) => {
-  //   this.setState({ anchorEl: event.currentTarget });
-  // };
+  handleOpenProfile = () => {
+    this.setState({ openProfileModal: true });
+  };
 
-  // handleProfileClose = () => {
-  //   this.setState({ anchorEl: null });
-  // };
-
-  // checkUserConfigs() {
-  // }
+  handleProfileClose = () => {
+    this.setState({ openProfileModal: false });
+  };
 
   setGaugeColor = (traffic) => {
     if (traffic >= 0 && traffic <= 3.33) {
@@ -85,14 +72,22 @@ class TrafficWidget extends React.Component {
               <GridItem xs={6}>
                 <h5>Please enter an origin and destination</h5>
               </GridItem>
-            )};
+            )}
             <GridItem xs={5}>
               <Gauge color={this.setGaugeColor(traffic)} value={traffic} min={0} max={10} width={200} height={175} label="Traffic" />
             </GridItem>
           </Grid>
-          <Button onClick={this.handleOpen.bind(this)} color="primary">Edit Widget</Button>
-          <Button color="primary">Add to Profile</Button>
-          <TrafficWidgetModal open={this.state.open} close={this.handleClose.bind(this)} />
+          <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
+          <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>
+          <TrafficWidgetModal
+            open={this.state.openEditModal}
+            close={this.handleEditClose.bind(this)}
+          />
+          <ProfilesModal
+            open={this.state.openProfileModal}
+            close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.traffic.widgetName}
+          />
         </div>
     );
   }
