@@ -81,6 +81,7 @@ class NewsWidget extends React.Component {
           <ProfilesModal
             open={this.state.openProfileModal}
             close={this.handleProfileClose.bind(this)}
+            widgetName={this.props.news.widgetName}
           />
         </div>
       );
