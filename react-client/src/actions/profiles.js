@@ -27,10 +27,10 @@ const fetchProfilesFromDB = () => {
   };
 };
 
-const deployProfileToDevice = (profile) => {
+const deployProfileToDevice = (profile, device) => {
   return (dispatch) => {
     axios.post('/profile/apply', {
-      deviceName: 'savvy-fox',
+      deviceName: device,
       profileData:
       {
         profile: profile.widgets,
@@ -69,11 +69,29 @@ const updateProfileWidgets = (profileName, widgetName) => {
 };
 
 const saveProfileToDB = () => {
-  
+
 };
 
-const deleteProfileFromDB = () => {
+const deleteProfileFromDB = (profileData, profIdx) => {
+  return (dispatch) => {
+    // 1) close modal
+    let _profileData = profileData;
+    _profileData[profIdx].deleting = false;
+    dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
 
+    // 2) remove from db
+    axios.post('/profile/delete', {
+      profileName: profileData[profIdx].profile,
+    })
+      .then(() => {
+        // 3) remove from our state
+        _profileData.splice(profIdx, 1);
+        dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
+      })
+      .catch((err) => {
+        console.log(`Error deleting profile from db: ${err}`);
+      });
+  };
 };
 
 export {

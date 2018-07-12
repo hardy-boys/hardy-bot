@@ -84,7 +84,6 @@ class DeviceProfiles extends React.Component {
   }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
-    console.log(this.props.profiles.profileData);
   }
 
   handleEditProfileClick = (profIdx) => {
@@ -145,19 +144,14 @@ class DeviceProfiles extends React.Component {
   }
 
   handleDeployClick = (profIdx) => {
-    let { profileData } = this.props.profiles;
-    this.props.deployProfileToDevice(profileData[profIdx]);
+    const { deviceInfo } = this.props.particle;
+    const { profile } = this.props.profiles.profileData[profIdx];
+    this.props.deployProfileToDevice(profile, deviceInfo.deviceName);
   }
 
   handleDeleteModalConfirm = (profIdx) => {
-    let closeModal = this.props.profiles.profileData;
-    closeModal[profIdx].deleting = false;
-    this.props.updateProfiles(closeModal);
-    // todo: make sure modal is closed before deleting profile w/ prom,i
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles.splice(profIdx, 1);
-    this.props.updateProfiles(updatedProfiles);
-    // TODO: delete from database
+    let currentProfiles = this.props.profiles.profileData;
+    this.props.deleteProfileFromDB(currentProfiles, profIdx);
   }
 
   saveChanges = () => {
@@ -389,6 +383,7 @@ class DeviceProfiles extends React.Component {
 const mapStateToProps = (state) => {
   return {
     profiles: state.profiles,
+    particle: state.particle,
   };
 };
 
