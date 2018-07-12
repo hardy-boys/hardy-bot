@@ -27,11 +27,11 @@ import CardBody from 'components/Card/CardBody.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
 import CustomInput from 'components/CustomInput/CustomInput.jsx';
-import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
+import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
 
-import { fetchProfilesFromDB, updateProfiles } from '../../actions/profiles';
+import { fetchProfilesFromDB, updateProfiles, backupProfiles } from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -52,9 +52,12 @@ const styles = {
 };
 
 class DeviceProfiles extends React.Component {
-
+  state = {
+    showWidgetSelectModal: null,
+  }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
+    console.log(this.props.profiles.profileData);
   }
 
   handleEditProfileClick = (profIdx) => {
@@ -77,22 +80,35 @@ class DeviceProfiles extends React.Component {
   }
 
   handleCancelClick = (profIdx) => {
+    // restore profile state from backup
     let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].editing = false;
+    updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleAddClick = () => {
-
-  }
-
-  handleModalClose = (profIdx) => {
+  handleDeleteModalClose = (profIdx) => {
     let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].deleting = false;
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleModalConfirm = (profIdx) => {
+  handleWidgetModalSelect = (widget, profIdx) => {
+    this.setState({
+      showWidgetSelectModal: null,
+    });
+    console.log(`Selected ${widget}`);
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles[profIdx].widgets.push(widget);
+    this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleAddWidgetClick = (profIdx) => {
+    this.setState({
+      showWidgetSelectModal: profIdx,
+    });
+  }
+
+  handleDeleteModalConfirm = (profIdx) => {
     let closeModal = this.props.profiles.profileData;
     closeModal[profIdx].deleting = false;
     this.props.updateProfiles(closeModal);
@@ -103,8 +119,20 @@ class DeviceProfiles extends React.Component {
     // TODO: delete from database
   }
 
-  saveChanges() {
+  saveChanges = () => {
     // TODO: save changes to database
+  }
+
+  handleAddProfileClick = () => {
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles.push({
+      profile: 'NewProfile',
+      widgets: [],
+      editing: true,
+      deleting: false,
+      widgetModalOpen: false,
+    });
+    this.props.updateProfiles(updatedProfiles);
   }
 
   render() {
@@ -133,6 +161,8 @@ class DeviceProfiles extends React.Component {
         <React.Fragment>
           <Grid container>
             {profiles.map((profile, index) => {
+              // limit to 4 widgets due to device restrictions
+              let widgetMax = profile.widgets.length >= 4;
               return (
                 <GridItem xs={12} sm={12} md={6} key={index}>
                   <Card>
@@ -167,7 +197,7 @@ class DeviceProfiles extends React.Component {
                           <IconButton
                             aria-label="Edit"
                             className={classes.tableActionButton}
-                            onClick={() => { this.handleEditProfileClick(index); }}
+                            onClick={() => { this.handleEditProfileClick(index, profiles); }}
                           >
                             <Edit
                               className={
@@ -205,10 +235,15 @@ class DeviceProfiles extends React.Component {
                           justify='space-between'
                         >
                           <Fade in={profile.editing}>
-                            <WidgetDropdown
-                            type={'add'}
-                            editing={profile.editing}
-                            />
+                            <Button
+                              color="primary"
+                              disabled={widgetMax}
+                              onClick={() => { this.handleAddWidgetClick(index); }}
+                            >
+                              <Add className={
+                                `${classes.tableActionButtonIcon}`} />
+                              Add Widget
+                            </Button>
                           </Fade>
                           <Fade in={profile.editing}>
                             <div>
@@ -234,9 +269,14 @@ class DeviceProfiles extends React.Component {
                   </Card>
                   <DeleteProfileModal
                     open={profile.deleting}
-                    close={this.handleModalClose.bind(this)}
-                    confirm={this.handleModalConfirm.bind(this)}
+                    close={this.handleDeleteModalClose}
+                    confirm={this.handleDeleteModalConfirm}
                     profileName={profile.profile}
+                    profileIndex={index}
+                    />
+                  <WidgetSelectModal
+                    open={this.state.showWidgetSelectModal === index}
+                    select={this.handleWidgetModalSelect}
                     profileIndex={index}
                     />
                 </GridItem>
@@ -253,7 +293,7 @@ class DeviceProfiles extends React.Component {
           <Button
             color="primary"
             aria-label="Add"
-            onClick={null}
+            onClick={this.handleAddProfileClick}
             className={classes.buttonLink}
           >
             <Add className={
