@@ -27,7 +27,6 @@ import CardBody from 'components/Card/CardBody.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
 import CustomInput from 'components/CustomInput/CustomInput.jsx';
-import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
@@ -54,7 +53,7 @@ const styles = {
 
 class DeviceProfiles extends React.Component {
   state = {
-    showWidgetSelectModal: false,
+    showWidgetSelectModal: null,
   }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
@@ -95,10 +94,9 @@ class DeviceProfiles extends React.Component {
 
   handleWidgetModalSelect = (widget, profIdx) => {
     this.setState({
-      showWidgetSelectModal: false,
+      showWidgetSelectModal: null,
     });
     console.log(`Selected ${widget}`);
-    console.log(profIdx)
     let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].widgets.push(widget);
     this.props.updateProfiles(updatedProfiles);
@@ -279,7 +277,6 @@ class DeviceProfiles extends React.Component {
                   <WidgetSelectModal
                     open={this.state.showWidgetSelectModal === index}
                     select={this.handleWidgetModalSelect}
-                    profileName={profile.profile}
                     profileIndex={index}
                     />
                 </GridItem>

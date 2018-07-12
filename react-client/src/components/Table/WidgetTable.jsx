@@ -10,21 +10,29 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 // @material-ui/icons
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
 import Check from '@material-ui/icons/Check';
 // core components
 import tasksStyle from 'assets/jss/material-dashboard-react/components/tasksStyle.jsx';
-import WidgetDropdown from 'views/DeviceProfiles/WidgetDropdown.jsx';
-import Typography from '@material-ui/core/Typography';
+import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
+
 
 import { updateProfiles } from '../../actions/profiles';
 
 
 class WidgetTable extends React.Component {
-  handleEditClicked(widget) {
-    console.log('Edit widget: ', widget);
+  state = {
+    showWidgetSelectModal: null,
+  }
+
+  handleEditClicked(widgetIdx) {
+    console.log('Edit widget: ', widgetIdx);
+    this.setState({
+      showWidgetSelectModal: widgetIdx,
+    });
   }
 
   handleDeleteClicked(widget) {
@@ -33,6 +41,18 @@ class WidgetTable extends React.Component {
     let updatedProfiles = this.props.profiles.profileData;
     let widgetIdx = updatedProfiles[profileIndex].widgets.indexOf(widget);
     updatedProfiles[profileIndex].widgets.splice(widgetIdx, 1);
+    this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleWidgetModalSelect = (widget, profIdx, widgetIdx) => {
+    console.log('Prof ', profIdx)
+    console.log('Widget ', widgetIdx)
+    this.setState({
+      showWidgetSelectModal: null,
+    });
+    console.log(`Selected ${widget}`);
+    let updatedProfiles = this.props.profiles.profileData;
+    updatedProfiles[profIdx].widgets[widgetIdx] = widget;
     this.props.updateProfiles(updatedProfiles);
   }
 
@@ -52,12 +72,15 @@ class WidgetTable extends React.Component {
                   direction='row'
                   justify='flex-start'
                 >
-                  <WidgetDropdown
-                    type={'edit'}
-                    editing={editing}
-                    profileIndex={this.props.profileIndex}
-                    widgetIndex={index}
-                  />
+                  <Fade in={editing}>
+                    <IconButton
+                      disabled={!editing}
+                      onClick={() => { this.handleEditClicked(index); }}
+                      className={classes.tableActionButton}
+                    >
+                      <Edit className={classes.tableActionButtonIcon} />
+                    </IconButton>
+                  </Fade>
                   <Typography variant="body2" gutterBottom>
                     {widget}
                   </Typography>
@@ -78,6 +101,12 @@ class WidgetTable extends React.Component {
                     />
                   </IconButton>
                 </Fade>
+              <WidgetSelectModal
+                open={this.state.showWidgetSelectModal === index}
+                select={this.handleWidgetModalSelect}
+                profileIndex={this.props.profileIndex}
+                widgetIndex={index}
+              />
               </TableCell>
             </TableRow>
           ))}

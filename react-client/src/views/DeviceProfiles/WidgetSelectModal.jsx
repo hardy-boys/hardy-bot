@@ -42,12 +42,10 @@ class WidgetSelectModal extends React.Component {
   };
 
   handleChange = (event) => {
-    console.log('In Profile: ', this.props.profileIndex)
-    console.log('In Profile: ', this.props.profileName)
     this.setState(
       { widget: event.target.value },
       () => {
-        this.props.select(this.state.widget, this.props.profileIndex);
+        this.props.select(this.state.widget, this.props.profileIndex, this.props.widgetIndex || null);
       },
     );
   };
