@@ -66,11 +66,11 @@ class App extends React.Component {
           {...rest}
         />
         <div className={classes.mainPanel} ref="mainPanel">
-          <Header
+          {/* <Header
             routes={dashboardRoutes}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
-          />
+          /> */}
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {this.getRoute() ? (
             <div className={classes.content}>
