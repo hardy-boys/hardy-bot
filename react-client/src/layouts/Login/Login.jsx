@@ -70,15 +70,12 @@ class Login extends React.Component {
     })
       .then((res) => {
         console.log(res.data);
-        if (res.data.login === 'success') {
-          history.push('/dashboard');
-        } else {
-          console.log('Invald Email or Password.');
-          history.push('/login');
-        }
+        history.push('/dashboard');
       })
       .catch((err) => {
         console.log(err.data);
+        alert('Invalid Username or Password.');
+        // history.push('/login');
       });
   }
 

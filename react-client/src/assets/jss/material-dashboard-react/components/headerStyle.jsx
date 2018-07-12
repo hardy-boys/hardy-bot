@@ -17,12 +17,11 @@ const headerStyle = theme => ({
     marginBottom: "0",
     position: "absolute",
     width: "45px",
-    paddingTop: "10px",
     zIndex: "1029",
     color: "#555555",
     border: "0",
     borderRadius: "3px",
-    padding: "10px 0",
+    padding: "0px",
     transition: "all 150ms ease 0s",
     minHeight: "50px",
     display: "block"
