@@ -5,6 +5,7 @@ import {
 } from '../actions/types';
 
 const initialState = {
+  widgetName: 'TrafficWidget',
   trafficData: {},
   fetching: false,
   fetched: false,
