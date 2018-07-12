@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 
 // actions
 
-import { fetchProfilesFromDB } from '../../actions/profiles';
+import { fetchProfilesFromDB, updateProfileWidgets } from '../../actions/profiles';
 
 function getModalStyle() {
   const top = 50;
@@ -45,8 +45,13 @@ class ProfilesModal extends React.Component {
     this.props.fetchProfilesFromDB();
   }
 
-  handleChange = name => (event) => {
-    this.setState({ [name]: event.target.value });
+  handleChange = (event) => {
+    this.setState(
+      { profile: event.target.value },
+      () => {
+        this.props.updateProfileWidgets(this.state.profile, this.props.widgetName);
+      },
+    );
   };
 
   render() {
@@ -71,7 +76,7 @@ class ProfilesModal extends React.Component {
               <Select
                 native
                 value={this.state.profile}
-                onChange={this.handleChange('profile')}
+                onChange={this.handleChange.bind(this)}
                 inputProps={{
                   name: 'profile',
                   id: 'profile-native-simple',
@@ -100,7 +105,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ fetchProfilesFromDB }, dispatch);
+  return bindActionCreators({ fetchProfilesFromDB, updateProfileWidgets }, dispatch);
 };
 
 export default compose(
