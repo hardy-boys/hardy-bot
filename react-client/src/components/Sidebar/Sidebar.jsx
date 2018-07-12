@@ -22,7 +22,7 @@ const Sidebar = ({ ...props }) => {
     return props.location.pathname.indexOf(routeName) > -1;
   }
   const {
-    classes, color, logo, image, logoText, routes,
+    classes, color, logo, image, logoText, routes, logout,
   } = props;
   let links = (
     <List className={classes.list}>
@@ -63,7 +63,7 @@ const Sidebar = ({ ...props }) => {
             </NavLink>
           );
         })}
-        <Button style={{ position: 'absolute', bottom: '10px', width: '90%', margin: '12px' }} color="rose">Logout</Button>
+        <Button style={{ position: 'absolute', bottom: '10px', width: '90%', margin: '12px' }} color="rose" onClick={logout}>Logout</Button>
     </List>
   );
   let brand = (

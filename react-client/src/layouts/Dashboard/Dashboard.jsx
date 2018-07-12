@@ -1,5 +1,8 @@
 /* eslint-disable */
 import React from "react";
+import axios from 'axios';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
@@ -51,6 +54,16 @@ class App extends React.Component {
       }
     }
   }
+  handleLogout() {
+    const { history } = this.props;
+    axios.get('/logout')
+      .then((res) => {
+          history.push('/login');
+      })
+      .catch((err) => {
+        console.log('error logging out');
+      });
+  }
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -58,6 +71,7 @@ class App extends React.Component {
         <Sidebar
           routes={dashboardRoutes}
           logoText={"Hardy Bot"}
+          logout={this.handleLogout.bind(this)}
           //logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}
@@ -90,4 +104,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(App);
+export default compose(withStyles(dashboardStyle, withRouter)(App));
