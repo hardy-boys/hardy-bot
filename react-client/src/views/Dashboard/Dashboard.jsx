@@ -16,18 +16,19 @@ import Grid from '@material-ui/core/Grid';
 // @material-ui/icons
 
 import ContentCopy from '@material-ui/icons/ContentCopy';
-import Store from '@material-ui/icons/Store';
 import InfoOutline from '@material-ui/icons/InfoOutline';
-import Warning from '@material-ui/icons/Warning';
 import DateRange from '@material-ui/icons/DateRange';
 import LocalOffer from '@material-ui/icons/LocalOffer';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import AccessTime from '@material-ui/icons/AccessTime';
+import DonutLarge from '@material-ui/icons/DonutLarge';
+import DonutSmall from '@material-ui/icons/DonutSmall';
+import Memory from '@material-ui/icons/Memory';
+import FlipToFront from '@material-ui/icons/FlipToFront';
 
 // core components
 
 import GridItem from 'components/Grid/GridItem.jsx';
-import Danger from 'components/Typography/Danger.jsx';
 import Card from 'components/Card/Card.jsx';
 import CardHeader from 'components/Card/CardHeader.jsx';
 import CardIcon from 'components/Card/CardIcon.jsx';
@@ -98,7 +99,13 @@ class Dashboard extends React.Component {
               <Card>
                 <CardHeader color={deviceInfo.deviceStats.status === 'online' ? 'success' : 'danger'} stats icon>
                   <CardIcon color={deviceInfo.deviceStats.status === 'online' ? 'success' : 'danger'}>
-                    <Store />
+                    {deviceInfo.deviceStats.status === 'online' ?
+                    (
+                      <DonutLarge />
+                    ) : (
+                      <DonutSmall />
+                    )
+                  }
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Status</p>
                   {/* This is data we need to get from the device */}
@@ -117,7 +124,7 @@ class Dashboard extends React.Component {
               <Card>
                 <CardHeader color="warning" stats icon>
                   <CardIcon color="warning">
-                    <ContentCopy />
+                    <Memory />
                   </CardIcon>
                   <p className={classes.cardCategory}>Used Space</p>
                   {/* This is data we need to get from the device */}
@@ -131,9 +138,9 @@ class Dashboard extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <CardHeader color="warning" stats icon>
-                  <CardIcon color="warning">
-                    <InfoOutline />
+                <CardHeader color="info" stats icon>
+                  <CardIcon color="info">
+                    <FlipToFront />
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Profile</p>
                   {/* Render device profile from database */}
