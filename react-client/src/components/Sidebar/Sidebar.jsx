@@ -10,6 +10,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from 'components/CustomButtons/Button.jsx';
 // core components
 import HeaderLinks from 'components/Header/HeaderLinks.jsx';
 
@@ -43,25 +44,26 @@ const Sidebar = ({ ...props }) => {
           [` ${classes.whiteFont}`]: activeRoute(prop.path),
         });
         return (
-          <NavLink
-            to={prop.path}
-            className={activePro + classes.item}
-            activeClassName="active"
-            key={key}
-          >
-            <ListItem button className={classes.itemLink + listItemClasses}>
-              <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
-                <prop.icon />
-              </ListItemIcon>
-              <ListItemText
-                primary={prop.sidebarName}
-                className={classes.itemText + whiteFontClasses}
-                disableTypography={true}
-              />
-            </ListItem>
-          </NavLink>
-        );
-      })}
+            <NavLink
+              to={prop.path}
+              className={activePro + classes.item}
+              activeClassName="active"
+              key={key}
+            >
+              <ListItem button className={classes.itemLink + listItemClasses}>
+                <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
+                  <prop.icon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={prop.sidebarName}
+                  className={classes.itemText + whiteFontClasses}
+                  disableTypography={true}
+                />
+              </ListItem>
+            </NavLink>
+          );
+        })}
+        <Button style={{ position: 'absolute', bottom: '10px', width: '90%', margin: '12px' }} color="rose">Logout</Button>
     </List>
   );
   let brand = (
