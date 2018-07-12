@@ -68,6 +68,9 @@ const styles = {
       lineHeight: '1',
     },
   },
+  widgetBackground: {
+    background: '#eceff4',
+  }
 };
 
 class Widgets extends React.Component {
@@ -76,7 +79,7 @@ class Widgets extends React.Component {
     return (
       <Grid container>
         <GridItem xs={12} sm={12} md={12}>
-          <Card>
+          <Card className={classes.widgetBackground}>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Widgets Store</h4>
             </CardHeader>

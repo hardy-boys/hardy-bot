@@ -99,7 +99,7 @@ class Signup extends React.Component {
     return (
     <div style={{ margin: '70px' }}>
       <Grid container justify='center'>
-        <GridItem xs={12} sm={6} md={4}>
+        <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color="primary">
             <img src='../../assets/img/hardybotlogo.png' style={{ width: '100px' }}/>
