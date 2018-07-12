@@ -132,6 +132,7 @@ class Signup extends React.Component {
                       value: this.state.password,
                       onChange: this.enterPassword,
                       onKeyPress: this.handleKeyPress,
+                      type: 'password',
                     }}
                   />
                 </GridItem>
