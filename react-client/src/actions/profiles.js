@@ -27,10 +27,11 @@ const fetchProfilesFromDB = () => {
   };
 };
 
-const deployProfileToDevice = (profile) => {
+const deployProfileToDevice = (profile, device) => {
   return (dispatch) => {
+    console.log('Deploying profile to device');
     axios.post('/profile/apply', {
-      deviceName: 'savvy-fox',
+      deviceName: device,
       profileData:
       {
         profile: profile.widgets,
@@ -38,8 +39,7 @@ const deployProfileToDevice = (profile) => {
       },
     })
       .then((result) => {
-        console.log(result.data);
-        dispatch({ type: null, payload: null });
+        console.log('Successfully deployed: ', result.data);
       })
       .catch((err) => {
         console.log(`Error loading profiles: ${err}`);
@@ -68,9 +68,73 @@ const updateProfileWidgets = (profileName, widgetName) => {
   };
 };
 
+const saveProfileToDB = (profileData, profIdx, prevName) => {
+  return (dispatch) => {
+    // 1) set mode to not editing and finalize local state changes
+    let _profileData = profileData;
+    _profileData[profIdx].editing = false;
+    dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
+
+    // 2) remove old profile from db if previously established
+    if (prevName) {
+      axios.post('/profile/delete', {
+        profileName: prevName,
+      })
+        .then(() => {
+          // 3) save new profiles to db
+          return axios.post('/profile/save', {
+            profileName: _profileData[profIdx].profile,
+            widgetNames: _profileData[profIdx].widgets,
+          });
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(`Error in save profile function: ${err}`);
+        });
+    } else {
+      axios.post('/profile/save', {
+        profileName: _profileData[profIdx].profile,
+        widgetNames: _profileData[profIdx].widgets,
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(`Error in save profile function: ${err}`);
+        });
+    }
+  };
+};
+
+const deleteProfileFromDB = (profileData, profIdx) => {
+  return (dispatch) => {
+    // 1) close modal
+    let _profileData = profileData;
+    _profileData[profIdx].deleting = false;
+    dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
+
+    // 2) remove from db
+    axios.post('/profile/delete', {
+      profileName: profileData[profIdx].profile,
+    })
+      .then(() => {
+        // 3) remove from our state
+        _profileData.splice(profIdx, 1);
+        dispatch({ type: PROFILE_DATA_UPDATE, payload: _profileData });
+      })
+      .catch((err) => {
+        console.log(`Error deleting profile from db: ${err}`);
+      });
+  };
+};
+
 export {
   fetchProfilesFromDB,
   updateProfiles,
   deployProfileToDevice,
   updateProfileWidgets,
+  saveProfileToDB,
+  deleteProfileFromDB,
 };

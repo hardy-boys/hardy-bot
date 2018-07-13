@@ -14,15 +14,12 @@ const jsonPatch = require('fast-json-patch');
 
 const appToken = process.env.STREAMDATA_NEWS;
 
-// let mapParticle = (input) => {
-//   return {
-//     name: input.name,
-//     main: input.weather[0].main,
-//     temp: Math.round(input.main.temp),
-//     humidity: input.main.humidity,
-//     wind: input.wind.speed,
-//   };
-// };
+let mapParticle = (input) => {
+  let articles = input.articles.slice(0, 8).map(el => el.title);
+  return {
+    articles,
+  };
+};
 
 let eventSource;
 let apiKey = process.env.NEWS_API_KEY;
@@ -50,7 +47,7 @@ router.post('/api/news', (req, res) => {
       // memorize the fresh data set
       result = data;
       console.log(result);
-      // particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
+      particleHelpers.sendEventData('news', mapParticle(result), req.session.particleToken);
     })
     // the streamdata.io specific 'patch' event will be called when a fresh Json patch
     // is pushed by streamdata.io from the API. This patch has to be applied to the
@@ -64,7 +61,7 @@ router.post('/api/news', (req, res) => {
       console.log(result);
       // res.send(result);
       io.emit('action', { type: actions.NEWS_DATA_UPDATE, payload: result.articles });
-      // particleHelpers.sendEventData('openWeather', mapParticle(result), req.session.particleToken);
+      particleHelpers.sendEventData('news', mapParticle(result), req.session.particleToken);
     })
 
     // the standard 'error' callback will be called when an error occur with the evenSource

@@ -23,7 +23,7 @@ function getModalStyle() {
 const styles = theme => ({
   paper: {
     position: 'absolute',
-    width: theme.spacing.unit * 50,
+    width: theme.spacing.unit * 40,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -42,7 +42,7 @@ class DeleteProfileModal extends React.Component {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
           open={this.props.open}
-          onClose={this.props.close}
+          onClose={() => { this.props.close(profileIndex); }}
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="title" id="modal-title">
@@ -62,7 +62,7 @@ class DeleteProfileModal extends React.Component {
               <Button
                 color="white"
                 onClick={() => { this.props.close(profileIndex); }}
-                >Nevermind
+                >Never Mind
               </Button>
             </Grid>
           </div>
