@@ -52,7 +52,7 @@ const dashboardRoutes = [
     component: UserProfile,
   },
   {
-    redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect',
+    redirect: true, path: '/', to: '/login', navbarName: 'Redirect',
   },
   // {
   //   redirect: true, path: '/login', to: '/login', navbarName: 'Login',
