@@ -34,10 +34,10 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'johndoe@gmail.com',
+      email: '',
       password: '',
-      zip: '78741',
-      particleToken: 't49e0217s39t',
+      zip: '',
+      particleToken: '',
       edit: true,
     };
     this.enterEmail = this.enterEmail.bind(this);
@@ -54,9 +54,11 @@ class UserProfile extends React.Component {
     axios.get('/profileInfo')
       .then((result) => {
         console.log('USERPROFILE RESULT', result);
-      // this.setState({
-      //   zip:
-      // })
+        this.setState({
+          email: result.data.email,
+          zip: result.data.zipcode,
+          particleToken: result.data.particleToken,
+        });
       });
   }
 

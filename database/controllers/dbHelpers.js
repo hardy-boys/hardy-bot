@@ -47,6 +47,7 @@ const updateMember = (email, password, zipcode, particleToken, callback) => {
 const getProfileInfo = (email, callback) => {
   return db.models.User.findOne({
     where: { email },
+    raw: true,
   })
     .then((result) => {
       return result;
