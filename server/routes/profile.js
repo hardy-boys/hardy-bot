@@ -83,7 +83,7 @@ router.post('/profile/updateWidgets', (req, res) => {
     })
     .catch((err) => {
       console.log('ERROR UPDATING PROF', err);
-      res.send(err);
+      res.status(500).end(err);
     });
 });
 

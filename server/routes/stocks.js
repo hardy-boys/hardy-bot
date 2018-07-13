@@ -30,7 +30,7 @@ let eventSource;
 
 router.post('/api/stocks', (req, res) => {
   console.log('REQUEST', req.body);
-  console.log('REQUEST USER!!!', req.user);  
+  console.log('REQUEST USER!!!', req.user);
   // hardcoded stock symbol for testing
   let stockSymbols = req.body.symbols.join(',');
   let targetUrl = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${stockSymbols}&types=quote`;
@@ -77,7 +77,7 @@ router.post('/api/stocks', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      res.send(error);
+      res.status(500).end(error);
       eventSource.close();
     });
 
@@ -98,7 +98,7 @@ router.post('/widgets/stocks/save', (req, res) => {
       res.send(result);
     })
     .catch((error) => {
-      res.send(error);
+      res.status(500).end(error);
     });
 });
 

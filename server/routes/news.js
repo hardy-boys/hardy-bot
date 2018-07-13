@@ -68,7 +68,7 @@ router.post('/api/news', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      res.send(error);
+      res.status(500).end(error);
       eventSource.close();
     });
 

@@ -20,7 +20,7 @@ router.get('/users/:userId/widgets/config', (req, res) => {
     })
     .catch((err) => {
       console.log('ERROR RETRIEVING USER CONFIGS', err);
-      res.send(err);
+      res.status(500).end(err);
     });
 });
 
