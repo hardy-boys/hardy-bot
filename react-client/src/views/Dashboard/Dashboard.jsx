@@ -145,8 +145,8 @@ class Dashboard extends React.Component {
                 <CardFooter stats>
                   <div className={classes.stats}>
                   {/* Make this into a button that will redirect them to the profiles page */}
-                    <LocalOffer />
-                    Change Profile
+                    {/* <LocalOffer />
+                    Change Profile */}
                   </div>
                 </CardFooter>
               </Card>
