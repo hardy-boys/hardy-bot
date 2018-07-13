@@ -179,6 +179,34 @@ const getUserDevices = (userId) => {
     });
 };
 
+const getActiveProfile = (userId) => {
+  return db.models.Profile.findOne({
+    where: {
+      active: true,
+    },
+  });
+};
+
+const changeProfileActiveState = (userId, profileName, state) => {
+  db.models.Profile.findOne({
+    where: {
+      name: profileName,
+    },
+  })
+    .then((profile) => {
+      if (profile) {
+        profile.update({
+          active: state,
+        });
+      } else {
+        console.log('DB: no profile found, aborting');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 const updateProfileWidgets = (profileName, widgetName) => {
   return db.models.Profile.findOne({
     where: {
@@ -215,4 +243,6 @@ module.exports = {
   getUserDevices,
   getUserWidgetConfigs,
   updateProfileWidgets,
+  getActiveProfile,
+  changeProfileActiveState,
 };

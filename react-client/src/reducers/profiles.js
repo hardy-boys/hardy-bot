@@ -7,6 +7,7 @@ import {
   UPDATING_PROFILE_WIDGETS,
   PROFILE_WIDGETS_UPDATED,
   ERROR_UPDATING_PROFILE_WIDGETS,
+  ACTIVE_PROFILE_RECIEVED,
 } from '../actions/types';
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   currentDevice: {},
   profileData: [],
   profileBackup: [],
+  activeProfile: '',
   loading: true,
   isOnline: false,
   loggingIn: false,
@@ -50,6 +52,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profileData: action.payload,
+      };
+    case ACTIVE_PROFILE_RECIEVED:
+      return {
+        ...state,
+        activeProfile: action.payload,
       };
     case UPDATING_PROFILE_WIDGETS:
       return {

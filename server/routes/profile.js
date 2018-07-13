@@ -45,6 +45,23 @@ router.get('/profile/loadAll', (req, res) => {
     });
 });
 
+router.get('/profile/active', (req, res) => {
+  dbHelpers.getActiveProfile(null)
+    .then((profile) => {
+      if (profile) {
+        console.log(`Found active profile: ${profile.name}`);
+        res.status(200).send(profile.name);
+      } else {
+        console.log('No active profile found');
+        res.status(200).send('No active profile found');
+      }
+    })
+    .catch((err) => {
+      console.log('Error getting active profile: ', err);
+      res.status(500).send(err);
+    });
+});
+
 router.post('/profile/apply', (req, res) => {
   // format => profileDetails: { profile: ['widget1','widget2' ...] , slideshow: t/f }
   if (!req.body || !req.body.deviceName || !req.body.profileData) {
@@ -54,11 +71,41 @@ router.post('/profile/apply', (req, res) => {
   let { deviceName, profileData } = req.body;
   let { particleToken } = req.session;
 
-  // prepare profile data to be sent to Particle function
-  profileData = JSON.stringify(profileData);
-  console.log(profileData);
+  // Update which profile is active in the db
+  dbHelpers.getActiveProfile()
+    .then((profile) => {
+      if (profile) {
+        if (profile.name === profileData.profileName) {
+          // no updates necessary if profile is already active
+          console.log('Requested profile is already active');
+          res.status(200).send('Requested profile is already active');
+        } else {
+          console.log(`Found active profile: ${profile.name}`);
+          // mark old active profile inactive
+          dbHelpers.changeProfileActiveState(null, profile.name, false);
+          // mark new profile active
+          console.log('Marking new profile active');
+          dbHelpers.changeProfileActiveState(null, profileData.profileName, true);
+        }
+      } else {
+        // if no active profile found, skip to just mark the new one active
+        console.log('Marking new profile active');
+        dbHelpers.changeProfileActiveState(null, profileData.profileName, true);
+      }
+    })
+    .catch((err) => {
+      console.log('Error updating active profile: ', err);
+      res.status(500).send(err);
+    });
 
-  particleHelpers.callFunction(deviceName, 'setProfile', profileData, particleToken)
+  // prepare profile data to be sent to Particle function
+  let particleProfileData = JSON.stringify({
+    profile: profileData.profile,
+    switchMode: profileData.switchMode,
+  });
+  console.log(particleProfileData);
+
+  particleHelpers.callFunction(deviceName, 'setProfile', particleProfileData, particleToken)
     .then((data) => {
       if (data.body.return_value === -1) {
         console.log('Particle: Error applying profile ', data);
@@ -70,7 +117,7 @@ router.post('/profile/apply', (req, res) => {
     })
     .catch((err) => {
       console.log('Particle Err: An error occurred setting profile: ', err);
-      res.status(500).end('Particle Err: An error occurred setting profile: ', JSON.stringify(err));
+      res.status(500).send('Particle Err: An error occurred setting profile: ', JSON.stringify(err));
     });
 });
 

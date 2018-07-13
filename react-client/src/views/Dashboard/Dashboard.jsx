@@ -49,6 +49,7 @@ import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardS
 
 import { getUserConfigs } from '../../actions/users';
 import { signInToParticle } from '../../actions/particle';
+import { fetchActiveProfile } from '../../actions/profiles';
 
 class Dashboard extends React.Component {
   state = {
@@ -60,6 +61,7 @@ class Dashboard extends React.Component {
     const userId = 1;
     this.props.getUserConfigs(userId);
     this.props.signInToParticle();
+    this.props.fetchActiveProfile();
   }
 
   render() {
@@ -142,9 +144,9 @@ class Dashboard extends React.Component {
                   <CardIcon color="info">
                     <FlipToFront />
                   </CardIcon>
-                  <p className={classes.cardCategory}>Current Profile</p>
+                  <p className={classes.cardCategory}>Active Profile</p>
                   {/* Render device profile from database */}
-                  <h3 className={classes.cardTitle}>Weather</h3>
+                  <h3 className={classes.cardTitle}>{this.props.profiles.activeProfile}</h3>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
@@ -242,11 +244,12 @@ const mapStateToProps = (state) => {
   return {
     user: state.user,
     particle: state.particle,
+    profiles: state.profiles,
   };
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ getUserConfigs, signInToParticle }, dispatch);
+  return bindActionCreators({ getUserConfigs, signInToParticle, fetchActiveProfile }, dispatch);
 };
 
 export default compose(
