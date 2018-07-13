@@ -6,10 +6,12 @@ import {
   UPDATING_PROFILE_WIDGETS,
   PROFILE_WIDGETS_UPDATED,
   ERROR_UPDATING_PROFILE_WIDGETS,
+  ACTIVE_PROFILE_RECIEVED,
 } from './types';
 
 const fetchProfilesFromDB = () => {
   return (dispatch) => {
+    // get profiles
     axios.get('/profile/loadAll')
       .then((result) => {
         let { data } = result;
@@ -27,6 +29,20 @@ const fetchProfilesFromDB = () => {
   };
 };
 
+const fetchActiveProfile = () => {
+  // get active profile
+  return (dispatch) => {
+    axios.get('/profile/active')
+      .then((result) => {
+        let { data } = result;
+        dispatch({ type: ACTIVE_PROFILE_RECIEVED, payload: data });
+      })
+      .catch((err) => {
+        console.log(`Error loading profiles: ${err}`);
+      });
+  };
+};
+
 const deployProfileToDevice = (profile, device) => {
   return (dispatch) => {
     console.log('Deploying profile to device');
@@ -34,6 +50,7 @@ const deployProfileToDevice = (profile, device) => {
       deviceName: device,
       profileData:
       {
+        profileName: profile.profile,
         profile: profile.widgets,
         switchMode: 'Manual',
       },
@@ -137,4 +154,5 @@ export {
   updateProfileWidgets,
   saveProfileToDB,
   deleteProfileFromDB,
+  fetchActiveProfile,
 };
