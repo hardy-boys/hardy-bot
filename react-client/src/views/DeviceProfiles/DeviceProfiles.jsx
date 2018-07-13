@@ -8,15 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
-import DeleteIcon from '@material-ui/icons/Delete';
-import CardIcon from 'components/Card/CardIcon.jsx';
-import Language from '@material-ui/icons/Language';
-import DirectionsCar from '@material-ui/icons/DirectionsCar';
-import WbSunny from '@material-ui/icons/WbSunny';
-import GolfCourse from '@material-ui/icons/GolfCourse';
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
-import Done from '@material-ui/icons/Done';
 import Save from '@material-ui/icons/Save';
 import GetApp from '@material-ui/icons/GetApp';
 import Add from '@material-ui/icons/Add';
