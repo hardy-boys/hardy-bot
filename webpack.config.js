@@ -9,6 +9,7 @@ const ASSET_DIR = path.join(__dirname, '/react-client/dist/assets');
 
 module.exports = {
   entry: `${SRC_DIR}/index.js`,
+  mode: (process.env.NODE_ENV === 'production' ? 'production' : 'development'),
   output: {
     filename: 'bundle.js',
     path: BUILD_DIR,
@@ -38,20 +39,6 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: true,
-      compress: {
-        warnings: false, // Suppress uglification warnings
-        pure_getters: true,
-        unsafe: true,
-        unsafe_comps: true,
-        screw_ie8: true,
-      },
-      output: {
-        comments: false,
-      },
-      exclude: [/\.min\.js$/gi], // skip pre-minified libs
     }),
     new CompressionPlugin({
       asset: '[path].gz[query]',
