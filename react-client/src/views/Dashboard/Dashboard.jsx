@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
         <div>
           <Grid container>
             <GridItem xs={12} sm={12} md={12}>
-              <Card>
+              <Card className={classes.titleCard}>
                 <CardHeader color="primary">
                 {/* Get device info from db */}
                   <h4 className={classes.cardTitleWhite}>{deviceInfo.deviceName}</h4>

@@ -2,7 +2,7 @@ const db = require('../models');
 const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
-const saveMember = (email, password, zipcode, callback) => {
+const saveMember = (email, password, zipcode, particleToken, callback) => {
   let hashedPW;
   if (password) {
     const salt = bcrypt.genSaltSync(3);
@@ -12,9 +12,45 @@ const saveMember = (email, password, zipcode, callback) => {
     email,
     password: hashedPW,
     zipcode,
+    particleToken,
   })
     .then((result) => {
       callback(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const updateMember = (email, password, zipcode, particleToken, callback) => {
+  let hashedPW;
+  if (password) {
+    const salt = bcrypt.genSaltSync(3);
+    hashedPW = bcrypt.hashSync(password, salt);
+  }
+  return db.models.User.findOne({
+    where: { email },
+  })
+    .then((result) => {
+      result.update({
+        email,
+        password: hashedPW,
+        zipcode,
+        particleToken,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const getProfileInfo = (email, callback) => {
+  return db.models.User.findOne({
+    where: { email },
+    raw: true,
+  })
+    .then((result) => {
+      return result;
     })
     .catch((error) => {
       console.log(error);
@@ -207,6 +243,8 @@ const updateProfileWidgets = (profileName, widgetName) => {
 
 module.exports = {
   saveMember,
+  updateMember,
+  getProfileInfo,
   saveProfile,
   deleteProfile,
   loadUserProfiles,

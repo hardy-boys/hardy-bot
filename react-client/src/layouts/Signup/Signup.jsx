@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -77,17 +79,25 @@ class Signup extends React.Component {
   }
 
   handleSubscribe() {
-    console.log('ahhhhh', this.state.email, this.state.password, this.state.zip);
+    const { history } = this.props;
     axios.post('/subscribe', {
       email: this.state.email,
       password: this.state.password,
       zip: this.state.zip,
       particleToken: this.state.particleToken,
-    });
+    })
+      .then((res) => {
+        console.log(res.data);
+        history.push('/dashboard');
+      })
+      .catch((err) => {
+        console.log('HELLOOOOOOOOSUBSCRIBE.', err.data);
+        alert('Username Taken.');
+      // history.push('/login');
+      });
   }
 
   handleKeyPress(event) {
-    console.log('hi');
     if (event.key === 'Enter') {
       this.handleSubscribe();
     }
@@ -99,7 +109,7 @@ class Signup extends React.Component {
     return (
     <div style={{ margin: '70px' }}>
       <Grid container justify='center'>
-        <GridItem xs={12} sm={6} md={4}>
+        <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color="primary">
             <img src='../../assets/img/hardybotlogo.png' style={{ width: '100px' }}/>
@@ -132,6 +142,7 @@ class Signup extends React.Component {
                       value: this.state.password,
                       onChange: this.enterPassword,
                       onKeyPress: this.handleKeyPress,
+                      type: 'password',
                     }}
                   />
                 </GridItem>
@@ -182,4 +193,4 @@ class Signup extends React.Component {
   }
 }
 
-export default withStyles(styles)(Signup);
+export default compose(withStyles(styles, withRouter)(Signup));

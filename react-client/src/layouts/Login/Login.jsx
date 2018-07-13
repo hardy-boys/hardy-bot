@@ -70,15 +70,12 @@ class Login extends React.Component {
     })
       .then((res) => {
         console.log(res.data);
-        if (res.data.login === 'success') {
-          history.push('/dashboard');
-        } else {
-          console.log('Invald Email or Password.');
-          history.push('/login');
-        }
+        history.push('/dashboard');
       })
       .catch((err) => {
         console.log(err.data);
+        alert('Invalid Username or Password.');
+        // history.push('/login');
       });
   }
 
@@ -93,7 +90,7 @@ class Login extends React.Component {
     return (
       <div style={{ margin: '70px' }}>
         <Grid container justify='center'>
-          <GridItem xs={12} sm={6} md={4}>
+          <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="primary">
               <img src='../../assets/img/hardybotlogo.png' style={{ width: '100px' }}/>
@@ -126,6 +123,7 @@ class Login extends React.Component {
                         value: this.state.password,
                         onChange: this.enterPassword,
                         onKeyPress: this.handleKeyPress,
+                        type: 'password',
                       }}
                     />
                   </GridItem>
