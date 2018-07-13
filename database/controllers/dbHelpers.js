@@ -22,6 +22,40 @@ const saveMember = (email, password, zipcode, particleToken, callback) => {
     });
 };
 
+const updateMember = (email, password, zipcode, particleToken, callback) => {
+  let hashedPW;
+  if (password) {
+    const salt = bcrypt.genSaltSync(3);
+    hashedPW = bcrypt.hashSync(password, salt);
+  }
+  return db.models.User.findOne({
+    where: { email },
+  })
+    .then((result) => {
+      result.update({
+        email,
+        password: hashedPW,
+        zipcode,
+        particleToken,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const getProfileInfo = (email, callback) => {
+  return db.models.User.findOne({
+    where: { email },
+  })
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 const saveProfile = (userId, profileName, widgetNames) => {
   // TODO: implement userId filtering
   console.log('DB: saving profile ', profileName);
@@ -183,6 +217,8 @@ const updateProfileWidgets = (profileName, widgetName) => {
 
 module.exports = {
   saveMember,
+  updateMember,
+  getProfileInfo,
   saveProfile,
   loadUserProfiles,
   saveWeatherWidgetConfig,
