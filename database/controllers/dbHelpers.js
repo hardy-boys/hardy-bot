@@ -58,7 +58,7 @@ const getProfileInfo = (email, callback) => {
 };
 
 const saveProfile = (userId, profileName, widgetNames) => {
-  // TODO: implement userId filtering
+  // TODO: implement per user
   console.log('DB: saving profile ', profileName);
 
   // delete the old profile and its associations
@@ -98,6 +98,31 @@ const saveProfile = (userId, profileName, widgetNames) => {
     })
     .catch((err) => {
       console.log('Error in saveProfile ', err);
+    });
+};
+
+const deleteProfile = (userId, profileName) => {
+  // TODO: implement per user
+  db.models.Profile.findOne({
+    where: {
+      name: profileName,
+    },
+  })
+    .then((profile) => {
+      if (profile) {
+        console.log('Deleting ', profileName);
+        return profile.destroy();
+      } else {
+        console.log('db deleteProfile: Profile does not exist');
+      }
+    })
+    .then((result) => {
+      if (result) {
+        console.log('db deleteProfile: Successfully deleted ', profileName);
+      }
+    })
+    .catch((err) => {
+      console.log('Error in deleteProfile ', err);
     });
 };
 
@@ -221,6 +246,7 @@ module.exports = {
   updateMember,
   getProfileInfo,
   saveProfile,
+  deleteProfile,
   loadUserProfiles,
   saveWeatherWidgetConfig,
   saveStockWidgetConfig,

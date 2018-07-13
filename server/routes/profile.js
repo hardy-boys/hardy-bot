@@ -13,6 +13,15 @@ router.post('/profile/save', (req, res) => {
   res.status(201).send('Saving profile to db...');
 });
 
+router.post('/profile/delete', (req, res) => {
+  // format => req.body: {profileName: "ExampleProfile", widgetNames: ["Weather", "News" ...]}
+  if (!req.body || !req.body.profileName) {
+    res.status(400).send('Err: Improperly formatted profile delete request');
+  }
+  dbHelpers.deleteProfile(null, req.body.profileName);
+  res.status(200).send('Processing delete profile from db request...');
+});
+
 router.get('/profile/loadAll', (req, res) => {
   let returnProfiles = [];
   dbHelpers.loadUserProfiles(null)
