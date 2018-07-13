@@ -21,6 +21,9 @@ const dashboardStyle = {
       marginRight: "3px"
     }
   },
+  titleCard: {
+    minHeight: "100px",
+  },
   cardCategory: {
     color: "#999999",
     margin: "0",

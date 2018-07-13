@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -33,12 +34,14 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'johndoe@gmail.com',
-      zip: '78741',
-      particleToken: 't49e0217s39t',
+      email: '',
+      password: '',
+      zip: '',
+      particleToken: '',
       edit: true,
     };
     this.enterEmail = this.enterEmail.bind(this);
+    this.enterPassword = this.enterPassword.bind(this);
     this.enterZip = this.enterZip.bind(this);
     this.enterParticleToken = this.enterParticleToken.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -46,9 +49,27 @@ class UserProfile extends React.Component {
     this.handleUpdate = this.handleUpdate.bind(this);
   }
 
+  componentDidMount() {
+    console.log('ASLDJGALSGJ');
+    axios.get('/profileInfo')
+      .then((result) => {
+        console.log('USERPROFILE RESULT', result);
+        this.setState({
+          email: result.data.email,
+          zip: result.data.zipcode,
+          particleToken: result.data.particleToken,
+        });
+      });
+  }
+
   enterEmail(e) {
     this.setState({
       email: e.target.value,
+    });
+  }
+  enterPassword(e) {
+    this.setState({
+      password: e.target.value,
     });
   }
 
@@ -66,7 +87,7 @@ class UserProfile extends React.Component {
 
   handleKeyPress(event) {
     if (event.key === 'Enter') {
-
+      this.handleEditProfile();
     }
   }
 
@@ -98,6 +119,12 @@ class UserProfile extends React.Component {
         updateButton: null,
       });
     }
+    axios.post('/updateProfile', {
+      email: this.state.email,
+      password: this.state.password,
+      zip: this.state.zip,
+      particleToken: this.state.particleToken,
+    });
   }
 
   render() {
@@ -113,10 +140,17 @@ class UserProfile extends React.Component {
               <CardBody>
                 <Grid container>
                   <GridItem xs={12} sm={12} md={12}>
-                    <FormControl error={!this.state.edit} fullWidth={true} disabled={this.state.edit} aria-describedby="name-error-text">
+                    <FormControl fullWidth={true} disabled={true} aria-describedby="name-error-text">
                     <InputLabel htmlFor="name-error">{this.state.email}</InputLabel>
                     <Input id="name-error" onChange={this.enterEmail} onKeyPress={this.handleKeyPress} />
                     <FormHelperText id="name-error-text">Email</FormHelperText>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <FormControl error={!this.state.edit} fullWidth={true} disabled={this.state.edit} aria-describedby="name-error-text">
+                    <InputLabel htmlFor="name-error">{this.state.password}</InputLabel>
+                    <Input id="name-error" fullWidth={true} onChange={this.enterPassword} onKeyPress={this.handleKeyPress} />
+                    <FormHelperText id="name-error-text">Password</FormHelperText>
                     </FormControl>
                   </GridItem>
                   <GridItem xs={12} sm={12} md={12}>

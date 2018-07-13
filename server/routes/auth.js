@@ -62,14 +62,14 @@ router.post('/loginEnter', (req, res) => {
       console.log(err); // will generate a 500 error
     }
     if (!user) {
-      res.status(409).send({ login: 'user not found' });
+      return res.status(409).send({ login: 'user not found' });
     }
     req.login(user, (error) => {
       if (error) {
         console.log('login:', error);
-        res.status(401).send({ login: 'failed' });
+        return res.status(401).send({ login: 'failed' });
       } else {
-        res.status(200).send({ login: 'success' });
+        return res.status(200).send({ login: 'success' });
       }
     });
   })(req, res);
@@ -77,6 +77,7 @@ router.post('/loginEnter', (req, res) => {
 
 
 router.get('/logout', (req, res) => {
+  console.log('LOGOUT', req.user);
   req.logout();
   res.redirect('/login');
 });
