@@ -49,9 +49,15 @@ class WeatherWidgetModal extends React.Component {
 
   onSubmit() {
     const { widgetName } = this.props.weather;
-    this.props.fetchWeather(this.state.zip);
-    // need to get user id from redux state
-    this.props.saveWidgetConfig(1, widgetName, this.state.zip);
+    const { zip } = this.state;
+    if (!Number.isNaN(Number(zip)) && zip !== undefined) {
+      this.props.fetchWeather(zip);
+      // need to get user id from redux state
+      this.props.saveWidgetConfig(1, widgetName, zip);
+    }
+    this.setState({
+      zip: '',
+    });
   }
 
   render() {
