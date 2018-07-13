@@ -55,6 +55,9 @@ class StocksWidgetModal extends React.Component {
     this.props.saveWidgetConfig(1, widgetName, stockSymbols);
     // need to get userID from session
     this.props.fetchStocks(stockSymbols);
+    this.setState({
+      symbol: '',
+    });
   }
 
   render() {

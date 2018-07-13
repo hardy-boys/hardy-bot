@@ -53,6 +53,10 @@ class TrafficWidgetModal extends React.Component {
   onSubmit() {
     let { origin, destination } = this.state;
     this.props.fetchTraffic(origin, destination);
+    this.setState({
+      origin: '',
+      destination: '',
+    });
   }
 
   render() {
