@@ -28,6 +28,11 @@ let apiKey = process.env.BING_MAPS_API_KEY;
 
 router.post('/api/traffic', (req, res) => {
   let { origin, destination } = req.body;
+  // remove certain characters to match expected URL parameter format
+  origin = origin.replace(/\s+/g, '%20');
+  origin = origin.replace(/#/g, '');
+  destination = destination.replace(/\s+/g, '%20');
+  destination = destination.replace(/#/g, '');
 
   let targetUrl = `http://dev.virtualearth.net/REST/v1/Routes?wayPoint.1=${origin}&waypoint.2=${destination}
   &optimize=timeWithTraffic&routeAttributes=routeSummariesOnly&maxSolutions=1&distanceUnit=mi&key=${apiKey}`;
@@ -64,7 +69,7 @@ router.post('/api/traffic', (req, res) => {
       // do whatever you wish with the update data
       console.log('RESULT', result);
       // res.send(result);
-      let data = result.data.resourceSets[0].resources[0];
+      let data = result.resourceSets[0].resources[0];
       io.emit('action', { type: actions.TRAFFIC_DATA_UPDATE, payload: data });
       particleHelpers.sendEventData('traffic', mapParticle(result), req.session.particleToken);
     })
