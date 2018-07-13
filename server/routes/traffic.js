@@ -20,6 +20,7 @@ let mapParticle = (input) => {
   return {
     Distance: `${Math.round(input.resourceSets[0].resources[0].travelDistance)} mi`,
     TrafficTime: `${Math.round(input.resourceSets[0].resources[0].travelDurationTraffic / 60)} min`,
+    NormalTime: `${Math.round(input.resourceSets[0].resources[0].travelDuration / 60)} min`,
   };
 };
 
