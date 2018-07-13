@@ -78,10 +78,12 @@ class TrafficWidget extends React.Component {
               </GridItem>
             ) : (
               <GridItem xs={7}>
-                <p>Distance: </p>
-                <p>Duration: </p>
-                <p>Duration with Traffic: </p>
-                <h5 style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}><strong>Please enter an origin and destination</strong></h5>
+                {/* <div style={{ backgroundColor: 'rgb(237, 235, 235)', padding: '10px'}}> */}
+                  <p>Distance: </p>
+                  <p>Duration: </p>
+                  <p>Duration with Traffic: </p>
+                  <h5 style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}><strong>Please enter an origin and destination</strong></h5>
+                {/* </div> */}
               </GridItem>
             )}
           </Grid>
