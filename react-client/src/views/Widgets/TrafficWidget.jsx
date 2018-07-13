@@ -67,21 +67,21 @@ class TrafficWidget extends React.Component {
     return (
         <div>
           <Grid container>
-            <GridItem xs={4}>
+            <GridItem xs={5}>
                 <Gauge color={this.setGaugeColor(traffic)} value={traffic} min={0} max={10} width={300} height={200} label="Traffic" />
               </GridItem>
             {Object.keys(trafficData).length ? (
-              <GridItem xs={8}>
+              <GridItem xs={7}>
                 <p>Distance: <strong>{travelDistance.toFixed(2)}mi </strong></p>
                 <p>Duration: <strong>{(travelDuration / 60).toFixed(2)}mins </strong></p>
                 <p>Duration with Traffic: <strong>{(travelDurationTraffic / 60).toFixed(2)}mins </strong></p>
               </GridItem>
             ) : (
-              <GridItem xs={8}>
+              <GridItem xs={7}>
                 <p>Distance: </p>
                 <p>Duration: </p>
                 <p>Duration with Traffic: </p>
-                <h5 style={{color: 'red'}}>Please enter an origin and destination</h5>
+                <h5 style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}><strong>Please enter an origin and destination</strong></h5>
               </GridItem>
             )}
           </Grid>
