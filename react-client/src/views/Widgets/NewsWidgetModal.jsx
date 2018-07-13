@@ -49,6 +49,9 @@ class NewsWidgetModal extends React.Component {
 
   onSubmit() {
     this.props.startNewsPolling(this.state.searchTerm);
+    this.setState({
+      searchTerm: '',
+    });
   }
 
   render() {
