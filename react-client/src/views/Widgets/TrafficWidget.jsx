@@ -58,6 +58,11 @@ class TrafficWidget extends React.Component {
     let traffic = Math.ceil((travelDurationTraffic - travelDuration) / 60) || '';
     let { trafficData } = this.props.traffic;
 
+    if (traffic > 10) {
+      traffic = 10;
+    } else if (traffic < 0) {
+      traffic = 0;
+    }
 
     return (
         <div>
