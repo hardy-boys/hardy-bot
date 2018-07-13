@@ -85,7 +85,7 @@ const CustomSkinMap = withScriptjs(withGoogleMap(props => (
 function Maps({ ...props }) {
   return (
     <CustomSkinMap
-      googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${config.GOOGLE_MAPS_API_KEY}`}
+      googleMapURL={'https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOdhXWVTuCeP2nP_44kS8_UHb3wRXWyI'}
       loadingElement={<div style={{ height: '100%' }} />}
       containerElement={<div style={{ height: '100vh' }} />}
       mapElement={<div style={{ height: '100%' }} />}

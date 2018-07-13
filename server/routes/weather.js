@@ -27,7 +27,7 @@ let mapParticle = (input) => {
 };
 
 let eventSource;
-let apiKey = 'AIzaSyDfOdhXWVTuCeP2nP_44kS8_UHb3wRXWyI';
+let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
 
 
 router.post('/api/weather', (req, res) => {
@@ -75,7 +75,7 @@ router.post('/api/weather', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      res.send(error);
+      res.status(400).end(error);
       eventSource.close();
       // io.emit('action', { type: actions.WEATHER_REQUEST_ERROR, data: error });
     });
