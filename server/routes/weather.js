@@ -87,7 +87,7 @@ router.post('/api/weather', (req, res) => {
 
 router.get('/api/weather/close', (req, res) => {
   eventSource.close();
-  res.status(200).end('Weather polling stopped');
+  res.status(404).end('Weather polling stopped');
 });
 
 router.post('/widgets/weather/save', (req, res) => {
@@ -97,7 +97,7 @@ router.post('/widgets/weather/save', (req, res) => {
       res.send(result);
     })
     .catch((error) => {
-      res.send(error);
+      res.status(500).end(error);
     });
 });
 

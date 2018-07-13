@@ -79,7 +79,7 @@ router.post('/api/traffic', (req, res) => {
     // for example with an invalid token provided
     .onError((error) => {
       console.log('ERROR!', error);
-      res.send(error);
+      res.status(500).end(error);
       eventSource.close();
       // io.emit('action', { type: actions.TRAFFIC_REQUEST_ERROR, data: error });
     });
