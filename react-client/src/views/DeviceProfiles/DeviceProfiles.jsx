@@ -8,15 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
-import DeleteIcon from '@material-ui/icons/Delete';
-import CardIcon from 'components/Card/CardIcon.jsx';
-import Language from '@material-ui/icons/Language';
-import DirectionsCar from '@material-ui/icons/DirectionsCar';
-import WbSunny from '@material-ui/icons/WbSunny';
-import GolfCourse from '@material-ui/icons/GolfCourse';
 import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
-import Done from '@material-ui/icons/Done';
 import Save from '@material-ui/icons/Save';
 import GetApp from '@material-ui/icons/GetApp';
 import Add from '@material-ui/icons/Add';
@@ -28,12 +21,23 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import CardBody from 'components/Card/CardBody.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import WidgetTable from 'components/Table/WidgetTable.jsx';
-import CustomInput from 'components/CustomInput/CustomInput.jsx';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
+import SnackbarContent from 'components/Snackbar/SnackbarContent.jsx';
 
-import { fetchProfilesFromDB, updateProfiles, deployProfileToDevice } from '../../actions/profiles';
+
+import {
+  fetchProfilesFromDB,
+  updateProfiles,
+  deployProfileToDevice,
+  saveProfileToDB,
+  deleteProfileFromDB,
+} from '../../actions/profiles';
 
 const styles = {
   cardTitleWhite: {
@@ -51,6 +55,22 @@ const styles = {
       lineHeight: '1',
     },
   },
+  cssLabel: {
+    color: '#FFFFFF',
+  },
+  cssFocused: {
+    '&$cssFocused': {
+      color: '#FFFFFF',
+    },
+  },
+  cssUnderline: {
+    '&:before': {
+      borderBottomColor: '#FFFFFF',
+    },
+    '&:after': {
+      borderBottomColor: '#FFFFFF',
+    },
+  },
 };
 
 class DeviceProfiles extends React.Component {
@@ -59,7 +79,6 @@ class DeviceProfiles extends React.Component {
   }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
-    console.log(this.props.profiles.profileData);
   }
 
   handleEditProfileClick = (profIdx) => {
@@ -74,24 +93,33 @@ class DeviceProfiles extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
-  handleSaveClick = (profIdx) => {
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx].editing = false;
-    this.props.updateProfiles(updatedProfiles);
-    // save to DB
-  }
-
-  handleCancelClick = (profIdx) => {
-    // restore profile state from backup
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
-    this.props.updateProfiles(updatedProfiles);
-  }
-
   handleDeleteModalClose = (profIdx) => {
     let updatedProfiles = this.props.profiles.profileData;
     updatedProfiles[profIdx].deleting = false;
     this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleDeleteModalConfirm = (profIdx) => {
+    let currentProfiles = this.props.profiles.profileData;
+    this.props.deleteProfileFromDB(currentProfiles, profIdx);
+  }
+
+  handleSaveProfileClick = (profIdx) => {
+    let currentProfiles = this.props.profiles.profileData;
+    console.log(profIdx);
+    let prevName = this.props.profiles.profileBackup[profIdx] ?
+      this.props.profiles.profileBackup[profIdx].profile : null;
+    this.props.saveProfileToDB(currentProfiles, profIdx, prevName);
+  }
+
+  handleCancelClick = (profIdx) => {
+    let updatedProfiles = this.props.profiles.profileData;
+    // don't process new/empty profiles
+    if (updatedProfiles[profIdx].widgets.length) {
+      // restore profile state from backup
+      updatedProfiles[profIdx] = JSON.parse(JSON.stringify(this.props.profiles.profileBackup[profIdx]));
+      this.props.updateProfiles(updatedProfiles);
+    }
   }
 
   handleWidgetModalSelect = (widget, profIdx) => {
@@ -104,6 +132,12 @@ class DeviceProfiles extends React.Component {
     this.props.updateProfiles(updatedProfiles);
   }
 
+  handleWidgetModalClose = () => {
+    this.setState({
+      showWidgetSelectModal: null,
+    });
+  }
+
   handleAddWidgetClick = (profIdx) => {
     this.setState({
       showWidgetSelectModal: profIdx,
@@ -111,23 +145,9 @@ class DeviceProfiles extends React.Component {
   }
 
   handleDeployClick = (profIdx) => {
-    let { profileData } = this.props.profiles;
-    this.props.deployProfileToDevice(profileData[profIdx]);
-  }
-
-  handleDeleteModalConfirm = (profIdx) => {
-    let closeModal = this.props.profiles.profileData;
-    closeModal[profIdx].deleting = false;
-    this.props.updateProfiles(closeModal);
-    // todo: make sure modal is closed before deleting profile w/ prom,i
-    let updatedProfiles = this.props.profiles.profileData;
-    updatedProfiles.splice(profIdx, 1);
-    this.props.updateProfiles(updatedProfiles);
-    // TODO: delete from database
-  }
-
-  saveChanges = () => {
-    // TODO: save changes to database
+    const { deviceInfo } = this.props.particle;
+    let profile = this.props.profiles.profileData[profIdx];
+    this.props.deployProfileToDevice(profile, deviceInfo.deviceName);
   }
 
   handleAddProfileClick = () => {
@@ -137,9 +157,17 @@ class DeviceProfiles extends React.Component {
       widgets: [],
       editing: true,
       deleting: false,
-      widgetModalOpen: false,
     });
     this.props.updateProfiles(updatedProfiles);
+  }
+
+  handleProfileNameChange = (e, profIdx) => {
+    if (e) {
+      console.log(`Editing profile name, Index: ${profIdx} Value: ${e.target.value}`);
+      let updatedProfiles = this.props.profiles.profileData;
+      updatedProfiles[profIdx].profile = e.target.value;
+      this.props.updateProfiles(updatedProfiles);
+    }
   }
 
   render() {
@@ -167,6 +195,9 @@ class DeviceProfiles extends React.Component {
       pageView = (
         <React.Fragment>
           <Grid container>
+            {/* <GridItem xs={12} sm={12} md={6}>
+              <SnackbarContent color='info' message={'Test Notification'} />
+            </GridItem> */}
             {profiles.map((profile, index) => {
               // limit to 4 widgets due to device restrictions
               let widgetMax = profile.widgets.length >= 4;
@@ -181,37 +212,53 @@ class DeviceProfiles extends React.Component {
                         justify='space-between'
                       >
                       {profile.editing ?
-                          (<CustomInput
-                            onEnter
-                            labelText="ProfileName"
-                            id="profilename"
-                            inputProps={{
-                              value: profile.profile,
-                              // onChange: this.enterEmail,
-                              // onKeyPress: this.handleKeyPress,
-                            }}
-                            formControlProps={{
-                              fullWidth: false,
-                            }}/>
+                          (<FormControl fullWidth={false} >
+                            <InputLabel
+                              FormLabelClasses={{
+                                root: classes.cssLabel,
+                                focused: classes.cssFocused,
+                              }}
+                            >
+                              {profile.profile}
+                            </InputLabel>
+                            <Input
+                              classes={{
+                                root: classes.cssUnderline,
+                                focused: classes.cssFocused,
+                                underline: classes.cssUnderline,
+                              }}
+                              onChange={(e) => { this.handleProfileNameChange(e, index); } }
+                            />
+                            <FormHelperText
+                              classes={{
+                                root: classes.cssLabel,
+                              }}
+                             >
+                              ProfileName
+                             </FormHelperText>
+                          </FormControl>
                           ) :
                           (
-                          <h4 className={classes.cardTitleWhite}>
+                          <h3 className={classes.cardTitleWhite}>
                             {profile.profile}
-                          </h4>
+                          </h3>
                           )
                       }
                         <div>
-                          <IconButton
-                            aria-label="Deploy"
-                            className={classes.tableActionButton}
-                            onClick={() => { this.handleDeployClick(index); }}
-                          >
-                            <GetApp
-                              className={
-                                `${classes.tableActionButtonIcon} ${classes.edit}`
-                              }
-                            />
-                          </IconButton>
+                          <Fade in={!profile.editing}>
+                            <IconButton
+                              aria-label="Deploy"
+                              className={classes.tableActionButton}
+                              disabled={profile.editing}
+                              onClick={() => { this.handleDeployClick(index); }}
+                            >
+                              <GetApp
+                                className={
+                                  `${classes.tableActionButtonIcon} ${classes.edit}`
+                                }
+                              />
+                            </IconButton>
+                          </Fade>
                           <IconButton
                             aria-label="Edit"
                             className={classes.tableActionButton}
@@ -268,7 +315,7 @@ class DeviceProfiles extends React.Component {
                               <Button
                                 color="primary"
                                 disabled={!profile.editing}
-                                onClick={() => { this.handleSaveClick(index); }}
+                                onClick={() => { this.handleSaveProfileClick(index); this.handleProfileNameChange(null, index); }}
                               ><Save />
                                 Save Changes
                               </Button>
@@ -294,6 +341,7 @@ class DeviceProfiles extends React.Component {
                     />
                   <WidgetSelectModal
                     open={this.state.showWidgetSelectModal === index}
+                    close={this.handleWidgetModalClose}
                     select={this.handleWidgetModalSelect}
                     profileIndex={index}
                     />
@@ -333,11 +381,18 @@ class DeviceProfiles extends React.Component {
 const mapStateToProps = (state) => {
   return {
     profiles: state.profiles,
+    particle: state.particle,
   };
 };
 
 const mapDispatchtoProps = (dispatch) => {
-  return bindActionCreators({ fetchProfilesFromDB, updateProfiles, deployProfileToDevice }, dispatch);
+  return bindActionCreators({
+    fetchProfilesFromDB,
+    updateProfiles,
+    deployProfileToDevice,
+    saveProfileToDB,
+    deleteProfileFromDB,
+  }, dispatch);
 };
 
 export default compose(
