@@ -27,7 +27,7 @@ let mapParticle = (input) => {
 };
 
 let eventSource;
-let apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
+let apiKey = 'AIzaSyDfOdhXWVTuCeP2nP_44kS8_UHb3wRXWyI';
 
 
 router.post('/api/weather', (req, res) => {

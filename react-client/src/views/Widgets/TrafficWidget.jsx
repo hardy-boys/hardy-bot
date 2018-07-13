@@ -58,24 +58,32 @@ class TrafficWidget extends React.Component {
     let traffic = Math.ceil((travelDurationTraffic - travelDuration) / 60) || '';
     let { trafficData } = this.props.traffic;
 
+    if (traffic > 10) {
+      traffic = 10;
+    } else if (traffic < 0) {
+      traffic = 0;
+    }
 
     return (
         <div>
           <Grid container>
+            <GridItem xs={4}>
+                <Gauge color={this.setGaugeColor(traffic)} value={traffic} min={0} max={10} width={300} height={200} label="Traffic" />
+              </GridItem>
             {Object.keys(trafficData).length ? (
-              <GridItem xs={6}>
-                Distance:{travelDistance.toFixed(2)}mi<br />
-                Duration:{(travelDuration / 60).toFixed(2)}mins<br />
-                Duration with Traffic:{(travelDurationTraffic / 60).toFixed(2)}mins
+              <GridItem xs={8}>
+                <p>Distance: <strong>{travelDistance.toFixed(2)}mi </strong></p>
+                <p>Duration: <strong>{(travelDuration / 60).toFixed(2)}mins </strong></p>
+                <p>Duration with Traffic: <strong>{(travelDurationTraffic / 60).toFixed(2)}mins </strong></p>
               </GridItem>
             ) : (
-              <GridItem xs={6}>
-                <h5>Please enter an origin and destination</h5>
+              <GridItem xs={8}>
+                <p>Distance: </p>
+                <p>Duration: </p>
+                <p>Duration with Traffic: </p>
+                <h5 style={{color: 'red'}}>Please enter an origin and destination</h5>
               </GridItem>
             )}
-            <GridItem xs={5}>
-              <Gauge color={this.setGaugeColor(traffic)} value={traffic} min={0} max={10} width={200} height={175} label="Traffic" />
-            </GridItem>
           </Grid>
           <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
           <Button onClick={this.handleOpenProfile.bind(this)} color="primary">Add to Profile</Button>

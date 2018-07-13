@@ -3,9 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isEmail: true,
-      },
+      // validate: {
+      //   isEmail: true,
+      // },
     },
     password: {
       type: DataTypes.STRING,
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     particleToken: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true,
     },
   });

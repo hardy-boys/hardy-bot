@@ -37,9 +37,8 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 
 // charts
 import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  // completedTasksChart
+  hourlyNetworkChart,
+  uptimeChart,
 } from 'variables/charts';
 
 // styles
@@ -87,9 +86,8 @@ class Dashboard extends React.Component {
         <div>
           <Grid container>
             <GridItem xs={12} sm={12} md={12}>
-              <Card>
+              <Card className={classes.titleCard}>
                 <CardHeader color="primary">
-                {/* Get device info from db */}
                   <h4 className={classes.cardTitleWhite}>{deviceInfo.deviceName}</h4>
                   <p className={classes.cardCategoryWhite}>LCD Display</p>
                 </CardHeader>
@@ -110,13 +108,11 @@ class Dashboard extends React.Component {
                   }
                   </CardIcon>
                   <p className={classes.cardCategory}>Current Status</p>
-                  {/* This is data we need to get from the device */}
                   <h3 className={classes.cardTitle}>{deviceInfo.deviceStats.status}</h3>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
                     <DateRange />
-                    {/* This is data we need to get from the device */}
                     Last Online: {lastOnline.toString()}
                   </div>
                 </CardFooter>
@@ -151,8 +147,8 @@ class Dashboard extends React.Component {
                 <CardFooter stats>
                   <div className={classes.stats}>
                   {/* Make this into a button that will redirect them to the profiles page */}
-                    <LocalOffer />
-                    Change Profile
+                    {/* <LocalOffer />
+                    Change Profile */}
                   </div>
                 </CardFooter>
               </Card>
@@ -164,28 +160,28 @@ class Dashboard extends React.Component {
                 <CardHeader color="primary">
                   <ChartistGraph
                     className="ct-chart"
-                    data={dailySalesChart.data}
+                    data={hourlyNetworkChart.data}
                     type="Line"
-                    options={dailySalesChart.options}
-                    listener={dailySalesChart.animation}
+                    options={hourlyNetworkChart.options}
+                    listener={hourlyNetworkChart.animation}
                   />
                 </CardHeader>
                 <CardBody>
-                  <h4 className={classes.cardTitle}>Network Activity</h4>
-                  <p className={classes.cardCategory}>
+                  <h4 className={classes.cardTitle}>Network Strength</h4>
+                  {/* <p className={classes.cardCategory}>
                     <span className={classes.successText}>
-                    {/* Get this data from device */}
+                    Get this data from device
                       <ArrowUpward className={classes.upArrowCardCategory} /> 55%
                     </span>{' '}
                     increase in activity
-                  </p>
+                  </p> */}
                 </CardBody>
-                <CardFooter chart>
-                  <div className={classes.stats}>
+                {/* <CardFooter chart>
+                  <div className={classes.stats}> */}
                   {/* Get this data from device */}
-                    <AccessTime /> updated 4 minutes ago
+                    {/* <AccessTime /> updated 4 minutes ago
                   </div>
-                </CardFooter>
+                </CardFooter> */}
               </Card>
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
@@ -193,24 +189,24 @@ class Dashboard extends React.Component {
                 <CardHeader color="primary">
                   <ChartistGraph
                     className="ct-chart"
-                    data={emailsSubscriptionChart.data}
+                    data={uptimeChart.data}
                     type="Bar"
-                    options={emailsSubscriptionChart.options}
-                    responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                    listener={emailsSubscriptionChart.animation}
+                    options={uptimeChart.options}
+                    responsiveOptions={uptimeChart.responsiveOptions}
+                    listener={uptimeChart.animation}
                   />
                 </CardHeader>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Uptime</h4>
-                  <p className={classes.cardCategory}>
+                  {/* <p className={classes.cardCategory}>
                     Longest Uptime
-                  </p>
+                  </p> */}
                 </CardBody>
-                <CardFooter chart>
+                {/* <CardFooter chart>
                   <div className={classes.stats}>
                     <AccessTime /> 48 hours
                   </div>
-                </CardFooter>
+                </CardFooter> */}
               </Card>
             </GridItem>
           </Grid>
