@@ -85,7 +85,7 @@ class StocksWidget extends React.Component {
         <div>
           <Table
             tableHeaderColor="primary"
-            tableHead={['Symbol', 'Price', 'Change', 'Price Chart']}
+            tableHead={['Symbol', 'Price', 'Change']}
             tableData={stockData}
           />
           <Button onClick={this.handleEditOpen.bind(this)} color="primary">Edit Widget</Button>
