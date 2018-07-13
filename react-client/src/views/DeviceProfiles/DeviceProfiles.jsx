@@ -28,7 +28,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { MoonLoader } from 'react-spinners';
 import DeleteProfileModal from 'views/DeviceProfiles/DeleteProfileModal.jsx';
 import WidgetSelectModal from 'views/DeviceProfiles/WidgetSelectModal.jsx';
-import SnackbarContent from 'components/Snackbar/SnackbarContent.jsx';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 import {
@@ -76,6 +76,7 @@ const styles = {
 class DeviceProfiles extends React.Component {
   state = {
     showWidgetSelectModal: null,
+    showSnackbar: false,
   }
   componentDidMount() {
     this.props.fetchProfilesFromDB();
@@ -145,6 +146,7 @@ class DeviceProfiles extends React.Component {
   }
 
   handleDeployClick = (profIdx) => {
+    this.setState({ showSnackbar: true });
     const { deviceInfo } = this.props.particle;
     let profile = this.props.profiles.profileData[profIdx];
     this.props.deployProfileToDevice(profile, deviceInfo.deviceName);
@@ -168,6 +170,10 @@ class DeviceProfiles extends React.Component {
       updatedProfiles[profIdx].profile = e.target.value;
       this.props.updateProfiles(updatedProfiles);
     }
+  }
+
+  handleSnackbarClose = () => {
+    this.setState({ showSnackbar: false });
   }
 
   render() {
@@ -195,9 +201,27 @@ class DeviceProfiles extends React.Component {
       pageView = (
         <React.Fragment>
           <Grid container>
-            {/* <GridItem xs={12} sm={12} md={6}>
-              <SnackbarContent color='info' message={'Test Notification'} />
-            </GridItem> */}
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              open={this.state.showSnackbar}
+              autoHideDuration={5000}
+              onClose={this.handleSnackbarClose}
+              message={<span id="message-id">Deploying profile to device...</span>}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.handleSnackbarClose}
+                >
+                  <Close />
+                </IconButton>,
+              ]}
+            />
             {profiles.map((profile, index) => {
               // limit to 4 widgets due to device restrictions
               let widgetMax = profile.widgets.length >= 4;
