@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+let CompressionPlugin = require('compression-webpack-plugin');
 
 const SRC_DIR = path.join(__dirname, '/react-client/src');
 const BUILD_DIR = path.join(__dirname, '/react-client/dist');
@@ -8,6 +9,7 @@ const ASSET_DIR = path.join(__dirname, '/react-client/dist/assets');
 
 module.exports = {
   entry: `${SRC_DIR}/index.js`,
+  mode: (process.env.NODE_ENV === 'production' ? 'production' : 'development'),
   output: {
     filename: 'bundle.js',
     path: BUILD_DIR,
@@ -37,6 +39,13 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+    new CompressionPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0,
     }),
   ],
   resolve: {
