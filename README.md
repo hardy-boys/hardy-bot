@@ -1,5 +1,5 @@
 # Hardy-Bot
-A dashboard for loading real-time data widgets to an IoT display
+A dashboard for loading real-time data widgets to an IoT display.  Used to control a Particle device which drives a display using the [WidgetLoader](https://github.com/hardy-boys/particle-dev/tree/master/WidgetLoader) we developed.
 
 <img width="1680" alt="hardy-bot" src="https://user-images.githubusercontent.com/15896597/43548214-09c3e002-95a3-11e8-8d78-1d56dc893607.png">
 
